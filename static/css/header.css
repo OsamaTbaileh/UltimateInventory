@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins" , sans-serif;
+}
+
+#neubar {
+    background-color: #15516d;
+    border-bottom: 2px solid #15516d;
+    z-index: 99999;
+    box-shadow: 0 5px 10px #b3bed1;
+}
+
+#neubar .dropdown-menu li a:hover {
+    color: #2e364d !important; 
+}
+
+#neubar .dropdown-menu li a:active {
+    background-color: #b3bed1 !important; 
+}
+
+#neubar .nav-item {
+    margin : auto 4px;
+}
+
+#neubar a {
+    padding-left:12px;
+    padding-right:12px;
+}
+
+#neubar .dropdown-menu {
+    background : #2e364d;
+}
+
+#neubar .dropdown-menu {
+    background-color : #2e364d;
+}
+
+a.navbar-brand {
+    color: #2e364d;
+}
+
+.navbar-nav a {
+    font-size: 14px;
+}
+
+#user-img {
+    max-width: 40px; 
+    max-height: 40px;
+    border-radius: 100% !important;
+    aspect-ratio: 1;
+    min-height: 40px;
+    object-fit: cover;
+    /* border: 4px solid #e5c970; */
+    cursor: pointer;
+}
+
+#user-img:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 13px rgba(255, 255, 255, 1) !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.7) !important;
+    border-width: 2px !important;
+}
+
+.navbar-toggler:active {
+    box-shadow: 0 0 13px rgba(255, 255, 255, 1) !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 13px rgba(255, 255, 255, 1) !important;
+}
+
+.navbar-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 0.7)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E") !important;
+}
