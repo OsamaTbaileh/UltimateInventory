@@ -1,0 +1,2361 @@
+{% set css_files = '
+<link rel="stylesheet" href="../../static/css/dashboard.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lightgallery.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-video.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-rotate.min.css" />
+' %}
+{% include 'general/header.html' %}
+
+<div class="mx-0 px-0 mw-100 d-flex justify-content-center" style="flex: 1; margin-top: 76px !important;">
+    <div class="w-100 mx-0 px-sm-2 px-md-3 px-lg-4 bg d-flex justify-content-between" style="max-width: 1500px; ">
+        <!-- Left Section: -->
+        <section class="left-section">
+        </section>
+
+        <!-- Middle Section: -->
+        <section class="mid-section pt-3">
+
+            <!-- Post -->
+            <div class="post-box shaded-box rounded mb-4 py-2">
+                <!-- Post Header -->
+                <div class="d-flex justify-content-between rounded px-3 py-2 mb-2">
+                    <!-- Post Author Data -->
+                    <div class="d-flex">
+                        <a aria-label="{{ the_post.author_full_name}}" href="/users/{{ the_post.author_user_id}}"
+                            class="user-img-container me-2 ms-0">
+                            <img src="/static/uploads/users_photos/{{ the_post.author_image_id }}"
+                                alt="{{ the_post.author_full_name}} image" class="{{ the_post.author_job_title }}-img">
+                        </a>
+                        <div class="{{ the_post.author_job_title }}-name-container">
+                            <a class="mb-0 mx-0" href="/users/{{ the_post.author_user_id }}">{{
+                                the_post.author_full_name }}</a>
+                            {% if the_post.created_at == the_post.updated_at %}
+                            <p class="post-time">{{ the_post.created_at }}</p>
+                            {% else %}
+                            <p class="post-time">{{ the_post.updated_at }}<span
+                                    class="ms-2"><strong>updated</strong></span></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Meatballs Drop Down Menu -->
+                    <div class="dropdown post-dropdown">
+                        <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if the_post.is_owner %}
+                            <li>
+                                <span class="dropdown-item p-0">
+                                    <button class="post-update-btn" data-post-id="{{ the_post.post_id }}">
+                                        <i class="fas fa-pen-to-square mx-2 fa-fw"></i>Update
+                                    </button>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="dropdown-item p-0">
+                                    <button class="post-delete-btn" data-post-id="{{ the_post.post_id }}">
+                                        <i class="fas fa-trash mx-2 fa-fw"></i>Delete
+                                    </button>
+                                </span>
+                            </li>
+                            {% endif %}
+                            <li>
+                                <span class="dropdown-item p-0">
+                                    <button class="post-copy-url-btn" onclick="copyPostUrl({{ the_post.post_id }})">
+                                        <i class="fas fa-copy mx-2 fa-fw"></i>Copy URL
+                                    </button>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Post Caption -->
+                <p class="post-caption px-3 mb-2" id="post-{{ the_post.post_id }}-caption">
+                    {{ the_post.caption }}
+                </p>
+
+                <!-- Post Media -->
+                <div class="post-media-container mb-2" id="post-{{ the_post.post_id }}-media-container"
+                    data-post-id="{{ the_post.post_id }}">
+                </div>
+
+                <!-- Like & Comment Counts -->
+                <div class="post-comment-like-counter-container mx-3 mb-2">
+                    <div id="post-{{ the_post.post_id }}-likes-count">
+                        {% if the_post.is_liker and the_post.likes_count == 1 %}
+                        <i class="fa-solid fa-heart"></i> You liked this
+                        {% elif the_post.is_liker %}
+                        <i class="fa-solid fa-heart"></i> You & {{ the_post.likes_count-1 }} others like this
+                        {% elif the_post.likes_count == 0 %}
+                        {% elif not the_post.is_liker %}
+                        <i class="fa-solid fa-heart"></i>
+                        {{ the_post.likes_count }}
+                        {% endif %}
+                    </div>
+                    <div id="post-{{ the_post.post_id }}-comments-count">
+                        {% if the_post.comments_count != 0 %}
+                        {{ the_post.comments_count }} comments
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!--Post Like & Comment Buttons -->
+                <div class="post-comment-like-buttons-container mx-3">
+                    {% if the_post.is_liker %}
+                    <button class="post-like-btn post-red-like-btn" id="post-{{ the_post.post_id }}-like-btn"
+                        data-post-likes-count="{{ the_post.likes_count }}">
+                        <i class="fa-solid fa-heart fa-lg"></i>
+                        <strong>Like</strong>
+                    </button>
+                    {% else %}
+                    <button class="post-like-btn" id="post-{{ the_post.post_id }}-like-btn"
+                        data-post-likes-count="{{ the_post.likes_count }}">
+                        <i class="fa-regular fa-heart fa-lg"></i>
+                        <strong>Like</strong>
+                    </button>
+                    {% endif %}
+                    <button class="post-comment-btn" id="post-{{ the_post.post_id }}-comment-btn">
+                        <i class="fa-regular fa-comment fa-lg"></i>
+                        <strong>Comment</strong>
+                    </button>
+                </div>
+
+                <!-- Post Comments comment-likes-count-->
+                {% with messages = get_flashed_messages(category_filter=['fail']) %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-danger mx-3" role="alert">
+                    {{message}}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <div class="comments-container mx-3" data-post-id="{{ the_post.post_id }}">
+
+                    <!-- form to add comment -->
+                    <div class="sticky-comment-form-container d-flex align-items-start py-1"
+                        id="post-{{ the_post.post_id }}-add-comment-form-container">
+                        <a aria-label="{{ checked_user.user_first_name }} {{ checked_user.user_last_name }}"
+                            href="/users/{{ session.user_id }}" class="user-img-container me-2 ms-0">
+                            <img src="/static/uploads/users_photos/{{ checked_user.user_image_id }}"
+                                alt="{{ checked_user.user_first_name }} {{ checked_user.user_last_name }} image"
+                                class="comment-{{ the_post.author_job_title }}-img">
+                        </a>
+                        <div class="d-flex flex-column w-100">
+                            <form id="makeCommentForm" onsubmit="submitCommentForm(event)"
+                                action="/dashboard/add_new_comment" method="post" enctype="multipart/form-data"
+                                class="d-flex flex-column comment-form">
+                                <textarea class="comment-form-caption height-auto-adjuster"
+                                    placeholder="Write your comment here" name="comment_form_caption"
+                                    autofocus></textarea>
+                                <input type="hidden" name="post_id_of_comment" value="{{ the_post.post_id }}">
+                                <div class="wrapper">
+                                    <div class="file-upload comment-form-media-upload">
+                                        <input type="file" id="photoInput" name="comment-form-media"
+                                        accept="image/apng, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/webp, image/svg+xml, video/mp4, video/webm, video/ogg" onchange="previewCommentMedia(event)" />
+                                        <i class="fa fa-image"></i>
+                                    </div>
+                                    <button type="submit" id="comment-form-btn"
+                                        class="disabled-comment-form-submit-button" disabled>
+                                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pV
+                                        UAAAACXBIWXMAAAsTAAALEwEAmpwYAAADNklEQVR4nO2dv24TQRDGByEKJCrogIiegieg5
+                                        BVcEmXXKAUNJU+AxCtQQpmWkhZRJcK7MYjCNZLLCCGLAh1ywHZsBfCfu/lmdr+fNFUKbud
+                                        j53w/by4ihBBCCCGEVMDB6R76EshFQvopMb2VkB+JNFeWfkYAxNzMK+QvEtMzeTq8gbgUs
+                                        hrIvNKZxPxKwvA+m2QikNmOmY6z/E76uSe9o6vq11Yl/wpkedeMJObn8vjzLfQll83agcy
+                                        DmUhIb6SfH6AvvUw2DmTpQ8CxhMG+HB5fQy+jHHYJZHGv+Sohv5T9j3fQy/FPG4EsxtkPC
+                                        fno9zMNMRDI6jjLh9L7cH3LK6uUrgJZ1Ph8nMVP99BL9UH3gczuM1Q0pgJZHmdUNKYCmRc
+                                        VjbFALo4zKho7gVymaPrDm1Il8AD+GsykTkUDb/w6Iy1XpGjQzd4omFSBokE3eatKBSsae
+                                        HN33TW5MEWDbmh7NS5D0eAb2fKOSc4VDbqBnYaTHSoadNNUKjk6RQNvluaOSQ4UDbpJuF0
+                                        zsqlo4I1BVzKmaOANMVTBgqJBN8FiBaSiQS/edCWAooEv2kkFLUUz/aQR8+s//+B3+MKjC
+                                        0XzQp6ku90GMw/o5Pb5Fp0+4Z4/TKX3EtI3A41oTBVc0TCoxoeiYVCND0VTc1DBg6KpNqh
+                                        kVNFI7UElY4pmW2KBQZlQNG0TCwiqjlM0Jw6DmimawUMpjshA2PhY08iKHv/Hl3BTL7Hx0
+                                        cPH3uIbn40+GFbX+GxEndTc+IiUi2x8g9HvbHyD/YKKX+E2tr7Chc9dJxX0DjngF2u2Eo8
+                                        BSaxdaaAXb6mCBaWBbgK8kjGlUW8QIxtKYxV4YxQreDgNUsduOLN7XmqVondENnSicF2KC
+                                        yHx16KN1JgvDsCH0PDVGiYq8eUz+BCy01Mam+JmLA2Mn9JoC7tjaWJLaWhhL4iRTaWhBTw
+                                        AL0pDC+xucKQ0tIDsCI9KQwvVseT5TW9adB9GIUpDi+7GUmFvC9Wi3Zt0wUpDi3buDxUoD
+                                        S12Hku1KA0tNh9LlSoNLdYPgn96VYX/PjtQaehy+W6g0oCxfJOm0oBDpWGMg9M99CUQQgg
+                                        hhBBCpCZ+AVvGd6WEjTCVAAAAAElFTkSuQmCC" />
+                                    </button>
+                                </div>
+                            </form>
+                            <div id="commentFormMediaPreview" class="d-flex flex-wrap" style="display: block;"></div>
+                        </div>
+                    </div> <!-- End of Comment Form -->
+                </div> <!-- Comments Section End -->
+
+            </div> <!-- Post End -->
+
+        </section>
+
+        <!-- Right Section: -->
+        <section class="right-section">
+        </section>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/lightgallery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/plugins/video/lg-video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/plugins/rotate/lg-rotate.min.js"></script>
+
+
+<!-- This script contain functions to handle the ADD operation of comment/reply and preview their uploaded media files and the submition operation. -->
+<script>
+    // Array to keep track of selected files
+    const postFormSelectedFiles = [];
+    const commentFormSelectedFiles = [];
+    const replyFormSelectedFiles = [];
+
+    // Function to add the selected media file in the "add comment form" to the DOM and preview it.
+    function previewCommentMedia(event) {
+        let previewContainer = document.getElementById('commentFormMediaPreview');
+
+        // Clear everyhting in the elemnt
+        previewContainer.innerHTML = '';
+        // Clear the array when a new set of files is selected
+        commentFormSelectedFiles.length = 0;
+
+        const file = event.target.files[0]
+        const reader = new FileReader();
+        let invalidTypeFiles = [];
+        let invalidSizeFiles = [];
+        let isFileValid = true
+
+        // Validate the file type
+        if (!isValidFileType(file)) {
+            invalidTypeFiles.push(file.name);
+            isFileValid = false
+        }
+        // Validate the file type
+        if (!isValidFileSize(file)) {
+            invalidSizeFiles.push(file.name);
+            isFileValid = false
+        }
+
+        if(isFileValid){
+            reader.onload = function (e) {
+                const previewMediaContainer = document.createElement('div');
+                previewMediaContainer.classList.add('uploaded-media-container');
+
+                // Add file to the selected files array
+                const fileData = { file, container: previewMediaContainer };
+                commentFormSelectedFiles.push(fileData);
+
+                if (file.type.startsWith('image')) {
+                    const image = document.createElement('img');
+                    image.src = e.target.result;
+                    image.alt = file.name;
+                    image.classList.add('uploaded-media');
+                    previewMediaContainer.appendChild(image);
+                } else if (file.type.startsWith('video')) {
+                    const video = document.createElement('video');
+                    video.muted = true;
+                    video.classList.add('uploaded-media');
+
+                    const source = document.createElement('source');
+                    source.src = e.target.result;
+                    video.appendChild(source);
+
+                    previewMediaContainer.appendChild(video);
+
+                    const playIcon = document.createElement('i');
+                    playIcon.classList.add('fa', 'fa-play-circle');
+                    playIcon.setAttribute('aria-hidden', 'true');
+                    previewMediaContainer.appendChild(playIcon);
+                }
+
+                const removeButton = document.createElement('i');
+                removeButton.classList.add('remove-media-x-btn', 'fas', 'fa-circle-xmark');
+
+                // Event listener for removing the specific file and its container
+                removeButton.addEventListener('click', function () {
+                    removeCommentMedia(fileData);
+                });
+
+                previewMediaContainer.appendChild(removeButton);
+                previewContainer.appendChild(previewMediaContainer);
+
+                handleInputChange("comment");
+            };
+        }
+
+        reader.readAsDataURL(file);
+
+        // Display popup message for invalid files
+        displayUploadFilesError(invalidTypeFiles, invalidSizeFiles);
+    }
+
+
+    // Function to add the selected media file in the "add reply form" to the DOM and preview it.
+    function previewReplyMedia(event) {
+        let previewContainer = document.getElementById('replyFormMediaPreview');
+
+        // Clear everyhting in the elemnt
+        previewContainer.innerHTML = '';
+        // Clear the array when a new set of files is selected
+        replyFormSelectedFiles.length = 0;
+
+        const file = event.target.files[0]
+        const reader = new FileReader();
+        let invalidTypeFiles = [];
+        let invalidSizeFiles = [];
+        let isFileValid = true
+
+        // Validate the file type
+        if (!isValidFileType(file)) {
+            invalidTypeFiles.push(file.name);
+            isFileValid = false
+        }
+        // Validate the file type
+        if (!isValidFileSize(file)) {
+            invalidSizeFiles.push(file.name);
+            isFileValid = false
+        }
+
+        if(isFileValid){
+            reader.onload = function (e) {
+                const previewMediaContainer = document.createElement('div');
+                previewMediaContainer.classList.add('uploaded-media-container');
+
+                // Add file to the selected files array
+                const fileData = { file, container: previewMediaContainer };
+                replyFormSelectedFiles.push(fileData);
+
+                if (file.type.startsWith('image')) {
+                    const image = document.createElement('img');
+                    image.src = e.target.result;
+                    image.alt = file.name;
+                    image.classList.add('uploaded-media');
+                    previewMediaContainer.appendChild(image);
+                } else if (file.type.startsWith('video')) {
+                    const videoContainer = document.createElement('div');
+                    videoContainer.classList.add('video-container');
+
+                    const video = document.createElement('video');
+                    video.muted = true;
+                    video.classList.add('uploaded-media');
+
+                    const source = document.createElement('source');
+                    source.src = e.target.result;
+                    video.appendChild(source);
+
+                    videoContainer.appendChild(video);
+
+                    const playIcon = document.createElement('i');
+                    playIcon.classList.add('fa', 'fa-play-circle');
+                    playIcon.setAttribute('aria-hidden', 'true');
+                    videoContainer.appendChild(playIcon);
+
+                    previewMediaContainer.appendChild(videoContainer);
+                }
+
+                const removeButton = document.createElement('i');
+                removeButton.classList.add('remove-media-x-btn', 'fas', 'fa-circle-xmark');
+
+                // Event listener for removing the specific file and its container
+                removeButton.addEventListener('click', function () {
+                    removeReplyMedia(fileData);
+                });
+
+                previewMediaContainer.appendChild(removeButton);
+                previewContainer.appendChild(previewMediaContainer);
+
+                handleInputChange("reply");
+            };
+        }
+
+        reader.readAsDataURL(file);
+
+        // Display popup message for invalid files
+        displayUploadFilesError(invalidTypeFiles, invalidSizeFiles);
+    }
+
+
+    // Function to remove a media file from "add comment form".
+    function removeCommentMedia(fileData) {
+        const { file, container } = fileData;
+        let previewContainer = document.getElementById('commentFormMediaPreview');
+
+        const index = commentFormSelectedFiles.findIndex(item => item.file === file);
+        if (index !== -1) {
+            previewContainer.removeChild(container);
+            commentFormSelectedFiles.splice(index, 1);
+        }
+
+        handleInputChange("comment");
+    }
+
+
+    // Function to remove a media file from "add reply form".
+    function removeReplyMedia(fileData) {
+        const { file, container } = fileData;
+        let previewContainer = document.getElementById('replyFormMediaPreview');
+
+        const index = replyFormSelectedFiles.findIndex(item => item.file === file);
+        if (index !== -1) {
+            previewContainer.removeChild(container);
+            replyFormSelectedFiles.splice(index, 1);
+        }
+
+        handleInputChange("reply");
+    }
+
+
+
+    // Function to be called when the comment form is submitted
+    function submitCommentForm(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Access the form element
+        const form = document.getElementById('makeCommentForm');
+
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append the value of comment_caption to the FormData object
+        const commentFormCaptionInput = form.querySelector('textarea[name="comment_form_caption"]');
+        if (commentFormCaptionInput) {
+            formData.append('comment_form_caption', commentFormCaptionInput.value);
+        }
+
+        // Append the value of post_id_of_comment to the FormData object
+        const commentPostId = form.querySelector('input[name="post_id_of_comment"]');
+        if (commentPostId) {
+            formData.append('post_id_of_comment', commentPostId.value);
+        }
+
+        // Append the selected files to the FormData object
+        if (commentFormSelectedFiles.length > 0) {
+            formData.append('images[]', commentFormSelectedFiles[0]['file']);
+        }
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/add_new_comment', {
+            method: 'POST',
+            body: formData,  // Assuming formData is defined earlier
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                fetchComments(commentPostId.value);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+        // Empty the array where uploaded media files of comment form stored.
+        commentFormSelectedFiles.length = 0;
+        console.log("fff", commentFormSelectedFiles)
+    }
+
+
+    // Function to be called when the reply form is submitted
+    function submitReplyForm(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Access the form element
+        const form = document.getElementById('makeReplyForm');
+
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append the value of reply_caption to the FormData object
+        const replyFormCaptionInput = form.querySelector('textarea[name="reply_form_caption"]');
+        if (replyFormCaptionInput) {
+            formData.append('reply_form_caption', replyFormCaptionInput.value);
+        }
+
+        // Append the value of reply_id_of_comment to the FormData object
+        const replyCommentId = form.querySelector('input[name="comment_id_of_reply"]');
+        if (replyCommentId) {
+            formData.append('comment_id_of_reply', replyCommentId.value);
+        }
+
+        // Append the selected files to the FormData object
+        if (replyFormSelectedFiles.length > 0) {
+            formData.append('images[]', replyFormSelectedFiles[0]['file']);
+        }
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/add_new_reply', {
+            method: 'POST',
+            body: formData,  // Assuming formData is defined earlier
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                fetchReplies(replyCommentId.value);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+        // Empty the array where uploaded media files of reply form stored.
+        replyFormSelectedFiles.length = 0;
+    }
+</script>
+
+
+<!-- This script is to fetch the media of the post. -->
+<script>
+    $(document).ready(function () {
+        var postId = $('.post-media-container').data('post-id');
+        fetchMediaForPost(postId);
+    });
+
+    // Function to fetch media for a specific post
+    function fetchMediaForPost(postId) {
+        fetch(`/dashboard/get_media_of_post/${postId}`, {
+            method: 'GET'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Get the container for the current post
+            var container = $(`#post-${postId}-media-container`);
+            if (data.length > 0) {
+                // Generate and append media HTML for the current post
+                generateMediaHTML(container, data);
+                // Initialize any necessary functionalities for the media (e.g., image gallery)
+                initializeGallery("post", postId);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    // Function to generate the required elements for the fetched media of the post.
+    function generateMediaHTML(container, response) {
+        if (response.length === 1) {
+            html = generateSingleMediaHTML(response[0], "one-media-temp");
+        } else if (response.length === 2) {
+            html = generateTwoMediaHTML(response);
+        } else if (response.length === 3) {
+            html = generateThreeMediaHTML(response);
+        } else {
+            html = generateMoreThanThreeMediaHTML(response);
+        }
+        container.append(html);
+    }
+
+    function generateSingleMediaHTML(response, className) {
+        var html = '';
+        if (response.media_type === "image") {
+            html += '<img class="' + className + '" src="/static/uploads/posts/images/' + response.media_name + '" alt="' + response.media_name + ' post image">';
+        } else if (response.media_type === "video") {
+            html += '<a class="' + className + '" ' +
+                'data-lg-size="1280-720" ' +
+                'data-video=\'{"source": [{"src":"/static/uploads/posts/videos/' + response.media_name + '", "type":"video/mp4"}], ' +
+                '"attributes": {"preload": false, "playsinline": true, "controls": true}}\' >' +
+                '<video controls src="/static/uploads/posts/videos/' + response.media_name + '" ></video>' +
+                '</a>';
+        }
+        return html;
+    }
+
+    function generateTwoMediaHTML(response) {
+        var html = '';
+        for (var i = 0; i < response.length; i++) {
+            html += generateSingleMediaHTML(response[i], "two-media-temp");
+        }
+        return html;
+    }
+
+    function generateThreeMediaHTML(response) {
+        var html = '';
+        html += generateSingleMediaHTML(response[0], "three-media-temp");
+        html += '<div class="two-media-container three-media-temp">';
+        for (var i = 1; i < response.length; i++) {
+            html += generateSingleMediaHTML(response[i], "three-media-temp");
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function generateMoreThanThreeMediaHTML(response) {
+        var html = '';
+        html += generateSingleMediaHTML(response[0], "three-media-temp");
+        html += '<div class="two-media-container three-media-temp">';
+        html += generateSingleMediaHTML(response[1], "three-media-temp");
+        html += '<div class="more-media-container three-media-temp">';
+        html += generateSingleMediaHTML(response[2], "three-media-temp");
+        html += '<div class="overlay-media-count">+' + (response.length - 3) + '</div>';
+        html += '</div></div>';
+        for (var i = 3; i < response.length; i++) {
+            html += generateSingleMediaHTML(response[i], "hidden-media-temp");
+        }
+        return html;
+    }
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to fetch the comments of the post. -->
+<script>
+    var postId;
+    var initialAddCommentFormContainer;
+
+    $(document).ready(function () {
+        // Extract postId from the container id
+        postId = $(".comments-container").data("post-id");
+
+        // Fetch initial values when the page loads
+        fetchInitialValues();
+
+        // Fetch comments when the page loads
+        fetchComments(postId);
+    });
+
+    // Function to fetch and store initial values
+    function fetchInitialValues() {
+        initialAddCommentFormContainer = $("#post-" + postId + "-add-comment-form-container").length > 0
+            ? $("#post-" + postId + "-add-comment-form-container").clone()[0].outerHTML
+            : null;
+    }
+
+    // Function to fetch and display comments
+    function fetchComments(postId) {
+        // Use fetch to send the POST request
+        fetch('/dashboard/get_comments_of_post/' + postId, {
+            method: 'GET',
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Handle the fetched comments data and update the HTML
+            var commentsContainer = $(".comments-container");
+            commentsContainer.empty(); // Clear existing content
+
+            $.each(data, function (index, comment) {
+                // Format and append comment HTML to the container
+                console.log(comment)
+                var commentHtml = `
+                    <div id="comment-${comment.comment_id}" class="d-flex align-items-start py-1">
+                        <a aria-label="${comment.author_full_name}" href="/users/${comment.author_user_id}" class="user-img-container me-2 ms-0">                 
+                            <img src="/static/uploads/users_photos/${comment.author_image_id}" alt="${comment.author_full_name} image" class="comment-${comment.author_job_title}-img">
+                        </a>
+                        <div class="comment-content-box d-flex flex-column w-100">
+                            <div class="comment-caption-container">
+                                <div class="${comment.author_job_title}-name-container d-inline-block comment-caption">
+                                    <a class=" mb-0 mx-0" href="/users/${comment.author_user_id}">${comment.author_full_name}</a> 
+                                    <p id="comment-${comment.comment_id}-caption" class="p-0 m-0">${comment.caption}</p>
+                                </div>
+                                ${comment.likes_count > 0 ? `
+                                    <div class="comment-likes-count" id="comment-${comment.comment_id}-likes-count">
+                                        <i class="fa-solid fa-heart"></i>
+                                        ${comment.likes_count}
+                                    </div>
+                                ` : ''}
+                                ${comment.is_owner ? `
+                                    <div class="dropdown comment-dropdown">
+                                        <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <span class="dropdown-item p-0">
+                                                    <button class="comment-update-btn" data-comment-id="${comment.comment_id}"><i class="fas fa-pen-to-square mx-2 fa-fw"></i>update</button>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="dropdown-item p-0">
+                                                    <button class="comment-delete-btn" data-comment-id="${comment.comment_id}"><i class="fas fa-trash mx-2 fa-fw"></i>Delete</button>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            ${comment.media_type === "image" ? `
+                                <div id="comment-${comment.comment_id}-media-container">
+                                    <img class="comment-media " src="/static/uploads/comments/images/${comment.media_name}" alt="${comment.media_name} image">
+                                </div>
+                                    ` : comment.media_type === "video" ? `
+                                <div id="comment-${comment.comment_id}-media-container">
+                                    <a
+                                        data-lg-size="1280-720"
+                                        data-video='{"source": [{"src":"/static/uploads/comments/videos/${comment.media_name}", "type":"video/mp4"}],
+                                        "attributes": {"preload": false, "playsinline": true, "controls": true}}' >
+                                        <video class="comment-media" autoplay controls src="/static/uploads/comments/videos/${comment.media_name}" ></video>
+                                    </a>
+                                </div>
+                            ` : ''}
+                            <div class="comment-like-reply-buttons-container pb-1">
+                                <span class="me-2">${comment.updated_at}</span>
+                                <button class="me-2 comment-like-btn ${comment.is_liker ? 'blue-comment-like-btn' : ''}" id="comment-${comment.comment_id}-like-btn" data-comment-likes-count="${comment.likes_count}"><strong>Like</strong></button>
+                                <button class="me-2 comment-reply-btn" id="comment-${comment.comment_id}-reply-btn"><strong>Reply</strong></button>
+                                ${comment.created_at !== comment.updated_at ? '<span>updated</span>' : ''}
+                            </div>
+                            ${comment.replies_count > 0 ? `
+                                <button class="view-replies-btn ms-3 mt-1" id="comment-${comment.comment_id}-view-replies">
+                                    <img width="17" height="17" src="https://img.icons8.com/ios-filled/50/down-right.png" alt="down-right-arrow" class="pb-1"/>
+                                    View all ${comment.replies_count} replies
+                                </button>
+                            ` : ''}
+                            <div id="comment-${comment.comment_id}-replies-container">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                commentsContainer.append(commentHtml);
+                if (comment.media_name) {
+                    initializeGallery("comment", `${comment.comment_id}`);
+                }
+            });
+
+            if (initialAddCommentFormContainer) {
+                commentsContainer.append(initialAddCommentFormContainer);
+            }
+
+            addFormValidations("comment")
+        })
+
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+</script>
+
+
+<!-- This script is to fetch replies of a comment. -->
+<script>
+    // Function to handle click on "View all replies" button
+    function fetchReplies(commentId) {
+        // Use fetch to send the POST request
+        fetch('/dashboard/get_replies_of_comment/' + commentId, {
+            method: 'GET',
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Hide the "View all replies" button
+            $("#comment-" + commentId + "-view-replies").remove();
+
+            // Get the container to append replies
+            var repliesContainer = $("#comment-" + commentId + "-replies-container");
+            repliesContainer.empty()
+
+            // Loop through the fetched replies and append them to the container
+            $.each(data, function (index, reply) {
+                // Use the provided HTML template to generate the reply HTML
+                var replyHtml = `
+                    <div id="reply-${reply.reply_id}" class="d-flex align-items-start py-1">
+                        <a aria-label="${reply.author_full_name}" href="/users/${reply.author_user_id}" class="user-img-container me-2 ms-0">                 
+                            <img src="/static/uploads/users_photos/${reply.author_image_id}" alt="${reply.author_full_name} image" class="reply-${reply.author_job_title}-img">
+                        </a>
+                        <div class="reply-content-box d-flex flex-column w-100">
+                            <div class="reply-caption-container">
+                                <div class="${reply.author_job_title}-name-container d-inline-block reply-caption">
+                                    <a class="mb-0 mx-0"  href="/users/${reply.author_user_id}">${reply.author_full_name}</a>
+                                    <p id="reply-${reply.reply_id}-caption" class="p-0 m-0">${reply.caption}</p>
+                                </div>
+                                ${reply.likes_count > 0 ? `
+                                    <div class="reply-likes-count" id="reply-${reply.reply_id}-likes-count">
+                                        <i class="fa-solid fa-heart"></i>
+                                        ${reply.likes_count}
+                                    </div>
+                                ` : ''}
+                                ${reply.is_owner ? `
+                                    <div class="dropdown reply-dropdown">
+                                        <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <span class="dropdown-item p-0">
+                                                    <button class="reply-update-btn" data-reply-id="${reply.reply_id}"><i class="fas fa-pen-to-square mx-2 fa-fw"></i>update</button>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="dropdown-item p-0">
+                                                    <button class="reply-delete-btn" data-reply-id="${reply.reply_id}"><i class="fas fa-trash mx-2 fa-fw"></i>Delete</button>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            ${reply.media_type === "image" ? `
+                                <div id="reply-${reply.reply_id}-media-container">
+                                    <img class="reply-media" src="/static/uploads/replies/images/${reply.media_name}" alt="${reply.media_name} image">
+                                </div>
+                            ` : reply.media_type === "video" ? `
+                                <div id="reply-${reply.reply_id}-media-container">
+                                    <a
+                                        data-lg-size="1280-720"
+                                        data-video='{"source": [{"src":"/static/uploads/replies/videos/${reply.media_name}", "type":"video/mp4"}],
+                                        "attributes": {"preload": false, "playsinline": true, "controls": true}}' >
+                                        <video class="reply-media" autoplay controls src="/static/uploads/replies/videos/${reply.media_name}" ></video>
+                                    </a>
+                                </div>
+                            ` : ''}
+                            <div class="reply-like-reply-buttons-container pb-1">
+                                <span class="me-2">${reply.updated_at}</span>
+                                <button class="me-2 reply-like-btn ${reply.is_liker ? 'blue-reply-like-btn' : ''}" id="reply-${reply.reply_id}-like-btn" data-reply-likes-count="${reply.likes_count}"><strong>Like</strong></button>
+                                <button class="me-2 comment-reply-btn" id="comment-${commentId}-reply-btn"><strong>Reply</strong></button>
+                                ${reply.created_at != reply.updated_at ? '<span>updated</span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Append the generated HTML to the container
+                var existingIdentifierDiv = repliesContainer.find("#reply-form-unique-identifier");
+
+                // Check if the repliesContainer contains a div with an id "reply-form-unique-identifier"
+                if (existingIdentifierDiv.length > 0) {
+                    // If the div already exists, append the generated HTML before it
+                    existingIdentifierDiv.before(replyHtml);
+                } else {
+                    // If the div doesn't exist, simply append the generated HTML
+                    repliesContainer.append(replyHtml);
+                }
+
+                if (reply.media_name) {
+                    initializeGallery("reply", `${reply.reply_id}`);
+                }
+
+            })
+        })
+
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    // Click event for "View all replies" button
+    $(document).on('click', 'button.view-replies-btn', function () {
+        var commentId = $(this).attr('id').split('-')[1];
+        fetchReplies(commentId);
+    });
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to handle the like button of the post -->
+<script>
+    // Flag variable to track if fetch operation is in progress
+    var isFetchInProgress = false;
+
+    // Function to handle like button click
+    function handlePostLike(postId, likesCount) {
+        // Check if fetch operation is already in progress
+        if (isFetchInProgress) {
+            return; // Do nothing if fetch operation is in progress
+        }
+
+        // Set flag to indicate fetch operation is in progress
+        isFetchInProgress = true;
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/like_post/'+ postId, {
+            method: 'POST'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Update UI based on response data
+            var likeBtn = $("#post-" + postId + "-like-btn");
+            if (data['is_liker']) {
+                // Update UI for unlike
+                likeBtn.html('<i class="fa-regular fa-heart fa-lg"></i> <strong>Like</strong>');
+                likeBtn.removeClass("post-red-like-btn");
+                likeBtn.data("is-liker", 0);
+                likeBtn.data("post-likes-count", likesCount - 1);
+                // Update likes-count div based on likes_count
+                if (likesCount === 1) {
+                    $("#post-" + postId + "-likes-count").empty();
+                } else {
+                    $("#post-" + postId + "-likes-count").html('<i class="fa-solid fa-heart"></i> ' + (likesCount - 1));
+                }
+            } else {
+                // Update UI for like
+                likeBtn.html('<i class="fa-solid fa-heart fa-lg"></i> <strong>Like</strong>');
+                likeBtn.addClass("post-red-like-btn");
+                likeBtn.data("is-liker", 1);
+                likeBtn.data("post-likes-count", likesCount + 1);
+                // Update likes-count div based on likes_count
+                if (likesCount === 0) {
+                    $("#post-" + postId + "-likes-count").html('<i class="fa-solid fa-heart"></i> You liked this');
+                } else {
+                    $("#post-" + postId + "-likes-count").html('<i class="fa-solid fa-heart"></i> You & ' + likesCount + ' others like this');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+        .finally(() => {
+            // Reset flag to indicate fetch operation is completed
+            isFetchInProgress = false;
+        });
+    }
+
+    // Like button click event
+    $(document).on('click', 'button.post-like-btn', function () {
+        var postId = $(this).attr('id').split('-')[1];
+        var likesCount = $(this).data("post-likes-count");
+        handlePostLike(postId, likesCount);
+    });
+</script>
+
+
+<!-- This script is to handle the like button of comments. -->
+<script>
+    // Flag variable to track if fetch operation is in progress
+    var isFetchInProgress = false;
+
+    // Function to handle like button click
+    function handleCommentLike(commentId, likesCount) {
+        // Check if fetch operation is already in progress
+        if (isFetchInProgress) {
+            return; // Do nothing if fetch operation is in progress
+        }
+
+        // Set flag to indicate fetch operation is in progress
+        isFetchInProgress = true;
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/like_comment/'+ commentId, {
+            method: 'POST'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Update the like count
+            var likeBtn = $("#comment-" + commentId + "-like-btn");
+            var likesCountDiv = $("#comment-" + commentId + "-likes-count");  // Fixed the selector here
+            var commentCaptionDiv = $("#comment-" + commentId + "-caption");    // This is needed to add the likesCountDiv if it's not existed
+
+            if (data['is_liker']){
+                // Update UI for unlike
+                likeBtn.removeClass("blue-comment-like-btn");
+
+                // Check if the likes count div exists and decrement the count
+                if (likesCount === 1) {
+                    likesCountDiv.remove(); // Remove the likes count div
+                    likeBtn.data("comment-likes-count", 0);  // Update data-comment-likes-count
+                } else if (likesCount > 0) {
+                    likesCountDiv.html('<i class="fa-solid fa-heart"></i> ' + (likesCount - 1));
+                    likeBtn.data("comment-likes-count", likesCount - 1);  // Update data-comment-likes-count
+                }
+            } else{
+                // Update UI for like
+                likeBtn.addClass("blue-comment-like-btn");
+
+                // Check if the likes count div exists and increment the count
+                if (likesCount === 0) {
+                    // Create the likes count div
+                    commentCaptionDiv.parent().after('<div class="comment-likes-count" id="comment-' + commentId + '-likes-count"><i class="fa-solid fa-heart"></i> 1</div>');
+                    likeBtn.data("comment-likes-count", 1);  // Update data-comment-likes-count
+                } else {
+                    likesCountDiv.html('<i class="fa-solid fa-heart"></i> ' + (likesCount + 1));
+                    likeBtn.data("comment-likes-count", likesCount + 1);  // Update data-comment-likes-count
+                }
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+        .finally(() => {
+            // Reset flag to indicate fetch operation is completed
+            isFetchInProgress = false;
+        });
+    }
+
+    // Like button click event
+    $(document).on('click', 'button.comment-like-btn', function () {
+        var commentId = $(this).attr('id').split('-')[1];
+        var likesCount = $(this).data("comment-likes-count");
+        handleCommentLike(commentId, likesCount);
+    });
+</script>
+
+
+<!-- This script is to handle the like button of replies. -->
+<script>
+    // Flag variable to track if fetch operation is in progress
+    var isFetchInProgress = false;
+
+    // Function to handle like button click
+    function handleReplyLike(replyId, likesCount) {
+        // Check if fetch operation is already in progress
+        if (isFetchInProgress) {
+            return; // Do nothing if fetch operation is in progress
+        }
+
+        // Set flag to indicate fetch operation is in progress
+        isFetchInProgress = true;
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/like_reply/'+ replyId, {
+            method: 'POST'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Update the like count
+            var likeBtn = $("#reply-" + replyId + "-like-btn");
+            var likesCountDiv = $("#reply-" + replyId + "-likes-count");  // Fixed the selector here
+            var replyCaptionDiv = $("#reply-" + replyId + "-caption");    // This is needed to add the likesCountDiv if it's not existed
+            if (data['is_liker']){
+                // Update UI for unlike
+                likeBtn.removeClass("blue-reply-like-btn");
+
+                // Check if the likes count div exists and decrement the count
+                if (likesCount === 1) {
+                    likesCountDiv.remove(); // Remove the likes count div
+                    likeBtn.data("reply-likes-count", 0);  // Update data-reply-likes-count
+                } else if (likesCount > 0) {
+                    likesCountDiv.html('<i class="fa-solid fa-heart"></i> ' + (likesCount - 1));
+                    likeBtn.data("reply-likes-count", likesCount - 1);  // Update data-reply-likes-count
+                }
+            } else {
+                // Update UI for like
+                likeBtn.addClass("blue-reply-like-btn");
+
+                // Check if the likes count div exists and increment the count
+                if (likesCount === 0) {
+                    // Create the likes count div
+                    replyCaptionDiv.parent().after('<div class="reply-likes-count" id="reply-' + replyId + '-likes-count"><i class="fa-solid fa-heart"></i> 1</div>');
+                    likeBtn.data("reply-likes-count", 1);  // Update data-reply-likes-count
+                } else {
+                    likesCountDiv.html('<i class="fa-solid fa-heart"></i> ' + (likesCount + 1));
+                    likeBtn.data("reply-likes-count", likesCount + 1);  // Update data-reply-likes-count
+                }
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+        .finally(() => {
+            // Reset flag to indicate fetch operation is completed
+            isFetchInProgress = false;
+        });
+    }
+
+    // Like button click event
+    $(document).on('click', 'button.reply-like-btn', function () {
+        var replyId = $(this).attr('id').split('-')[1];
+        var likesCount = $(this).data("reply-likes-count");
+        handleReplyLike(replyId, likesCount);
+    });
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to add validations to the comment/reply form. -->
+<script>
+    function addFormValidations(formType) {
+        const formTextarea = document.querySelector(`.${formType}-form-caption`);
+
+        // Add an event listener to the textarea
+        formTextarea.addEventListener('input', function () {
+            handleInputChange(formType);
+        });
+
+        // Trigger initial check
+        handleInputChange(formType);
+    };
+
+    // Function to handle input changes
+    function handleInputChange(formType) {
+        // Get references to the elements
+        const formTextarea = document.querySelector(`.${formType}-form-caption`);
+        const submitButton = document.getElementById(`${formType}-form-btn`);
+        let selectedFiles = (formType === 'reply') ? replyFormSelectedFiles : commentFormSelectedFiles;
+
+        // Check if the textarea is not empty or if there are selected media files
+        if (formTextarea.value.trim() !== '' || selectedFiles.length !== 0) {
+            submitButton.removeAttribute('disabled');
+            submitButton.classList.remove(`disabled-${formType}-form-submit-button`);
+            submitButton.classList.add(`${formType}-form-submit-button`);
+        } else {
+            submitButton.setAttribute('disabled', 'disabled');
+            submitButton.classList.remove(`${formType}-form-submit-button`);
+            submitButton.classList.add(`disabled-${formType}-form-submit-button`);
+        }
+    }
+</script>
+
+
+<!-- This script is to add validations to the update post/comment/reply form. -->
+<script>
+    function addUpdateFormValidations(formType) {
+        const formTextarea = document.querySelector(`.update-${formType}-form-caption`);
+        // Add an event listener to the textarea
+        formTextarea.addEventListener('input', function () {
+            handleUpdateInputChange(formType);
+        });
+
+        // Trigger initial check
+        handleUpdateInputChange(formType);
+    };
+
+    // Function to handle input changes
+    function handleUpdateInputChange(formType) {
+        // Get references to the elements
+        const formTextarea = document.querySelector(`.update-${formType}-form-caption`);
+        const submitButton = document.getElementById(`update-${formType}-form-btn`);
+        const updateFormMediaContainer = document.getElementById(`update-${formType}-form-media-container`);
+
+        let addedNewMediaFiles;
+        let removedOldMediFiles;
+        if (formType === 'post') {
+            addedNewMediaFiles = updatePostFormSelectedFiles
+            removedOldMediFiles = postRemovedOldMedia
+        }
+        else if (formType === 'comment') {
+            addedNewMediaFiles = updateCommentFormSelectedFiles
+            removedOldMediFiles = commentRemovedOldMedia
+        }
+        else if (formType === 'reply') {
+            addedNewMediaFiles = updateReplyFormSelectedFiles
+            removedOldMediFiles = replyRemovedOldMedia
+        }
+
+        // Check if the textarea is not empty or if there are selected media files
+        if (formTextarea.value.trim() !== '' || updateFormMediaContainer.children.length > 0) {
+            submitButton.removeAttribute('disabled');
+            submitButton.classList.remove(`disabled-${formType}-form-submit-button`);
+            submitButton.classList.add(`${formType}-form-submit-button`);
+        } else {
+            submitButton.setAttribute('disabled', 'disabled');
+            submitButton.classList.remove(`${formType}-form-submit-button`);
+            submitButton.classList.add(`disabled-${formType}-form-submit-button`);
+        }
+    }
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to view the reply form. -->
+<script>
+    // Function to handle click on "View all replies" button
+    function viewReplyForm(commentId) {
+        // Empty the array where uploaded media files of reply form stored.
+        replyFormSelectedFiles.length = 0;
+        // Get the container to append replies
+        var repliesContainer = $("#comment-" + commentId + "-replies-container");
+
+        // Check if the repliesContainer contains a div with an id "reply-form-unique-identifier"
+        if (repliesContainer.find("#reply-form-unique-identifier").length > 0) {
+            // If the div already exists, do nothing
+            return;
+        } else {
+            // If the div doesn't exist, remove any existing div with the same id
+            $("#reply-form-unique-identifier").remove();
+        }
+
+        // Get the <a> tag inside an element with class "sticky-comment-form-container"
+        var userLink = $('.sticky-comment-form-container').find('a');
+
+        var replyHtml = `
+            <div class="d-flex align-items-start py-1" id="reply-form-unique-identifier">
+                ${userLink[0].outerHTML}
+                <div class="reply-content-box d-flex flex-column w-100">
+                    <form id="makeReplyForm" onsubmit="submitReplyForm(event)" action="/dashboard/add_new_reply" method="post" enctype="multipart/form-data" class="d-flex flex-column reply-form">
+                        <textarea class="reply-form-caption height-auto-adjuster" placeholder="Write your reply here" name="reply_form_caption" autofocus></textarea>
+                        <input type="hidden" name="comment_id_of_reply" value="${commentId}">
+                        <div class="wrapper">
+                            <div class="file-upload reply-form-media-upload">
+                                <input type="file" id="photoInput" name="reply-form-media" accept="image/apng, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/webp, image/svg+xml, video/mp4, video/webm, video/ogg" onchange="previewReplyMedia(event)"/>
+                                <i class="fa fa-image"></i>
+                            </div>
+                            <button type="submit" id="reply-form-btn" class="disabled-reply-form-submit-button" disabled>
+                                <img
+                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pV
+                                UAAAACXBIWXMAAAsTAAALEwEAmpwYAAADNklEQVR4nO2dv24TQRDGByEKJCrogIiegieg5
+                                BVcEmXXKAUNJU+AxCtQQpmWkhZRJcK7MYjCNZLLCCGLAh1ywHZsBfCfu/lmdr+fNFUKbud
+                                j53w/by4ihBBCCCGEVMDB6R76EshFQvopMb2VkB+JNFeWfkYAxNzMK+QvEtMzeTq8gbgUs
+                                hrIvNKZxPxKwvA+m2QikNmOmY6z/E76uSe9o6vq11Yl/wpkedeMJObn8vjzLfQll83agcy
+                                DmUhIb6SfH6AvvUw2DmTpQ8CxhMG+HB5fQy+jHHYJZHGv+Sohv5T9j3fQy/FPG4EsxtkPC
+                                fno9zMNMRDI6jjLh9L7cH3LK6uUrgJZ1Ph8nMVP99BL9UH3gczuM1Q0pgJZHmdUNKYCmRc
+                                VjbFALo4zKho7gVymaPrDm1Il8AD+GsykTkUDb/w6Iy1XpGjQzd4omFSBokE3eatKBSsae
+                                HN33TW5MEWDbmh7NS5D0eAb2fKOSc4VDbqBnYaTHSoadNNUKjk6RQNvluaOSQ4UDbpJuF0
+                                zsqlo4I1BVzKmaOANMVTBgqJBN8FiBaSiQS/edCWAooEv2kkFLUUz/aQR8+s//+B3+MKjC
+                                0XzQp6ku90GMw/o5Pb5Fp0+4Z4/TKX3EtI3A41oTBVc0TCoxoeiYVCND0VTc1DBg6KpNqh
+                                kVNFI7UElY4pmW2KBQZlQNG0TCwiqjlM0Jw6DmimawUMpjshA2PhY08iKHv/Hl3BTL7Hx0
+                                cPH3uIbn40+GFbX+GxEndTc+IiUi2x8g9HvbHyD/YKKX+E2tr7Chc9dJxX0DjngF2u2Eo8
+                                BSaxdaaAXb6mCBaWBbgK8kjGlUW8QIxtKYxV4YxQreDgNUsduOLN7XmqVondENnSicF2KC
+                                yHx16KN1JgvDsCH0PDVGiYq8eUz+BCy01Mam+JmLA2Mn9JoC7tjaWJLaWhhL4iRTaWhBTw
+                                AL0pDC+xucKQ0tIDsCI9KQwvVseT5TW9adB9GIUpDi+7GUmFvC9Wi3Zt0wUpDi3buDxUoD
+                                S12Hku1KA0tNh9LlSoNLdYPgn96VYX/PjtQaehy+W6g0oCxfJOm0oBDpWGMg9M99CUQQgg
+                                hhBBCpCZ+AVvGd6WEjTCVAAAAAElFTkSuQmCC"/>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="replyFormMediaPreview" class="d-flex flex-wrap" style="display: block;"></div>
+                </div>
+            </div>
+        `;
+
+        // Append the generated HTML to the container
+        repliesContainer.append(replyHtml);
+        addFormValidations("reply")
+    }
+
+    // Click event for "View reply form" button
+    $(document).on('click', 'button.comment-reply-btn', function () {
+        var commentId = $(this).attr('id').split('-')[1];
+        viewReplyForm(commentId);
+    });
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to delete a post. -->
+<script>
+    // Use event delegation for dynamically added buttons
+    $(document).on('click', '.post-delete-btn', function () {
+        // Get the post_id from the data attribute
+        var postId = $(this).data('post-id');
+
+        // Make a fetch request to the server
+        fetch('/dashboard/' + postId + '/delete_post', {
+            method: 'DELETE'
+        })
+        .then(response => {
+            // The reponse is always a redirect either to "/dashboard"
+            // it if it's a success or to "/signout" if it's a fail.
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+</script>
+
+
+<!-- This script is to delete a comment. -->
+<script>
+    // Use event delegation for dynamically added buttons
+    $(document).on('click', '.comment-delete-btn', function () {
+        // Get the comment_id from the data attribute
+        var commentId = $(this).data('comment-id');
+
+        // Make a fetch request to the server
+        fetch('/dashboard/' + commentId + '/delete_comment', {
+            method: 'DELETE'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                // Redirect to the specified location
+                window.location.href = response.url;
+            } else {
+                // If the response is successful, remove the comment from the DOM
+                $('#comment-' + commentId).remove();
+            }
+        })
+        .catch(error => {
+            // Handle fetch error
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+</script>
+
+
+<!-- This script is to delete a reply. -->
+<script>
+    // Use event delegation for dynamically added buttons
+    $(document).on('click', '.reply-delete-btn', function () {
+        // Get the reply_id from the data attribute
+        var replyId = $(this).data('reply-id');
+
+        // Make a fetch request to the server
+        fetch('/dashboard/' + replyId + '/delete_reply', {
+            method: 'DELETE'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                // Redirect to the specified location
+                window.location.href = response.url;
+            } else {
+                // Response is successful, remove the reply from the DOM
+                document.getElementById('reply-' + replyId).remove();
+            }
+        })
+        .catch(error => {
+            // Handle fetch error
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+</script>
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is for the lightGallery for the media on the page. -->
+<script>
+    let mediaLightGallery;
+    function initializeGallery(elementType, elementIdNumber = undefined) {
+        // If elementIdNumber is passed then it's to make a light gallery for a post/comment/reply media.
+        var elementHtmlId;
+        var container;
+        if (elementIdNumber) {
+            // Construct the ID of the element
+            elementHtmlId = elementType + '-' + elementIdNumber + '-media-container';
+            // Get the element by ID
+            container = document.getElementById(elementHtmlId);
+        }
+        // If elementIdNumber is NOT passed then it's to make a light gallery for a UPDATE post/comment/reply form media.
+        else {
+            elementHtmlId = 'update-' + elementType + '-form-media-container';
+            container = document.getElementById(elementHtmlId);
+        }
+        // Check if the element exists
+        if (container) {
+            // Initialize lightGallery for the specified element
+            mediaLightGallery = lightGallery(container, {
+                selector: 'img, a',
+                plugins: [lgVideo, lgRotate],
+            });
+
+            // console.log("Gallery initialized for " + elementType + " with ID: " + elementIdNumber);
+        } else {
+            // console.error("Element with type: " + elementType + " and ID " + elementIdNumber + " not found.");
+        }
+    }
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to add the update post form, and hide the other elements. -->
+<script>
+    let postRemovedOldMedia = [];
+    let updatePostFormSelectedFiles = [];
+    $(document).on('click', '.post-update-btn', function () {
+        // Empty the required lists for storing the media of the updated post.
+        postRemovedOldMedia = [];
+        updatePostFormSelectedFiles = [];
+
+        // Get the post_id from the data attribute of the clicked button.
+        var postId = $(this).data('post-id');
+
+        // Get the post container based on the clicked button
+        var postContainer = $(this).closest('.post-box');
+
+        // Check if the form is not already present
+        if (!postContainer.find('.update-post-from').length) {
+
+            // Find the closest ancestor with class post-dropdown
+            var postDropdown = $(this).closest('.post-dropdown');
+
+            // Hide elements with specified classes
+            postContainer.find('.post-caption, .post-media-container, .post-comment-like-counter-container, .post-comment-like-buttons-container, .comments-container').hide();
+
+            // Find all descendants of post-media-container that are <a> or <img>
+            var postMediaSiblings = postContainer.find('.post-media-container *').filter('a, img');
+
+            // Get the HTML of all matching elements with added structure
+            var siblingsHTML = postMediaSiblings.map(function () {
+                var elementHTML;
+                var srcAttribute;
+
+                if ($(this).is('img')) {
+                    // For img elements
+                    srcAttribute = $(this).attr('src');
+                    elementHTML = `
+                        <div class="uploaded-media-container">
+                            ${$(this).clone().removeClass('post-media hidden-media-temp').addClass('uploaded-media').prop('outerHTML')}
+                            <i class="remove-media-x-btn update-post-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
+                        </div>
+                    `;
+
+                } else if ($(this).is('a')) {
+                    // For a elements
+                    srcAttribute = $(this).find('video').attr('src');
+                    elementHTML = `
+                        <div class="uploaded-media-container">
+                            ${$(this).clone().removeClass('post-media hidden-media-temp').addClass('uploaded-media').prop('outerHTML')}
+                            <i class="fa fa-play-circle" aria-hidden="true"></i>
+                            <i class="remove-media-x-btn update-post-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
+                            </div>
+                    `;
+                }
+
+                return elementHTML;
+            }).get().join('');
+
+            // Get the caption of the post to place it in the update textarea to update it.
+            var captionContent = $(`#post-${postId}-caption`).text().trim();
+
+            // Insert the HTML into the update-post-form-media-container div
+            $('#update-post-form-media-container').html(siblingsHTML);
+
+            // Insert the form before the post-caption
+            var formHtml = `
+                <form id="updatePostForm" onsubmit="submitUpdatePostForm(event, ${postId})" action="/dashboard/update_post" method="post" enctype="multipart/form-data" class="update-post-from p-3 mb-3">
+                    <textarea class="update-post-form-caption height-auto-adjuster" placeholder="Write your post here" name="update_post_form_caption">${captionContent}</textarea>
+                    <div id="update-post-form-media-container" class="d-flex flex-wrap">
+                        ${siblingsHTML}
+                    </div>
+                    <div class="wrapper">
+                        <div class="file-upload">
+                            <input type="file" id="photoInput" name="images[]" multiple accept="image/apng, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/webp, image/svg+xml, video/mp4, video/webm, video/ogg"  onchange="previewUpdatePostMedia(event)"/>
+                            <i class="fa fa-image"></i>
+                        </div>
+                        <button disabled id="update-post-form-btn" class="btn btn-primary post-button" type="submit">Update</button>
+                    </div>
+                </form>
+            `;
+
+            // Add the form with it's media to the DOM.
+            postContainer.find('.post-caption').before(formHtml);
+            // Add the required validation to the inputs of the form.
+            addUpdateFormValidations('post');
+
+            // Hide the closest ancestor with class post-dropdown
+            postDropdown.hide();
+
+            // Add a button to close & discard the post change form.
+            postDropdown.after('<button class="post-cancel-update-btn"><i class="fa-regular fa-x fa-fw"></i></button>');
+
+            // Make a gallery for the reviewed media.
+            initializeGallery('post')
+
+            // Event listener for the cancel update button created above.
+            $(document).on('click', '.post-cancel-update-btn', function () {
+                // Get the post container
+                // var postContainer = $(this).closest('.post-box');
+
+                // Show the previously hidden elements
+                postContainer.find('.post-caption, .post-media-container, .post-comment-like-counter-container, .post-comment-like-buttons-container, .comments-container').show();
+
+                // Remove the dynamically created form
+                postContainer.find('.update-post-from').remove();
+
+                // Remove the cancel update button
+                $(this).remove();
+
+                // Unhide the post-dropdown
+                postContainer.find('.post-dropdown').show();
+            });
+        }
+    });
+
+    // Event listener for dynamically created elements to make the x icon work on the chosen post's media.
+    $(document).on('click', '.update-post-form-media-x-btn', function () {
+        removeMediaFromUpdatePostForm(this);
+    });
+
+    // Function to handle the deleteion of any media of the update post form.
+    function removeMediaFromUpdatePostForm(removeButton, fileData = null) {
+        // Check if the clicked element has a data attribute 'src' which means it's old (original) media for the post that will be
+        if ($(removeButton).data('src')) {
+            var removedMediaPath = $(removeButton).data('src');
+            // Add the data-src of the removed container to the global list postRemovedOldMedia.
+            postRemovedOldMedia.push(removedMediaPath);
+        } else {
+            // If it doesn't have the attribute data-src, then it's a dynamically created element(new added media) that will be removed.
+            const { file, container } = fileData;
+            var previewContainer = document.getElementById('update-post-form-media-container');
+            const index = updatePostFormSelectedFiles.findIndex(item => item.file === file);
+            if (index !== -1) {
+                previewContainer.removeChild(container);
+                updatePostFormSelectedFiles.splice(index, 1);
+            }
+        }
+        var mediaContainer = $(removeButton).closest('.uploaded-media-container');
+        mediaContainer.remove();
+        handleUpdateInputChange("post");
+
+        // Refresh the gallery for the reviewed media.
+        mediaLightGallery.refresh();
+    }
+</script>
+
+
+<!-- This script is to add new media to the chosen post to update and preview them. -->
+<script>
+    function previewUpdatePostMedia(event) {
+        let previewContainer = document.getElementById('update-post-form-media-container');
+
+        const files = event.target.files;
+        let invalidTypeFiles = [];
+        let invalidSizeFiles = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            let isFileValid = true
+
+            // Validate the file type
+            if (!isValidFileType(file)) {
+                invalidTypeFiles.push(file.name);
+                isFileValid = false
+            }
+            // Validate the file type
+            if (!isValidFileSize(file)) {
+                invalidSizeFiles.push(file.name);
+                isFileValid = false
+            }
+
+            if(isFileValid){
+                reader.onload = function (e) {
+                    const previewMediaContainer = document.createElement('div');
+                    previewMediaContainer.classList.add('uploaded-media-container');
+
+                    // Add file to the selected files array
+                    const fileData = { file, container: previewMediaContainer };
+                    updatePostFormSelectedFiles.push(fileData);
+
+                    if (file.type.startsWith('image')) {
+                        const image = document.createElement('img');
+                        image.src = e.target.result;
+                        image.alt = file.name;
+                        image.classList.add('uploaded-media');
+                        previewMediaContainer.appendChild(image);
+                    } else if (file.type.startsWith('video')) {
+                        const videoContainer = document.createElement('a');
+                        videoContainer.classList.add('one-media-temp', 'uploaded-media');
+                        videoContainer.setAttribute('data-lg-size', '1280-720');
+                        videoContainer.setAttribute('data-video', '{"source": [{"src":"' + e.target.result + '", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}');
+
+                        const video = document.createElement('video');
+                        video.autoplay = false;
+                        video.controls = true;
+                        video.muted = true;
+                        video.src = e.target.result;
+
+                        videoContainer.appendChild(video);
+                        previewMediaContainer.appendChild(videoContainer);
+
+                        const playIcon = document.createElement('i');
+                        playIcon.classList.add('fa', 'fa-play-circle');
+                        playIcon.setAttribute('aria-hidden', 'true');
+                        previewMediaContainer.appendChild(playIcon);
+                    }
+
+                    const removeButton = document.createElement('i');
+                    removeButton.classList.add('remove-media-x-btn', 'fas', 'fa-circle-xmark');
+
+                    // Event listener for removing the specific file and its container.
+                    removeButton.addEventListener('click', function () {
+                        removeMediaFromUpdatePostForm(removeButton, fileData);
+                    });
+
+                    previewMediaContainer.appendChild(removeButton);
+                    previewContainer.appendChild(previewMediaContainer);
+
+                    // Refresh the validations on the update post form submit button.
+                    handleUpdateInputChange("post");
+
+                    // Refresh the gallery for the reviewed media.
+                    mediaLightGallery.refresh();
+                };
+            }
+
+            reader.readAsDataURL(file);
+            }
+
+        // Display popup message for invalid files
+        displayUploadFilesError(invalidTypeFiles, invalidSizeFiles);
+    }
+</script>
+
+
+<!-- Function to be called when the update post form is submitted -->
+<script>
+    function submitUpdatePostForm(event, post_id) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Access the form element
+        const form = document.getElementById('updatePostForm');
+
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append the value of update_post_form_caption to the FormData object
+        const updatePostFormCaptionInput = form.querySelector('textarea[name="update_post_form_caption"]');
+        if (updatePostFormCaptionInput) {
+            formData.append('update_post_form_caption', updatePostFormCaptionInput.value.trim());
+        }
+
+        // Append the value of post_id to the FormData object
+        if (post_id) {
+            formData.append('updated_post_id', post_id);
+        }
+
+        // Append the removed old media files to the FormData object
+        for (let i = 0; i < postRemovedOldMedia.length; i++) {
+            formData.append('deleted_images[]', postRemovedOldMedia[i]);
+        }
+
+        // Append the added new media files to the FormData object
+        for (let i = 0; i < updatePostFormSelectedFiles.length; i++) {
+            formData.append('added_images[]', updatePostFormSelectedFiles[i]['file']);
+        }
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/update_post', {
+            method: 'POST',
+            body: formData,  // Assuming formData is defined earlier
+        })
+        .then(response => {
+            // The reponse is always a redirect either to the same page to refresh 
+            // it if it's a success or to "/signout" if it's a fail.
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to add the update comment form, and hide the other elements of the selected comment. -->
+<script>
+    let commentRemovedOldMedia = [];
+    let updateCommentFormSelectedFiles = [];
+    let chosenCommentIdToUpdate;
+    $(document).on('click', '.comment-update-btn', function () {
+        // Empty the required lists for storing the media of the updated comment.
+        commentRemovedOldMedia = [];
+        updateCommentFormSelectedFiles = [];
+
+        // Get the comment_id from the data attribute of the clicked button.
+        var commentId = $(this).data('comment-id');
+
+        // Get the comment container based on the clicked button.
+        var commentContainer = $(this).closest('.comment-content-box');
+
+        // Check if the form is already present in the whole DOM.(This check is to ensure there will be one update comment form at a time)
+        if ($('#updateCommentForm').length) {
+            // Delete the form and unhide the elements inside the comment-content-box.
+            $('#updateCommentForm').remove();
+            $(`#comment-${chosenCommentIdToUpdate} .comment-content-box`).children().show();
+        }
+
+        // Save the ID of the selected comment, in case the user want to discard this form and update another comment, it will be used in the check above.
+        chosenCommentIdToUpdate = commentId
+
+        // Find all descendants of comment-commentId-media-container that are <a> or <img>
+        var commentMediaElements = commentContainer.find('#comment-' + commentId + '-media-container *').filter('a, img');
+
+        // Get the HTML of all matching elements with added structure
+        var mediaHTML = commentMediaElements.map(function () {
+            var elementHTML;
+            var srcAttribute;
+
+            if ($(this).is('img')) {
+                // For img elements
+                srcAttribute = $(this).attr('src');
+                elementHTML = `
+                    <div class="uploaded-media-container">
+                        ${$(this).clone().removeClass('comment-media').addClass('uploaded-media').prop('outerHTML')}
+                        <i class="remove-media-x-btn update-comment-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
+                    </div>
+                `;
+
+            } else if ($(this).is('a')) {
+                // For a elements
+                let videoElement = $(this).find('video');
+                // Remove comment-media class and add uploaded-media class to the video tag
+                videoElement.removeClass('comment-media').addClass('uploaded-media');
+                srcAttribute = $(this).find('video').attr('src');
+                elementHTML = `
+                    <div class="uploaded-media-container">
+                        ${$(this).clone().removeClass('comment-media').addClass("").prop('outerHTML')}
+                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                        <i class="remove-media-x-btn update-comment-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
+                    </div>
+                `;
+            }
+
+            return elementHTML;
+        }).get().join('');
+
+        // Get the caption of the comment to place it in the update textarea to update it.
+        var captionContent = $(`#comment-${commentId}-caption`).text().trim();
+
+        // Insert the form before the comment-caption
+        var formHtml = `
+            <form id="updateCommentForm" onsubmit="submitUpdateCommentForm(event, ${commentId})" action="/dashboard/update_comment" method="post" enctype="multipart/form-data" class="d-flex flex-column comment-form">
+                <div class="d-flex justify-content-between">
+                    <textarea class="update-comment-form-caption height-auto-adjuster" placeholder="Write your comment here" name="update_comment_form_caption">${captionContent}</textarea>
+                    <button type="button" class="comment-cancel-update-btn"><i class="fa-regular fa-x fa-fw"></i></button>
+                </div>
+                <div class="wrapper">
+                    <div class="file-upload comment-form-media-upload">
+                        <input type="file" id="photoInput" name="images[]" accept="image/apng, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/webp, image/svg+xml, video/mp4, video/webm, video/ogg" onchange="previewUpdateCommentMedia(event)"/>
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <button type="submit" id="update-comment-form-btn" class="disabled-comment-form-submit-button" disabled>
+                        <img
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pV
+                        UAAAACXBIWXMAAAsTAAALEwEAmpwYAAADNklEQVR4nO2dv24TQRDGByEKJCrogIiegieg5
+                        BVcEmXXKAUNJU+AxCtQQpmWkhZRJcK7MYjCNZLLCCGLAh1ywHZsBfCfu/lmdr+fNFUKbud
+                        j53w/by4ihBBCCCGEVMDB6R76EshFQvopMb2VkB+JNFeWfkYAxNzMK+QvEtMzeTq8gbgUs
+                        hrIvNKZxPxKwvA+m2QikNmOmY6z/E76uSe9o6vq11Yl/wpkedeMJObn8vjzLfQll83agcy
+                        DmUhIb6SfH6AvvUw2DmTpQ8CxhMG+HB5fQy+jHHYJZHGv+Sohv5T9j3fQy/FPG4EsxtkPC
+                        fno9zMNMRDI6jjLh9L7cH3LK6uUrgJZ1Ph8nMVP99BL9UH3gczuM1Q0pgJZHmdUNKYCmRc
+                        VjbFALo4zKho7gVymaPrDm1Il8AD+GsykTkUDb/w6Iy1XpGjQzd4omFSBokE3eatKBSsae
+                        HN33TW5MEWDbmh7NS5D0eAb2fKOSc4VDbqBnYaTHSoadNNUKjk6RQNvluaOSQ4UDbpJuF0
+                        zsqlo4I1BVzKmaOANMVTBgqJBN8FiBaSiQS/edCWAooEv2kkFLUUz/aQR8+s//+B3+MKjC
+                        0XzQp6ku90GMw/o5Pb5Fp0+4Z4/TKX3EtI3A41oTBVc0TCoxoeiYVCND0VTc1DBg6KpNqh
+                        kVNFI7UElY4pmW2KBQZlQNG0TCwiqjlM0Jw6DmimawUMpjshA2PhY08iKHv/Hl3BTL7Hx0
+                        cPH3uIbn40+GFbX+GxEndTc+IiUi2x8g9HvbHyD/YKKX+E2tr7Chc9dJxX0DjngF2u2Eo8
+                        BSaxdaaAXb6mCBaWBbgK8kjGlUW8QIxtKYxV4YxQreDgNUsduOLN7XmqVondENnSicF2KC
+                        yHx16KN1JgvDsCH0PDVGiYq8eUz+BCy01Mam+JmLA2Mn9JoC7tjaWJLaWhhL4iRTaWhBTw
+                        AL0pDC+xucKQ0tIDsCI9KQwvVseT5TW9adB9GIUpDi+7GUmFvC9Wi3Zt0wUpDi3buDxUoD
+                        S12Hku1KA0tNh9LlSoNLdYPgn96VYX/PjtQaehy+W6g0oCxfJOm0oBDpWGMg9M99CUQQgg
+                        hhBBCpCZ+AVvGd6WEjTCVAAAAAElFTkSuQmCC"/>
+                    </button>
+                </div>
+            </form>
+            <div id="update-comment-form-media-container" class="d-flex flex-wrap" style="display: block;">
+                ${mediaHTML}
+            </div>
+        `;
+
+        // Hide all childs of commentContainer.
+        commentContainer.children().hide();
+
+        // Add the form with it's media to the DOM.
+        commentContainer.append(formHtml);
+
+        // Add the required validation to the inputs of the form.
+        addUpdateFormValidations('comment');
+
+        // Make a gallery for the reviewed media.
+        initializeGallery('comment')
+
+        // Event listener for the cancel update button created above.
+        $(document).on('click', '.comment-cancel-update-btn', function () {
+            $('#updateCommentForm').remove();
+            $('#update-comment-form-media-container').remove();
+            $(`#comment-${chosenCommentIdToUpdate} .comment-content-box`).children().show();
+            $('.comment-form-caption').remove();
+        });
+
+    });
+
+
+    // Event listener for dynamically created elements to make the x icon work on the chosen comment's media.
+    $(document).on('click', '.update-comment-form-media-x-btn', function () {
+        removeMediaFromUpdateCommentForm(this);
+    });
+
+    // Function to handle the deleteion of any media of the update comment form.
+    function removeMediaFromUpdateCommentForm(removeButton, fileData = null) {
+        // Check if the clicked element has a data attribute 'src' which means it's old (original) media for the comment that will be.
+        if ($(removeButton).data('src')) {
+            var removedMediaPath = $(removeButton).data('src');
+            // Add the data-src of the removed container to the global list commemtRemovedOldMedia.
+            commentRemovedOldMedia.push(removedMediaPath);
+        } else {
+            // If it doesn't have the attribute data-src, then it's a dynamically created element(new added media) that will be removed.
+            const { file, container } = fileData;
+            var previewContainer = document.getElementById('update-comment-form-media-container');
+            const index = updateCommentFormSelectedFiles.findIndex(item => item.file === file);
+            if (index !== -1) {
+                previewContainer.removeChild(container);
+                updateCommentFormSelectedFiles.splice(index, 1);
+            }
+        }
+        var mediaContainer = $(removeButton).closest('.uploaded-media-container');
+        mediaContainer.remove();
+        handleUpdateInputChange("comment");
+
+        // Refresh the gallery for the reviewed media.
+        mediaLightGallery.refresh();
+    }
+</script>
+
+
+<!-- This script is to add new media to the chosen comment to update and preview them. -->
+<script>
+    function previewUpdateCommentMedia(event) {
+        let previewContainer = document.getElementById('update-comment-form-media-container');
+        updateCommentFormSelectedFiles.length = 0;
+        previewContainer.innerHTML = '';
+
+        const file = event.target.files[0]
+        const reader = new FileReader();
+        let invalidTypeFiles = [];
+        let invalidSizeFiles = [];
+        let isFileValid = true
+
+        // Validate the file type
+        if (!isValidFileType(file)) {
+            invalidTypeFiles.push(file.name);
+            isFileValid = false
+        }
+        // Validate the file type
+        if (!isValidFileSize(file)) {
+            invalidSizeFiles.push(file.name);
+            isFileValid = false
+        }
+
+        if(isFileValid){
+            reader.onload = function (e) {
+                const previewMediaContainer = document.createElement('div');
+                previewMediaContainer.classList.add('uploaded-media-container');
+
+                // Add file to the selected files array
+                const fileData = { file, container: previewMediaContainer };
+                updateCommentFormSelectedFiles.push(fileData);
+
+                if (file.type.startsWith('image')) {
+                    const image = document.createElement('img');
+                    image.src = e.target.result;
+                    image.alt = file.name;
+                    image.classList.add('uploaded-media');
+                    previewMediaContainer.appendChild(image);
+                } else if (file.type.startsWith('video')) {
+                    const videoContainer = document.createElement('a');
+                    videoContainer.classList.add('one-media-temp', 'uploaded-media');
+                    videoContainer.setAttribute('data-lg-size', '1280-720');
+                    videoContainer.setAttribute('data-video', '{"source": [{"src":"' + e.target.result + '", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}');
+
+                    const video = document.createElement('video');
+                    video.autoplay = false;
+                    video.controls = true;
+                    video.muted = true;
+                    video.src = e.target.result;
+
+                    videoContainer.appendChild(video);
+                    previewMediaContainer.appendChild(videoContainer);
+
+                    const playIcon = document.createElement('i');
+                    playIcon.classList.add('fa', 'fa-play-circle');
+                    playIcon.setAttribute('aria-hidden', 'true');
+                    previewMediaContainer.appendChild(playIcon);
+                }
+
+                const removeButton = document.createElement('i');
+                removeButton.classList.add('remove-media-x-btn', 'fas', 'fa-circle-xmark');
+
+                // Event listener for removing the specific file and its container.
+                removeButton.addEventListener('click', function () {
+                    removeMediaFromUpdateCommentForm(removeButton, fileData);
+                });
+
+                previewMediaContainer.appendChild(removeButton);
+                previewContainer.appendChild(previewMediaContainer);
+
+                // Refresh the validations on the update comment form submit button.
+                handleUpdateInputChange("comment");
+
+                // Refresh the gallery for the reviewed media.
+                mediaLightGallery.refresh();
+            };
+        }
+        reader.readAsDataURL(file);
+
+        // Display popup message for invalid files
+        displayUploadFilesError(invalidTypeFiles, invalidSizeFiles);
+    }
+</script>
+
+
+<!-- Function to be called when the update comment form is submitted -->
+<script>
+    function submitUpdateCommentForm(event, commentId) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Access the form element
+        const form = document.getElementById('updateCommentForm');
+
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append the value of update__form_caption to the FormData object
+        const updateCommentFormCaptionInput = form.querySelector('textarea[name="update_comment_form_caption"]');
+        if (updateCommentFormCaptionInput) {
+            formData.append('update_comment_form_caption', updateCommentFormCaptionInput.value.trim());
+        }
+
+        // Append the value of commentId to the FormData object
+        if (commentId) {
+            formData.append('updated_comment_id', commentId);
+        }
+
+        // Append the removed old media files to the FormData object
+        for (let i = 0; i < commentRemovedOldMedia.length; i++) {
+            formData.append('deleted_images[]', commentRemovedOldMedia[i]);
+        }
+
+        // Append the added new media files to the FormData object
+        for (let i = 0; i < updateCommentFormSelectedFiles.length; i++) {
+            formData.append('added_images[]', updateCommentFormSelectedFiles[i]['file']);
+        }
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/update_comment', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                fetchComments(postId)
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!-- This script is to add the update reply form, and hide the other elements of the selected reply. -->
+<script>
+    let replyRemovedOldMedia = [];
+    let updateReplyFormSelectedFiles = [];
+    let chosenReplyIdToUpdate;
+    $(document).on('click', '.reply-update-btn', function () {
+        // Empty the required lists for storing the media of the updated reply.
+        replyRemovedOldMedia = [];
+        updateReplyFormSelectedFiles = [];
+
+        // Get the reply_id from the data attribute of the clicked button.
+        var replyId = $(this).data('reply-id');
+
+        // Get the reply container based on the clicked button.
+        var replyContainer = $(this).closest('.reply-content-box');
+
+        // Check if the form is already present in the whole DOM.(This check is to ensure there will be one update reply form at a time)
+        if ($('#updateReplyForm').length) {
+            // Delete the form and unhide the elements inside the reply-content-box.
+            $('#updateReplyForm').remove();
+            $(`#reply-${chosenReplyIdToUpdate} .reply-content-box`).children().show();
+        }
+
+        // Save the ID of the selected reply, in case the user want to discard this form and update another reply, it will be used in the check above.
+        chosenReplyIdToUpdate = replyId
+
+        // Find all descendants of reply-replyId-media-container that are <a> or <img>
+        var replyMediaElements = replyContainer.find('#reply-' + replyId + '-media-container *').filter('a, img');
+
+        // Get the HTML of all matching elements with added structure
+        var mediaHTML = replyMediaElements.map(function () {
+            var elementHTML;
+            var srcAttribute;
+
+            if ($(this).is('img')) {
+                // For img elements
+                srcAttribute = $(this).attr('src');
+                elementHTML = `
+                    <div class="uploaded-media-container">
+                        ${$(this).clone().removeClass('reply-media').addClass('uploaded-media').prop('outerHTML')}
+                        <i class="remove-media-x-btn update-reply-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
+                    </div>
+                `;
+
+            } else if ($(this).is('a')) {
+                // For a elements
+                let videoElement = $(this).find('video');
+                // Remove reply-media class and add uploaded-media class to the video tag
+                videoElement.removeClass('reply-media').addClass('uploaded-media');
+                srcAttribute = $(this).find('video').attr('src');
+                elementHTML = `
+                    <div class="uploaded-media-container">
+                        ${$(this).clone().removeClass('reply-media').addClass("").prop('outerHTML')}
+                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                        <i class="remove-media-x-btn update-reply-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
+                    </div>
+                `;
+            }
+
+            return elementHTML;
+        }).get().join('');
+
+        // Get the caption of the reply to place it in the update textarea to update it.
+        var captionContent = $(`#reply-${replyId}-caption`).text().trim();
+
+        // Insert the form before the reply-caption
+        var formHtml = `
+            <form id="updateReplyForm" onsubmit="submitUpdateReplyForm(event, ${replyId})" action="/dashboard/update_reply" method="post" enctype="multipart/form-data" class="d-flex flex-column reply-form">
+                <div class="d-flex justify-content-between">
+                    <textarea class="update-reply-form-caption height-auto-adjuster" placeholder="Write your reply here" name="update_reply_form_caption">${captionContent}</textarea>
+                    <button type="button" class="reply-cancel-update-btn"><i class="fa-regular fa-x fa-fw"></i></button>
+                </div>
+                <div class="wrapper">
+                    <div class="file-upload reply-form-media-upload">
+                        <input type="file" id="photoInput" name="images[]" accept="image/apng, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/webp, image/svg+xml, video/mp4, video/webm, video/ogg" onchange="previewUpdateReplyMedia(event)"/>
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <button type="submit" id="update-reply-form-btn" class="disabled-reply-form-submit-button" disabled>
+                        <img
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pV
+                        UAAAACXBIWXMAAAsTAAALEwEAmpwYAAADNklEQVR4nO2dv24TQRDGByEKJCrogIiegieg5
+                        BVcEmXXKAUNJU+AxCtQQpmWkhZRJcK7MYjCNZLLCCGLAh1ywHZsBfCfu/lmdr+fNFUKbud
+                        j53w/by4ihBBCCCGEVMDB6R76EshFQvopMb2VkB+JNFeWfkYAxNzMK+QvEtMzeTq8gbgUs
+                        hrIvNKZxPxKwvA+m2QikNmOmY6z/E76uSe9o6vq11Yl/wpkedeMJObn8vjzLfQll83agcy
+                        DmUhIb6SfH6AvvUw2DmTpQ8CxhMG+HB5fQy+jHHYJZHGv+Sohv5T9j3fQy/FPG4EsxtkPC
+                        fno9zMNMRDI6jjLh9L7cH3LK6uUrgJZ1Ph8nMVP99BL9UH3gczuM1Q0pgJZHmdUNKYCmRc
+                        VjbFALo4zKho7gVymaPrDm1Il8AD+GsykTkUDb/w6Iy1XpGjQzd4omFSBokE3eatKBSsae
+                        HN33TW5MEWDbmh7NS5D0eAb2fKOSc4VDbqBnYaTHSoadNNUKjk6RQNvluaOSQ4UDbpJuF0
+                        zsqlo4I1BVzKmaOANMVTBgqJBN8FiBaSiQS/edCWAooEv2kkFLUUz/aQR8+s//+B3+MKjC
+                        0XzQp6ku90GMw/o5Pb5Fp0+4Z4/TKX3EtI3A41oTBVc0TCoxoeiYVCND0VTc1DBg6KpNqh
+                        kVNFI7UElY4pmW2KBQZlQNG0TCwiqjlM0Jw6DmimawUMpjshA2PhY08iKHv/Hl3BTL7Hx0
+                        cPH3uIbn40+GFbX+GxEndTc+IiUi2x8g9HvbHyD/YKKX+E2tr7Chc9dJxX0DjngF2u2Eo8
+                        BSaxdaaAXb6mCBaWBbgK8kjGlUW8QIxtKYxV4YxQreDgNUsduOLN7XmqVondENnSicF2KC
+                        yHx16KN1JgvDsCH0PDVGiYq8eUz+BCy01Mam+JmLA2Mn9JoC7tjaWJLaWhhL4iRTaWhBTw
+                        AL0pDC+xucKQ0tIDsCI9KQwvVseT5TW9adB9GIUpDi+7GUmFvC9Wi3Zt0wUpDi3buDxUoD
+                        S12Hku1KA0tNh9LlSoNLdYPgn96VYX/PjtQaehy+W6g0oCxfJOm0oBDpWGMg9M99CUQQgg
+                        hhBBCpCZ+AVvGd6WEjTCVAAAAAElFTkSuQmCC"/>
+                    </button>
+                </div>
+            </form>
+            <div id="update-reply-form-media-container" class="d-flex flex-wrap" style="display: block;">
+                ${mediaHTML}
+            </div>
+        `;
+
+        // Hide all childs of replyContainer.
+        replyContainer.children().hide();
+
+        // Add the form with it's media to the DOM.
+        replyContainer.append(formHtml);
+
+        // Add the required validation to the inputs of the form.
+        addUpdateFormValidations('reply');
+
+        // Make a gallery for the reviewed media.
+        initializeGallery('reply')
+
+        // Event listener for the cancel update button created above.
+        $(document).on('click', '.reply-cancel-update-btn', function () {
+            $('#updateReplyForm').remove();
+            $('#update-reply-form-media-container').remove();
+            $(`#reply-${chosenReplyIdToUpdate} .reply-content-box`).children().show();
+            $('.reply-form-caption').remove();
+        });
+
+    });
+
+    // Event listener for dynamically created elements to make the x icon work on the chosen reply's media.
+    $(document).on('click', '.update-reply-form-media-x-btn', function () {
+        removeMediaFromUpdateReplyForm(this);
+    });
+
+    // Function to handle the deleteion of any media of the update reply form.
+    function removeMediaFromUpdateReplyForm(removeButton, fileData = null) {
+        // Check if the clicked element has a data attribute 'src' which means it's old (original) media for the reply that will be.
+        if ($(removeButton).data('src')) {
+            var removedMediaPath = $(removeButton).data('src');
+            // Add the data-src of the removed container to the global list replyRemovedOldMedia.
+            replyRemovedOldMedia.push(removedMediaPath);
+        } else {
+            // If it doesn't have the attribute data-src, then it's a dynamically created element(new added media) that will be removed.
+            const { file, container } = fileData;
+            var previewContainer = document.getElementById('update-reply-form-media-container');
+            const index = updateReplyFormSelectedFiles.findIndex(item => item.file === file);
+            if (index !== -1) {
+                previewContainer.removeChild(container);
+                updateReplyFormSelectedFiles.splice(index, 1);
+            }
+        }
+        var mediaContainer = $(removeButton).closest('.uploaded-media-container');
+        mediaContainer.remove();
+        handleUpdateInputChange("reply");
+
+        // Refresh the gallery for the reviewed media.
+        mediaLightGallery.refresh();
+    }
+</script>
+
+
+<!-- This script is to add new media to the chosen reply to update and preview them. -->
+<script>
+    function previewUpdateReplyMedia(event) {
+        let previewContainer = document.getElementById('update-reply-form-media-container');
+        updateReplyFormSelectedFiles.length = 0;
+        previewContainer.innerHTML = '';
+
+        const file = event.target.files[0]
+        const reader = new FileReader();
+        let invalidTypeFiles = [];
+        let invalidSizeFiles = [];
+        let isFileValid = true
+
+        // Validate the file type
+        if (!isValidFileType(file)) {
+            invalidTypeFiles.push(file.name);
+            isFileValid = false
+        }
+        // Validate the file type
+        if (!isValidFileSize(file)) {
+            invalidSizeFiles.push(file.name);
+            isFileValid = false
+        }
+
+        if(isFileValid){
+            reader.onload = function (e) {
+                const previewMediaContainer = document.createElement('div');
+                previewMediaContainer.classList.add('uploaded-media-container');
+
+                // Add file to the selected files array
+                const fileData = { file, container: previewMediaContainer };
+                updateReplyFormSelectedFiles.push(fileData);
+
+                if (file.type.startsWith('image')) {
+                    const image = document.createElement('img');
+                    image.src = e.target.result;
+                    image.alt = file.name;
+                    image.classList.add('uploaded-media');
+                    previewMediaContainer.appendChild(image);
+                } else if (file.type.startsWith('video')) {
+                    const videoContainer = document.createElement('a');
+                    videoContainer.classList.add('one-media-temp', 'uploaded-media');
+                    videoContainer.setAttribute('data-lg-size', '1280-720');
+                    videoContainer.setAttribute('data-video', '{"source": [{"src":"' + e.target.result + '", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}');
+
+                    const video = document.createElement('video');
+                    video.autoplay = false;
+                    video.controls = true;
+                    video.muted = true;
+                    video.src = e.target.result;
+
+                    videoContainer.appendChild(video);
+                    previewMediaContainer.appendChild(videoContainer);
+
+                    const playIcon = document.createElement('i');
+                    playIcon.classList.add('fa', 'fa-play-circle');
+                    playIcon.setAttribute('aria-hidden', 'true');
+                    previewMediaContainer.appendChild(playIcon);
+                }
+
+                const removeButton = document.createElement('i');
+                removeButton.classList.add('remove-media-x-btn', 'fas', 'fa-circle-xmark');
+
+                // Event listener for removing the specific file and its container.
+                removeButton.addEventListener('click', function () {
+                    removeMediaFromUpdateReplyForm(removeButton, fileData);
+                });
+
+                previewMediaContainer.appendChild(removeButton);
+                previewContainer.appendChild(previewMediaContainer);
+
+                // Refresh the validations on the update reply form submit button.
+                handleUpdateInputChange("reply");
+
+                // Refresh the gallery for the reviewed media.
+                mediaLightGallery.refresh();
+            };
+        }
+        reader.readAsDataURL(file);
+
+        // Display popup message for invalid files
+        displayUploadFilesError(invalidTypeFiles, invalidSizeFiles);
+    }
+</script>
+
+
+<!-- Function to be called when the update reply form is submitted. -->
+<script>
+    function submitUpdateReplyForm(event, replyId) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Find the comment ID of the reply.
+        const commentId = document.getElementById(`reply-${replyId}`).parentElement.id.split('-')[1];
+
+        // Access the form element
+        const form = document.getElementById('updateReplyForm');
+
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append the value of update__form_caption to the FormData object
+        const updateReplyFormCaptionInput = form.querySelector('textarea[name="update_reply_form_caption"]');
+        if (updateReplyFormCaptionInput) {
+            formData.append('update_reply_form_caption', updateReplyFormCaptionInput.value.trim());
+        }
+
+        // Append the value of replyId to the FormData object
+        if (replyId) {
+            formData.append('updated_reply_id', replyId);
+        }
+
+        // Append the removed old media files to the FormData object
+        for (let i = 0; i < replyRemovedOldMedia.length; i++) {
+            formData.append('deleted_images[]', replyRemovedOldMedia[i]);
+        }
+
+        // Append the added new media files to the FormData object
+        for (let i = 0; i < updateReplyFormSelectedFiles.length; i++) {
+            formData.append('added_images[]', updateReplyFormSelectedFiles[i]['file']);
+        }
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/update_reply', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                fetchReplies(commentId);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+</script>
+
+
+
+<!-- ################################################################################################ -->
+
+<!--This script is to make the height of textarea for the post/comment/reply 
+    form adjust automatically with the size of the the inputted text.-->
+<script>
+    $(document).ready(function () {
+        // Attach the event listener using event delegation
+        $(document).on('input', 'textarea.height-auto-adjuster', function (e) {
+            let textarea = e.target;
+
+        if (textarea.classList.contains("post-form-caption") || textarea.classList.contains("update-post-form-caption")) {
+            textarea.style.height = "63px";
+        } else if (textarea.classList.contains("comment-form-caption") || textarea.classList.contains("update-comment-form-caption")) {
+            textarea.style.height = "25px";
+        } else if (textarea.classList.contains("reply-form-caption") || textarea.classList.contains("update-reply-form-caption")) {
+            textarea.style.height = "25px";
+        } else {
+            textarea.style.height = "auto";
+        }
+
+            let scHeight = textarea.scrollHeight;
+            textarea.style.height = `${scHeight}px`;
+        });
+    });
+</script>
+
+
+<!-- This script is for the copy url link buttons. -->
+<script>
+    function copyPostUrl(postId) {
+        var urlToCopy = window.location.origin + '/dashboard/' + postId;
+        copyUrlToClipboard(urlToCopy);
+    }
+
+    function copyUrlToClipboard(urlToCopy) {
+        var inputElement = document.createElement("input");
+        inputElement.value = urlToCopy;
+        document.body.appendChild(inputElement);
+        inputElement.select();
+        document.execCommand("copy");
+        document.body.removeChild(inputElement);
+        alert("URL copied to clipboard: " + urlToCopy);
+    }
+</script>
+
+
+<!-- This script has a function to make a pop up with the names of the files that didn't pass the type and size validations. -->
+<script>
+    function displayUploadFilesError(invalidTypeFiles, invalidSizeFiles) {
+        if (invalidTypeFiles.length > 0 || invalidSizeFiles.length > 0) {
+            let errorMessage = 'Some files could not be uploaded: \n\n';
+            if (invalidTypeFiles.length > 0) {
+                errorMessage += 'Invalid types:\n';
+                errorMessage += invalidTypeFiles.map(file => '- ' + file).join('\n') + '\n\n';
+            }
+            if (invalidSizeFiles.length > 0) {
+                errorMessage += 'Exceeded size limit, 25MB/img 500MB/vid:\n';
+                errorMessage += invalidSizeFiles.map(file => '- ' + file).join('\n');
+            }
+            alert(errorMessage);
+    }
+}
+</script>
+
+
+<!-- This script is to validate the type and size of the uploaded media files. -->
+<script>
+    function isValidFileType(file) {
+        const acceptableTypes = { 'image': ['apng', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'webp', 'svg'], 'video': ['mp4', 'webm', 'ogg'] };
+        const fileType = file.type.split('/')[0]; // Extracting the file type from the file's MIME type
+
+        if (acceptableTypes.hasOwnProperty(fileType)) {
+            const fileExtension = file.name.split('.').pop().toLowerCase(); // Extracting the file extension
+            return acceptableTypes[fileType].includes(fileExtension);
+        }
+
+        return false;
+    }
+
+    function isValidFileSize(file) {
+        const acceptableSizes = { 'image': 25 * 1024 * 1024, 'video': 500 * 1024 * 1024 };
+        const fileType = file.type.split('/')[0]; // Extracting the file type from the file's MIME type
+
+        if (acceptableSizes.hasOwnProperty(fileType)) {
+            return file.size <= acceptableSizes[fileType];
+        }
+
+        return false;
+    }
+</script>

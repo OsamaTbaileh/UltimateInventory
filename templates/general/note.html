@@ -1,0 +1,705 @@
+{% set css_files = '<link rel="stylesheet" href="../../static/css/dashboard.css">' %}
+{% include 'general/header.html' %}
+
+<div class="mx-0 px-0 mw-100 d-flex justify-content-center" style="flex: 1; margin-top: 76px !important;">
+    <div class="w-100 mx-0 px-sm-2 px-md-3 px-lg-4 bg d-flex justify-content-between" style="max-width: 1500px; ">
+        <!-- Left Section: -->
+        <section class="left-section p-2 bg-light shaded-box">
+
+        </section>
+
+        <!-- Middle Section: -->
+        <section class="mid-section pt-3">
+            <!-- Make post form: -->
+            <form id="makePostForm" onsubmit="submitForm(event)" action="/dashboard/add_new_post" method="post" enctype="multipart/form-data" class="bg-light p-3 mb-3 shaded-box rounded">
+                <textarea class="form-control" placeholder="What's on your mind today?" id="exampleFormControlTextarea1" rows="2" name="post_caption"></textarea>
+                <div id="previewContainer" class="d-flex flex-wrap"></div>
+                <div class="wrapper">
+                    <div class="file-upload">
+                        <input type="file" id="photoInput" name="images[]" multiple multiple accept="image/*,video/*" max="20MB" onchange="previewMedia(event)"/>
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <button class="btn btn-primary post-button" type="submit">Post</button>
+                </div>
+            </form>
+
+            <!-- Post -->
+            {{% for post in all_posts %}}
+            <div class="bg-light shaded-box rounded mb-4">
+                <!-- Post Header -->
+                <div class="d-flex justify-content-between rounded px-3 py-2 mb-2">
+                    <!-- Post Author Data -->
+                    <div class="d-flex">
+                        <a aria-label="{{ post.author_full_name }}" href="/users/{{ post.author_id }}" class="user-img-container me-2 ms-0">                 
+                            <img src="/static/uploads/users_photos/{{ post.author_iamge_id }}" alt="{{ post.author_full_name }} image" class="{{ author.job_title | lower }}-team-member-img">
+                        </a>
+                        <div class="{{ post.author_job_title | lower }}-name-container">
+                            <a class="mb-0 mx-0" href="/users/{{ post.author_id }}">{{ post.author_full_name }}</a>
+                            {{% if post.created_at == post.updated_at %}}
+                            <p class="post-time">{{ post.created_at }}</p>
+                            {{% else %}}
+                            <p class="post-time">{{ post.updated_at }}<span class="ms-2"><strong>edited</strong></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Meatballs Drop Down Menu -->
+                    <div class="dropdown post-dropdown">
+                        <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <span class="dropdown-item">
+                                    <a href=""><i class="fas fa-pen-to-square mx-2 fa-fw"></i>Edit</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="dropdown-item">
+                                    <a href=""><i class="fas fa-trash mx-2 fa-fw"></i>Delete</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="dropdown-item">
+                                    <a href=""><i class="fa fa-copy mx-2 fa-fw"></i>Copy URL</a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="dropdown-item">
+                                    <a href=""><i class="fas fa-bookmark mx-2 fa-fw"></i>Save</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Post Caption -->
+                <p class="px-3 mb-2">
+                    {{ post.caption }}
+                </p>
+
+                <!-- Post Media (imgs/vids) -->
+                {{% if post.media|length == 1 %}}
+                <div class="post-media mb-2">
+                    {{% if "img" in post.media[0] %}}
+                    <img class="one-media-temp" src="/static/uploads/posts/images/{{ post.media[0]['img'] }}" alt="{{ post.media[0]['img'] }} post image">
+                    {{% elif "vid" in post.media[0] %}}
+                    <video class="one-media-temp" src="/static/uploads/posts/videos/{{ post.media[0]['vid'] }}" controls muted autoplay></video>
+                    {{% endif %}}
+                </div>
+
+                {{% elif post.media|length == 2 %}}
+                <div class="post-media mb-2">
+                    {{% for one_media in post.media %}}
+                        {{% if "img" in one_media %}}
+                        <img class="two-media-temp" src="/static/uploads/posts/images/{{ one_media['img'] }}" alt="{{ one_media['img'] }} post image">
+                        {{% elif "vid" in one_media %}}
+                        <video class="two-media-temp" src="/static/uploads/posts/videos/{{ one_media['vid'] }}" controls muted autoplay></video>
+                        {{% endif %}}
+                    {{% endfor %}}
+                </div>
+
+                {{% elif post.media|length == 3 %}}
+                <div class="post-media mb-2">
+                    {{% if "img" in post.media[0] %}}
+                    <img class="three-media-temp" src="/static/uploads/posts/images/{{ post.media[0]['img'] }}" alt="{{ post.media[0]['img'] }} post image">
+                    {{% elif "vid" in post.media[0] %}}
+                    <video class="three-media-temp" src="/static/uploads/posts/videos/{{ post.media[0]['vid'] }}" controls muted autoplay></video>
+                    {{% endif %}}
+                    <div class="two-imgs-container three-media-temp">
+                        {{% for i in range(1, 3) %}}
+                            {{% if "img" in post.media[i] %}}
+                            <img class="three-media-temp" src="/static/uploads/posts/images/{{ post.media[i]['img'] }}" alt="{{ post.media[i]['img'] }} post image">
+                            {{% elif "vid" in post.media[i] %}}
+                            <video class="three-media-temp" src="/static/uploads/posts/videos/{{ post.media[i]['vid'] }}" controls muted autoplay></video>
+                            {{% endif %}}
+                        {{% endfor %}}
+                    </div>
+                </div>
+
+                {{% elif post.media|length > 3 %}}
+                <div class="post-media mb-2">
+                    {{% if "img" in post.media[0] %}}
+                    <img class="three-media-temp" src="/static/uploads/posts/images/{{ post.media[0]['img'] }}" alt="{{ post.media[0]['img'] }} post image">
+                    {{% elif "vid" in post.media[0] %}}
+                    <video class="three-media-temp" src="/static/uploads/posts/videos/{{ post.media[0]['vid'] }}" controls muted autoplay></video>
+                    {{% endif %}}
+                    <div class="two-imgs-container three-media-temp">
+                        {{% if "img" in post.media[1] %}}
+                        <img class="three-media-temp" src="/static/uploads/posts/images/{{ post.media[1]['img'] }}" alt="{{ post.media[1]['img'] }} post image">
+                        {{% elif "vid" in post.media[1] %}}
+                        <video class="three-media-temp" src="/static/uploads/posts/videos/{{ post.media[1]['vid'] }}" controls muted autoplay></video>
+                        {{% endif %}}
+                        <div class="more-media-container three-media-temp">
+                            {{% if "img" in post.media[2] %}}
+                            <img class="three-media-temp" src="/static/uploads/posts/images/{{ post.media[2]['img'] }}" alt="{{ post.media[2]['img'] }} post image">
+                            {{% elif "vid" in post.media[2] %}}
+                            <video class="three-media-temp" src="/static/uploads/posts/videos/{{ post.media[2]['vid'] }}" muted autoplay></video>
+                            {{% endif %}}
+                            <div class="overlay-media-number">+4</div>
+                        </div>
+                    </div>
+                </div>
+                {{% endif %}}
+
+                <!-- Likes & Comments Numbers -->
+                <div class="d-flex justify-content-between mx-3 mb-2">
+                    <div>
+                        <i class="fa-solid fa-heart"></i>
+                        87 
+                    </div>
+                    <div>
+                        15 comments
+                    </div>
+                </div>
+                <hr class="mx-3 my-0">
+
+                <!-- Like & Comment Buttons -->
+                <div class="comment-like-buttons-container">
+                    <button class="like-btn">
+                        <i class="fa-solid fa-heart fa-lg"></i>
+                        <strong>Like</strong>
+                    </button>
+                    <button class="comment-btn">
+                        <i class="fa-regular fa-comment fa-lg"></i>
+                        <strong>Comment</strong>
+                    </button>
+                </div>
+
+                <!-- Last 3 Comments on The Post -->
+                <div>
+
+                </div>
+            </div>
+            {{% endfor %}}
+        </section>
+
+        <!-- Right Section: -->
+        <section class="right-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
+            <div class="d-flex bg-light shaded-box rounded p-2 mb-2">
+                <a aria-label="Osama Tbaileh" href="/users/" class="user-img-container me-2">                 
+                    <img src="/static/uploads/users_photos/male_default_user.jpg" alt=" image" class="manager-team-member-img">
+                </a>
+                <div class="manager-name-container d-flex flex-column  justify-content-center">
+                    <a class="text-center mb-1" href="/users/###">Osama Tbaileh</a>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<script>
+// Array to keep track of selected files
+const selectedFiles = [];
+
+function previewMedia(event) {
+    const previewContainer = document.getElementById('previewContainer');
+
+    // Clear the array when a new set of files is selected
+    // selectedFiles.length = 0;
+
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const previewMediaContainer = document.createElement('div');
+            previewMediaContainer.classList.add('uploaded-media-container');
+
+            // Add file to the selected files array
+            const fileData = { file, container: previewMediaContainer };
+            selectedFiles.push(fileData);
+
+            if (file.type.startsWith('image')) {
+                const image = document.createElement('img');
+                image.src = e.target.result;
+                image.alt = file.name;
+                image.classList.add('uploaded-media');
+                previewMediaContainer.appendChild(image);
+            } else if (file.type.startsWith('video')) {
+                const videoContainer = document.createElement('div');
+                videoContainer.classList.add('video-container');
+
+                const video = document.createElement('video');
+                video.muted = true;
+                video.classList.add('uploaded-media');
+
+                const source = document.createElement('source');
+                source.src = e.target.result;
+                video.appendChild(source);
+
+                videoContainer.appendChild(video);
+
+                const playIcon = document.createElement('i');
+                playIcon.classList.add('fa', 'fa-play-circle');
+                playIcon.setAttribute('aria-hidden', 'true');
+                videoContainer.appendChild(playIcon);
+
+                previewMediaContainer.appendChild(videoContainer);
+            }
+
+            const removeOverlay = document.createElement('div');
+            removeOverlay.classList.add('remove-overlay');
+            removeOverlay.innerText = 'Remove';
+
+            // Event listener for removing the specific file and its container
+            removeOverlay.addEventListener('click', function () {
+                removeFile(fileData);
+            });
+
+            previewMediaContainer.appendChild(removeOverlay);
+            previewContainer.appendChild(previewMediaContainer);
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+
+// Function to remove a file and its container
+function removeFile(fileData) {
+    const { file, container } = fileData;
+    const index = selectedFiles.findIndex(item => item.file === file);
+    if (index !== -1) {
+        previewContainer.removeChild(container);
+        selectedFiles.splice(index, 1);
+        console.log(selectedFiles);
+    }
+}
+
+// Function to be called when the form is submitted
+function submitForm(event) {
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Access the form element
+    const form = document.getElementById('makePostForm');
+
+    // Create a FormData object associated with the form
+    const formData = new FormData(form);
+
+    // Append the selected files to the FormData object
+    for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append('images[]', selectedFiles[i]['file']);
+    }
+
+    // Log the FormData object (optional for debugging)
+    console.log("Form Data:", formData);
+
+    // Submit the form without using fetch or XMLHttpRequest
+    form.submit();
+
+    // ... (any other form submission logic) ...
+}
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="d-flex justify-content-between mx-3 mb-2">
+    <div>
+        <i class="fa-solid fa-heart"></i>
+        {{ the_post.likes_count }} 
+    </div>
+    <div>
+        {{ the_post.comments_count }} 
+    </div>
+</div>
+
+<!-- Like & Comment Buttons -->
+<div class="comment-like-buttons-container mx-3">
+    <button class="like-btn">
+        <i class="fa-solid fa-heart fa-lg"></i>
+        <strong>Like</strong>
+    </button>
+    <button class="comment-btn">
+        <i class="fa-regular fa-comment fa-lg"></i>
+        <strong>Comment</strong>
+    </button>
+</div>
+
+<!-- Comments -->
+<div class="post-comments mx-3">
+    <!-- Comment Data -->
+    <div id="comment-{{ the_comment.comment_id }}" class="d-flex align-items-start py-1">
+        <a aria-label="{{ the_comment.author_full_name }}" href="/users/{{ the_comment.author_user_id }}" class="user-img-container me-2 ms-0">                 
+            <img src="/static/uploads/users_photos/{{ the_comment.author_image_id }}" alt="{{ the_comment.author_full_name }} image" class="job-title-{{ the_comment.author_job_title }}-img">
+        </a>
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-center">
+                <div class="job-title-{{ the_comment.author_job_title}}-name-container d-inline-block comment-caption">
+                    <a class=" mb-0 mx-0" href="/users/{{ the_comment.author_job_title}}">{{ the_comment.author_full_name }}</a> <span></span>
+                    <p class="p-0 m-0">{{ the_comment.caption }}</p>
+                </div>
+                {{% if the_comment.is_liker %}}
+                <div class="dropdown comment-dropdown">
+                    <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <span class="dropdown-item">
+                                <a href=""><i class="fas fa-pen-to-square mx-2 fa-fw"></i>Edit</a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="dropdown-item">
+                                <a href=""><i class="fas fa-trash mx-2 fa-fw"></i>Delete</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% if the_comment.media_type == "image" %}
+            <img class="comment-media pb-1" src="/static/uploads/comments/images/{{ the_comment.media_name }}" alt="">
+            {% else if the_comment.media_type = "video" %}
+            <video controls class="comment-media pb-1" src="/static/uploads/comments/videos/{{ the_comment.media_name }}"></video>
+            {% endif %}
+            <div class="d-flex justify-content-between">
+                <div class="comment-like-and-reply-buttons pb-1">
+                    <span class="me-2">{{ the_comment.created_at }}</span>
+                    <a class="me-2" href="" id="comment-{{ the_comment.comment_id }}-like-btn"><strong>Like</strong></a>
+                    <a href="" id="comment-{{ the_comment.comment_id }}-reply-btn"><strong>Reply</strong></a>
+                </div>
+                {% if the_comment.likes_count > 0 %}
+                <div id="comment-{{ the_comment.likes_count }}-likes-count">
+                    <i class="fa-solid fa-heart"></i>
+                    {{ the_comment.likes_count }}
+                </div>
+                {% endif %}
+            </div>
+            {% if the_comment.replys_count > 0 %}
+            <a href="" class="view-replys ms-3 mt-1" id="comment-{{ the_comment.replys_count }}-likes-count">
+                <img width="17" height="17" src="https://img.icons8.com/ios-filled/50/down-right.png" alt="down-right-arrow" class="pb-1"/>
+                View all {{ the_comment.replys_count }} replies
+            </a>
+            {% endif %}
+        <!-- </div>
+
+
+    </div> -->
+            <!-- reply 1: -->
+            <div class="d-flex align-items-start py-1">
+                <a aria-label="Osama Tbaileh" href="/users/" class="user-img-container me-2 ms-0">                 
+                    <img src="/static/uploads/users_photos/male_default_user.jpg" alt=" image" class="reply-head-master-img">
+                </a>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                        <div class="head-master-name-container d-inline-block reply-caption">
+                            <a class="mb-0 mx-0"  href="/users/###">Osama Tbaileh</a>
+                            <p class="comment-caption p-0 m-0">hey there that is amazin</p>
+                        </div>
+                        <div class="dropdown comment-dropdown">
+                            <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <span class="dropdown-item">
+                                        <a href=""><i class="fas fa-pen-to-square mx-2 fa-fw"></i>Edit</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item">
+                                        <a href=""><i class="fas fa-trash mx-2 fa-fw"></i>Delete</a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- mayber img/vid -->
+                    <!-- <img class="comment-media mb-1" src="/static/uploads/locations_photos/217cfd01-8d1b-4dfe-bb83-104347989f1a_hong.jpg" alt=""> -->
+                    <!-- time & reply btn -->
+                    <div class="comment-like-and-reply-buttons">
+                        <span class="me-2">5 min</span>
+                        <a class="me-2" href=""><strong>Like</strong></a>
+                        <a href=""><strong>Reply</strong></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- reply 2: -->
+            <div class="d-flex align-items-start py-1">
+                <a aria-label="Osama Tbaileh" href="/users/" class="user-img-container me-2 ms-0">                 
+                    <img src="/static/uploads/users_photos/male_default_user.jpg" alt=" image" class="reply-head-master-img">
+                </a>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                        <div class="head-master-name-container d-inline-block reply-caption">
+                            <a class="mb-0 mx-0"  href="/users/###">Osama Tbaileh</a>
+                            <p class="comment-caption p-0 m-0">hey there that is amazin</p>
+                        </div>
+                        <div class="dropdown comment-dropdown">
+                            <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <span class="dropdown-item">
+                                        <a href=""><i class="fas fa-pen-to-square mx-2 fa-fw"></i>Edit</a>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="dropdown-item">
+                                        <a href=""><i class="fas fa-trash mx-2 fa-fw"></i>Delete</a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- mayber img/vid -->
+                    <!-- <img class="comment-media mb-1" src="/static/uploads/locations_photos/217cfd01-8d1b-4dfe-bb83-104347989f1a_hong.jpg" alt=""> -->
+                    <!-- time & reply btn -->
+                    <div class="comment-like-and-reply-buttons">
+                        <span class="me-2">5 min</span>
+                        <a class="me-2" href=""><strong>Like</strong></a>
+                        <a href=""><strong>Reply</strong></a>
+                    </div>
+                </div>
+            </div>
+            <!-- end of reply2 -->
+            <!-- form to add reply -->
+            <div class="d-flex align-items-start py-1">
+                <a aria-label="Osama Tbaileh" href="/users/" class="user-img-container me-2 ms-0">                 
+                    <img src="/static/uploads/users_photos/male_default_user.jpg" alt=" image" class="reply-head-master-img">
+                </a>
+                <div class="d-flex flex-column w-100">
+                    <form onsubmit="submitForm(event, 'reply')" class="d-flex flex-column reply-form">
+                        <textarea class="reply-form-caption" placeholder="Write your relpy here" name="reply_form_caption"></textarea>
+                        <div class="wrapper">
+                            <div class="file-upload reply-form-media-upload">
+                                <input type="file" id="photoInput" name="reply-form-media" accept="image/*,video/*" max="20MB" onchange="previewMedia(event, 'reply')"/>
+                                <i class="fa fa-image"></i>
+                            </div>
+                            <button type="submit" class="reply-form-submit-button">
+                                <img
+                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pV
+                                UAAAACXBIWXMAAAsTAAALEwEAmpwYAAADNklEQVR4nO2dv24TQRDGByEKJCrogIiegieg5
+                                BVcEmXXKAUNJU+AxCtQQpmWkhZRJcK7MYjCNZLLCCGLAh1ywHZsBfCfu/lmdr+fNFUKbud
+                                j53w/by4ihBBCCCGEVMDB6R76EshFQvopMb2VkB+JNFeWfkYAxNzMK+QvEtMzeTq8gbgUs
+                                hrIvNKZxPxKwvA+m2QikNmOmY6z/E76uSe9o6vq11Yl/wpkedeMJObn8vjzLfQll83agcy
+                                DmUhIb6SfH6AvvUw2DmTpQ8CxhMG+HB5fQy+jHHYJZHGv+Sohv5T9j3fQy/FPG4EsxtkPC
+                                fno9zMNMRDI6jjLh9L7cH3LK6uUrgJZ1Ph8nMVP99BL9UH3gczuM1Q0pgJZHmdUNKYCmRc
+                                VjbFALo4zKho7gVymaPrDm1Il8AD+GsykTkUDb/w6Iy1XpGjQzd4omFSBokE3eatKBSsae
+                                HN33TW5MEWDbmh7NS5D0eAb2fKOSc4VDbqBnYaTHSoadNNUKjk6RQNvluaOSQ4UDbpJuF0
+                                zsqlo4I1BVzKmaOANMVTBgqJBN8FiBaSiQS/edCWAooEv2kkFLUUz/aQR8+s//+B3+MKjC
+                                0XzQp6ku90GMw/o5Pb5Fp0+4Z4/TKX3EtI3A41oTBVc0TCoxoeiYVCND0VTc1DBg6KpNqh
+                                kVNFI7UElY4pmW2KBQZlQNG0TCwiqjlM0Jw6DmimawUMpjshA2PhY08iKHv/Hl3BTL7Hx0
+                                cPH3uIbn40+GFbX+GxEndTc+IiUi2x8g9HvbHyD/YKKX+E2tr7Chc9dJxX0DjngF2u2Eo8
+                                BSaxdaaAXb6mCBaWBbgK8kjGlUW8QIxtKYxV4YxQreDgNUsduOLN7XmqVondENnSicF2KC
+                                yHx16KN1JgvDsCH0PDVGiYq8eUz+BCy01Mam+JmLA2Mn9JoC7tjaWJLaWhhL4iRTaWhBTw
+                                AL0pDC+xucKQ0tIDsCI9KQwvVseT5TW9adB9GIUpDi+7GUmFvC9Wi3Zt0wUpDi3buDxUoD
+                                S12Hku1KA0tNh9LlSoNLdYPgn96VYX/PjtQaehy+W6g0oCxfJOm0oBDpWGMg9M99CUQQgg
+                                hhBBCpCZ+AVvGd6WEjTCVAAAAAElFTkSuQmCC"/>
+                            </button>
+                        </div>
+                    </form>
+                    <div id="replyFormMediaPreview" class="d-flex flex-wrap" style="display: block;"></div>
+                </div>
+            </div>
+            <!-- end reply form -->
+
+
+            
+            
+        </div>
+    </div>
+
+    <!-- comment form: -->
+    <!-- form to add comment -->
+    <div class="d-flex align-items-start py-1" id="comment-form-container">
+        <a aria-label="Osama Tbaileh" href="/users/" class="user-img-container me-2 ms-0">                 
+            <img src="/static/uploads/users_photos/male_default_user.jpg" alt=" image" class="comment-head-master-img">
+        </a>
+        <div class="d-flex flex-column w-100">
+            <form onsubmit="submitForm(event, 'comment')" class="d-flex flex-column comment-form">
+                <textarea class="comment-form-caption" placeholder="Write your comment here" name="comment_form_caption"></textarea>
+                <div class="wrapper">
+                    <div class="file-upload comment-form-media-upload">
+                        <input type="file" id="photoInput" name="comment-form-media" accept="image/*,video/*" max="20MB" onchange="previewMedia(event, 'comment')"/>
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <button type="submit" class="comment-form-submit-button">
+                        <img
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pV
+                        UAAAACXBIWXMAAAsTAAALEwEAmpwYAAADNklEQVR4nO2dv24TQRDGByEKJCrogIiegieg5
+                        BVcEmXXKAUNJU+AxCtQQpmWkhZRJcK7MYjCNZLLCCGLAh1ywHZsBfCfu/lmdr+fNFUKbud
+                        j53w/by4ihBBCCCGEVMDB6R76EshFQvopMb2VkB+JNFeWfkYAxNzMK+QvEtMzeTq8gbgUs
+                        hrIvNKZxPxKwvA+m2QikNmOmY6z/E76uSe9o6vq11Yl/wpkedeMJObn8vjzLfQll83agcy
+                        DmUhIb6SfH6AvvUw2DmTpQ8CxhMG+HB5fQy+jHHYJZHGv+Sohv5T9j3fQy/FPG4EsxtkPC
+                        fno9zMNMRDI6jjLh9L7cH3LK6uUrgJZ1Ph8nMVP99BL9UH3gczuM1Q0pgJZHmdUNKYCmRc
+                        VjbFALo4zKho7gVymaPrDm1Il8AD+GsykTkUDb/w6Iy1XpGjQzd4omFSBokE3eatKBSsae
+                        HN33TW5MEWDbmh7NS5D0eAb2fKOSc4VDbqBnYaTHSoadNNUKjk6RQNvluaOSQ4UDbpJuF0
+                        zsqlo4I1BVzKmaOANMVTBgqJBN8FiBaSiQS/edCWAooEv2kkFLUUz/aQR8+s//+B3+MKjC
+                        0XzQp6ku90GMw/o5Pb5Fp0+4Z4/TKX3EtI3A41oTBVc0TCoxoeiYVCND0VTc1DBg6KpNqh
+                        kVNFI7UElY4pmW2KBQZlQNG0TCwiqjlM0Jw6DmimawUMpjshA2PhY08iKHv/Hl3BTL7Hx0
+                        cPH3uIbn40+GFbX+GxEndTc+IiUi2x8g9HvbHyD/YKKX+E2tr7Chc9dJxX0DjngF2u2Eo8
+                        BSaxdaaAXb6mCBaWBbgK8kjGlUW8QIxtKYxV4YxQreDgNUsduOLN7XmqVondENnSicF2KC
+                        yHx16KN1JgvDsCH0PDVGiYq8eUz+BCy01Mam+JmLA2Mn9JoC7tjaWJLaWhhL4iRTaWhBTw
+                        AL0pDC+xucKQ0tIDsCI9KQwvVseT5TW9adB9GIUpDi+7GUmFvC9Wi3Zt0wUpDi3buDxUoD
+                        S12Hku1KA0tNh9LlSoNLdYPgn96VYX/PjtQaehy+W6g0oCxfJOm0oBDpWGMg9M99CUQQgg
+                        hhBBCpCZ+AVvGd6WEjTCVAAAAAElFTkSuQmCC"/>
+                    </button>
+                </div>
+            </form>
+            <div id="commentFormMediaPreview" class="d-flex flex-wrap" style="display: block;"></div>
+        </div>
+    </div> <!-- End of Comment Form -->
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="reply-${reply.reply_id}" class="d-flex align-items-start py-1">
+    <a aria-label="${reply.author_full_name}" href="/users/${reply.author_user_id}" class="user-img-container me-2 ms-0">                 
+        <img src="/static/uploads/users_photos/${reply.author_image_id}" alt="${reply.author_full_name} image" class="reply-job-title-${reply.author_job_title}-img">
+    </a>
+    <div class="d-flex flex-column">
+        <div class="d-flex align-items-center">
+            <div class="job-title-${reply.author_job_title}-name-container d-inline-block reply-caption">
+                <a class="mb-0 mx-0"  href="/users/${reply.author_user_id}">${reply.author_full_name}</a>
+                <p class="reply-caption p-0 m-0">${reply.caption}</p>
+            </div>
+            ${reply.is_owner ? `
+                <div class="dropdown reply-dropdown">
+                    <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <span class="dropdown-item">
+                                <a href=""><i class="fas fa-pen-to-square mx-2 fa-fw"></i>Edit</a>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="dropdown-item">
+                                <a href=""><i class="fas fa-trash mx-2 fa-fw"></i>Delete</a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            ` : ''}
+        </div>
+        <div>
+        ${reply.media_type === "image" ? `
+        <img class="reply-media pb-1" src="/static/uploads/replys/images/${reply.media_name}" alt="${reply.media_name} image">
+        ` : reply.media_type === "video" ? `
+        <video controls class="reply-media pb-1" src="/static/uploads/replys/videos/${reply.media_name}"></video>
+        ` : ''}
+        </div>
+        <div class="reply-like-reply-buttons-container">
+            <span class="me-2">5 min</span>
+            <a class="me-2" href=""><strong>Like</strong></a>
+            <a href=""><strong>Reply</strong></a>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class="reply-like-reply-buttons-container pb-1">
+                <span class="me-2">${reply.created_at}</span>
+                <button class="me-2 reply-like-btn ${reply.is_liker ? 'blue-reply-like-btn' : ''}" id="reply-${reply.reply_id}-like-btn" data-is-liker="${reply.is_liker}" data-reply-likes-count="${reply.likes_count}"><strong>Like</strong></button>
+                <a class="me-2" href="" id="reply-${reply.reply_id}-reply-btn" ><strong>Reply</strong></a>
+                ${reply.created_at == reply.updated_at ? '<span>edited</span>' : ''}
+            </div>
+            ${comment.likes_count > 0 ? `
+                <div id="comment-${comment.likes_count}-likes-count">
+                    <i class="fa-solid fa-heart"></i>
+                    ${comment.likes_count}
+                </div>
+            ` : ''}
+        </div>
+    </div>
+</div>

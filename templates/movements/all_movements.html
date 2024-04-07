@@ -1,0 +1,109 @@
+{% set css_files = '<link rel="stylesheet" href="../../static/css/all_movements.css">' %}
+{% include 'general/header.html' %} 
+
+
+<div class="mx-0 px-0 mw-100 my-5 pb-3 d-flex justify-content-center">
+  <div class="container mx-0 pt-5 px-1 px-sm-2 px-md-3 px-lg-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1 class="text-warning">All Movements:</h1>
+      <div class="btn-container">
+        <a href="/movements/add_new_movement" class="btn btn-warning btn-sm">Add New Movement</a>
+      </div>
+    </div>
+
+    <!-- Filtering movements form  -->
+    <div class="col-lg-7 mx-auto mb-4 px-1 py-2 form-style filter-form-container rounded">
+      <p class="text-center text-light my-1">Leave it empty for all movements or type a number to retrieve all movements for the past n days:</p>
+      <form action="/movements/filter_movements" method="POST">
+        <div class="row justify-content-between align-items-center">
+
+          <div class="col-sm-5 p-0">
+            <div class="row align-items-center justify-content-center">
+              <div class="col-5 text-center p-0">
+                <label for="filter-days" class="col-form-label text-center w-100 golden-form-label rounded nowrap-text p-0" style="min-width: 90px;">Filter Days:</label>
+              </div>
+              <div class="col-4 p-0">
+                <input type="number" min="1" pattern="[0-9]+" class="form-control text-center p-0" id="filter-days" placeholder="Type here" name="filter_days" style="min-width: 100px;" >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-5 p-0">
+            <div class="row  align-items-center justify-content-center">
+              <div class="col-5 text-center p-0">
+                <label for="filter-sort" class="col-form-label text-center w-100 golden-form-label rounded nowrap-text p-0" style="min-width: 100px;">Time Order:</label>
+              </div>
+              <div class="col-4 p-0">
+                <select class="form-select text-center p-0" id="filter-sort" name="filter_sort" style="min-width: 100px;">
+                  <option value="ASC">Ascend</option>
+                  <option value="DESC">Descen</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-2 text-center diplay-flex align-items-center">
+            <button type="submit" class="golden-button glow-button btn-block filter-button-style my-1">Filter</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table custom-table table-hover " id="table">
+        <thead>
+          <tr class="table-head">
+            <th>ID</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Timetamp</th>
+            <th>From Location</th>
+            <th>To Location</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for one_movement in all_movements %}
+          <tr>
+            <td>{{ one_movement.movement_id }}</td>
+            <td>{{ one_movement.product_name }}</td>
+            <td>{{ one_movement.quantity }}</td>
+            <td>{{ one_movement.updated_at }}</td>
+            <td>{{ one_movement.from_location_name }}</td>
+            <td>{{ one_movement.to_location_name }}</td>
+            <td>
+              <form action="/movements/delete_movement/{{one_movement.movement_id }}" method="POST">
+                <input type="hidden" name="movement_id" value="{{ one_movement.movement_id }}">
+                <div class="btn-group">
+                  <a href="/movements/view_movement/{{ one_movement.movement_id }}" class="btn btn-success">View</a>
+                  <a href="/movements/update_movement/{{ one_movement.movement_id }}" class="btn btn-primary">Edit</a>
+                  <button type="submit" class="btn btn-danger" onclick="confirmDelete(event)">Delete</button>
+                </div>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Showing a pop up when clicking the delete button to approve the deletion. -->
+<script>
+  function confirmDelete(event) {
+    event.preventDefault(); // Prevent the default form submission
+    if (confirm("Are you sure you want to delete this movement?")) {
+      // If the user clicks "OK" (Yes) in the confirmation pop-up, proceed with the form submission
+      event.target.closest('form').submit();
+    } else {
+      // If the user clicks "Cancel" (No) in the confirmation pop-up, do nothing
+      return false;
+    }
+  }
+</script>
+
+
+{%include 'general/footer.html'%}  

@@ -1,0 +1,803 @@
+{% set css_files = '
+<link rel="stylesheet" href="../../static/css/dashboard.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lightgallery.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-video.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/css/lg-rotate.min.css" />
+' %}
+{% include 'general/header.html' %}
+
+
+<div class="mx-0 px-0 mw-100 d-flex justify-content-center" style="flex: 1; margin-top: 76px !important;">
+    <div class="w-100 mx-0 px-sm-2 px-md-3 px-lg-4 bg d-flex justify-content-between" style="max-width: 1500px; ">
+        <!-- Left Section: -->
+        <section class="left-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
+            <a class="left-section-item d-flex align-items-center rounded p-2" href="/users/{{ the_supervisor.image_id }}">               
+                <img src="/static/uploads/users_photos/{{ the_supervisor.image_id }}" alt="{{ the_supervisor.first_name }} {{ the_supervisor.last_name }} image." class="{{ the_supervisor.first_name }} {{ the_supervisor.job_title | lower }}-img">
+                <p class="text-center mb-1">{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/users">               
+                <i class="fa-solid fa-user-group fa-fw"></i>
+                <p class="text-center">All Members</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/teams/my_team">               
+                <i class="fa-solid fa-people-group fa-fw"></i>
+                <p class="text-center">My Team</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/locations">               
+                <i class="fa-solid fa-location-dot fa-fw"></i>
+                <p class="text-center">Locations</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/products">               
+                <i class="fa-solid fa-box-open fa-fw"></i>
+                <p class="text-center">Products</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/normal_report">               
+                <i class="fa-solid fa-clipboard fa-fw"></i>
+                <p class="text-center">Normal Report</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/advanced_report">               
+                <i class="fa-solid fa-clipboard-list fa-fw"></i>
+                <p class="text-center">Advanced Report</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/movements/1/ASC">               
+                <i class="fa-solid fa-bolt fa-fw"></i>
+                <p class="text-center">Movements of last 1 day</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/movements/7/ASC">               
+                <i class="fa-solid fa-bolt fa-fw"></i>
+                <p class="text-center">Movements of last 7 day</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/movements/30/ASC">               
+                <i class="fa-solid fa-bolt fa-fw"></i>
+                <p class="text-center">Movements of last 30 day</p>
+            </a>
+            <a class="left-section-item d-flex align-items-center rounded" href="/sign_out">               
+                <i class="fa-solid fa-arrow-right-from-bracket fa-aw"></i>
+                <p class="text-center">Sign Out</p>
+            </a>
+        </section>
+
+        <!-- Middle Section: -->
+        <section class="mid-section pt-3">
+            <!-- Make post form: -->
+            <form id="makePostForm" onsubmit="submitPostForm(event)" action="/dashboard/add_new_post" method="post" enctype="multipart/form-data" class="p-3 mb-3 shaded-box rounded">
+                <textarea class="post-form-caption height-auto-adjuster" placeholder="What's on your mind today?" name="post_form_caption"></textarea>
+                <div id="postFormMediaPreview" class="d-flex flex-wrap"></div>
+                <div class="wrapper">
+                    <div class="file-upload">
+                        <input type="file" id="photoInput" name="images[]" multiple multiple accept="image/*,video/*" max="20MB" onchange="previewPostMedia(event, 'post')"/>
+                        <i class="fa fa-image"></i>
+                    </div>
+                    <button id="post-form-btn" class="btn btn-primary disabled-post-form-submit-button" type="submit" disabled>Post</button>
+                </div>
+            </form>
+
+            <div class="loading-indicator">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x text-center"></i>
+            </div>
+        </section>
+
+        <!-- Right Section: -->
+        <section class="right-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
+            {% if has_team %}
+                <p class="d-flex team-header shaded-box rounded p-2 ps-3 mb-2">My Team Members:</p>
+                <div class="d-flex team-member shaded-box rounded p-2 mb-2">
+                    <a aria-label="{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}" href="/users/{{ the_supervisor.user_id }}" class="user-img-container me-2">                 
+                        <img src="/static/uploads/users_photos/{{ the_supervisor.image_id }}" alt="{{ the_supervisor.first_name }} {{ the_supervisor.last_name }} image." class="{{ the_supervisor.first_name }} {{ the_supervisor.job_title | lower }}-img">
+                    </a>
+                    <div class="{{ the_supervisor.job_title | lower }}-name-container d-flex flex-column  justify-content-center">
+                        <a class="text-center mb-1" href="/users/{{ the_supervisor.image_id }}">{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}</a>
+                    </div>
+                </div>
+                {% for member in the_team %}
+                <div class="d-flex team-member shaded-box rounded p-2 mb-2">
+                    <a aria-label="{{ member.first_name }} {{ member.last_name }}" href="/users/{{ member.user_id }}" class="user-img-container me-2">                 
+                        <img src="/static/uploads/users_photos/{{ member.image_id }}" alt="{{ member.first_name }} {{ member.last_name }} image." class="{{ member.first_name }} {{ member.job_title | lower }}-img">
+                    </a>
+                    <div class="{{ member.job_title | lower }}-name-container d-flex flex-column  justify-content-center">
+                        <a class="text-center mb-1" href="/users/{{ member.image_id }}">{{ member.first_name }} {{ member.last_name }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="d-flex team-member shaded-box rounded p-2 mb-2">
+                    <p>
+                        You don't have any team yet. Please make sure to contact your manager and ask him to add you to his team.
+                        <br>
+                        <br>
+                        Press <a href="/users">here</a> to see all managers.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/lightgallery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/plugins/video/lg-video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.2/plugins/rotate/lg-rotate.min.js"></script>
+
+
+
+
+
+<script>
+$(document).ready(function () {
+    // Flag variable to track fetch status
+    var fetchingPosts = false;
+
+    // Function to fetch posts from the server
+    function fetchPosts(posts_number, posts_offset) {
+        // Check if a fetch is already in progress
+        if (fetchingPosts) {
+            return; // Exit function if fetch is ongoing
+        }
+
+        // Set fetch status to true
+        fetchingPosts = true;
+
+        // Show loading indicator
+        $('.loading-indicator').show();
+
+        // Introduce a delay of 3 seconds before fetching posts
+        setTimeout(function() {
+            fetch(`/dashboard/get_posts/${posts_number}/${posts_offset}`, {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url; // Redirect to the specified URL
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(function (post) {
+                        // Append posts to the DOM
+                        var postHtml = `
+                                <!-- Post -->
+                                <div class="post-box shaded-box rounded mb-3 py-2">
+                                    <!-- Post Header -->
+                                    <div class="d-flex justify-content-between rounded px-3 py-2 mb-2">
+                                        <!-- Post Author Data -->
+                                        <div class="d-flex">
+                                            <a aria-label="${post.author_full_name}" href="/users/${post.author_user_id}" class="user-img-container me-2 ms-0">
+                                                <img src="/static/uploads/users_photos/${post.author_image_id}" alt="${post.author_full_name} image" class="${post.author_job_title}-img">
+                                            </a>
+                                            <div class="${post.author_job_title}-name-container">
+                                                <a class="mb-0 mx-0" href="/users/${post.author_user_id}">${post.author_full_name}</a>
+                                                ${post.created_at == post.updated_at ?
+                                                    `<p class="post-time">${post.created_at}</p>` :
+                                                    `<p class="post-time">${post.updated_at}<span class="ms-2"><strong>updated</strong></span></p>`
+                                                }
+                                            </div>
+                                        </div>
+                                        <!-- Meatballs Drop Down Menu -->
+                                        <div class="dropdown post-dropdown">
+                                            <i class="fas fa-ellipsis fa-lg" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                ${post.is_owner ?
+                                                    `<li>
+                                                        <span class="dropdown-item p-0">
+                                                            <a href="/dashboard/${post.post_id}" class="post-update-btn" data-post-id="${post.post_id}">
+                                                                <i class="fas fa-pen-to-square mx-2 fa-fw"></i>Update
+                                                            </a>
+                                                        </span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="dropdown-item p-0">
+                                                            <button class="post-delete-btn" data-post-id="${post.post_id}">
+                                                                <i class="fas fa-trash mx-2 fa-fw"></i>Delete
+                                                            </button>
+                                                        </span>
+                                                    </li>` : ''
+                                                }
+                                                <li>
+                                                    <span class="dropdown-item p-0">
+                                                        <a class="post-copy-url-btn" onclick="copyPostUrl(${post.post_id})">
+                                                            <i class="fas fa-copy mx-2 fa-fw"></i>Copy URL
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Post Caption -->
+                                    <p class="post-caption px-3 mb-2" id="post-${post.post_id}-caption">
+                                        ${post.caption}
+                                    </p>
+                                    <!-- Post Media -->
+                                    <div class="post-media-container mb-2" id="post-${post.post_id}-media-container" data-post-id="${post.post_id}">
+                                    </div>
+                                    <!-- Like & Comment Counts -->
+                                    <div class="post-comment-like-counter-container mx-3 mb-2">
+                                        <div id="post-${post.post_id}-likes-count">
+                                            ${post.is_liker && post.likes_count == 1 ?
+                                                `<i class="fa-solid fa-heart"></i> You liked this` :
+                                                post.is_liker ?
+                                                    `<i class="fa-solid fa-heart"></i> You & ${post.likes_count - 1} others like this` :
+                                                    post.likes_count == 0 ? '' :
+                                                        `<i class="fa-solid fa-heart"></i> ${post.likes_count}`
+                                            }
+                                        </div>
+                                        <div id="post-${post.post_id}-comments-count">
+                                            ${post.comments_count != 0 ? `${post.comments_count} comments` : ''}
+                                        </div>
+                                    </div>
+                                    <!-- Post Like & Comment Buttons -->
+                                    <div class="post-comment-like-buttons-container mx-3">
+                                        ${post.is_liker ?
+                                            `<button class="post-like-btn post-red-like-btn" id="post-${post.post_id}-like-btn" data-post-likes-count="${post.likes_count}">
+                                                <i class="fa-solid fa-heart fa-lg"></i>
+                                                <strong>Like</strong>
+                                            </button>` :
+                                            `<button class="post-like-btn" id="post-${post.post_id}-like-btn" data-post-likes-count="${post.likes_count}">
+                                                <i class="fa-regular fa-heart fa-lg"></i>
+                                                <strong>Like</strong>
+                                            </button>`
+                                        }
+                                        <a href="/dashboard/${post.post_id}" class="post-comment-btn" id="post-${post.post_id}-comment-btn">
+                                            <i class="fa-regular fa-comment fa-lg"></i>
+                                            <strong>Comment</strong>
+                                        </a>
+                                    </div>
+                                </div> <!-- Post End -->
+                            `;
+                        $('.loading-indicator').before(postHtml);
+                        fetchMediaForPost(`${post.post_id}`)
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            })
+            .finally(() => {
+                // Hide loading indicator
+                $('.loading-indicator').hide();
+
+                // Reset fetch status to false
+                fetchingPosts = false;
+            });
+        }, 1000); // 3 seconds delay before fetching posts
+    }
+
+    // Fetch initial posts when the page loads
+    fetchPosts(3, 0);
+
+    // Event listener for scrolling to the bottom of the page
+    $(window).scroll(function() {
+        if(Math.round($(window).scrollTop() + $(window).height())+1 == $(document).height()) {
+            // Fetch next set of posts only if no fetch is in progress
+            if (!fetchingPosts) {
+                fetchPosts(3, $('.mid-section').children().length - 2);
+            }
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- This script contain functions to handle the ADD operation of comment/reply and preview their uploaded media files and the submition operation. -->
+<script>
+    // Array to keep track of selected files
+    const postFormSelectedFiles = [];
+    function previewPostMedia(event) {
+        let previewContainer = document.getElementById('postFormMediaPreview');
+
+        const files = event.target.files;
+        let invalidTypeFiles = [];
+        let invalidSizeFiles = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            let isFileValid = true
+
+            // Validate the file type
+            if (!isValidFileType(file)) {
+                invalidTypeFiles.push(file.name);
+                isFileValid = false
+            }
+            // Validate the file type
+            if (!isValidFileSize(file)) {
+                invalidSizeFiles.push(file.name);
+                isFileValid = false
+            }
+
+            if(isFileValid){
+                reader.onload = function (e) {
+                    const previewMediaContainer = document.createElement('div');
+                    previewMediaContainer.classList.add('uploaded-media-container');
+
+                    // Add file to the selected files array
+                    const fileData = { file, container: previewMediaContainer };
+                    postFormSelectedFiles.push(fileData);
+
+                    if (file.type.startsWith('image')) {
+                        const image = document.createElement('img');
+                        image.src = e.target.result;
+                        image.alt = file.name;
+                        image.classList.add('uploaded-media');
+                        previewMediaContainer.appendChild(image);
+                    } else if (file.type.startsWith('video')) {
+                        const videoContainer = document.createElement('a');
+                        videoContainer.classList.add('one-media-temp', 'uploaded-media');
+                        videoContainer.setAttribute('data-lg-size', '1280-720');
+                        videoContainer.setAttribute('data-video', '{"source": [{"src":"' + e.target.result + '", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}');
+
+                        const video = document.createElement('video');
+                        video.autoplay = false;
+                        video.controls = true;
+                        video.muted = true;
+                        video.src = e.target.result;
+
+                        videoContainer.appendChild(video);
+                        previewMediaContainer.appendChild(videoContainer);
+
+                        const playIcon = document.createElement('i');
+                        playIcon.classList.add('fa', 'fa-play-circle');
+                        playIcon.setAttribute('aria-hidden', 'true');
+                        previewMediaContainer.appendChild(playIcon);
+                    }
+
+                    const removeButton = document.createElement('i');
+                    removeButton.classList.add('remove-media-x-btn', 'fas', 'fa-circle-xmark');
+
+                    // Event listener for removing the specific file and its container.
+                    removeButton.addEventListener('click', function () {
+                        removePostMedia(fileData);
+                    });
+
+                    previewMediaContainer.appendChild(removeButton);
+                    previewContainer.appendChild(previewMediaContainer);
+
+                    // Refresh the validations on the update post form submit button.
+                    handleInputChange("post");
+
+                    // Refresh the gallery for the reviewed media.
+                    mediaLightGallery.refresh();
+                };
+            }
+
+            reader.readAsDataURL(file);
+        }
+
+        // Display popup message for invalid files
+        displayUploadFilesError(invalidTypeFiles, invalidSizeFiles);
+    }
+
+
+    // Function to remove a media file from "add post form".
+    function removePostMedia(fileData) {
+        const { file, container } = fileData;
+        let previewContainer = document.getElementById('postFormMediaPreview');
+
+        const index = postFormSelectedFiles.findIndex(item => item.file === file);
+        if (index !== -1) {
+            previewContainer.removeChild(container);
+            postFormSelectedFiles.splice(index, 1);
+        }
+
+        handleInputChange("post");
+    }
+
+
+    // Function to be called when the post form is submitted
+    function submitPostForm(event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Access the form element
+        const form = document.getElementById('makePostForm');
+
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Append the value of post_caption to the FormData object
+        const postFormCaptionInput = form.querySelector('textarea[name="post_form_caption"]');
+        if (postFormCaptionInput) {
+            formData.append('post_form_caption', postFormCaptionInput.value);
+        }
+        console.log(postFormSelectedFiles)
+        // Append the selected files to the FormData object
+        if (postFormSelectedFiles.length > 0) {
+            // Append the selected files to the FormData object
+            for (let i = 0; i < postFormSelectedFiles.length; i++) {
+                formData.append('images[]', postFormSelectedFiles[i]['file']);
+            }
+        }
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/add_new_post', {
+            method: 'POST',
+            body: formData,  // Assuming formData is defined earlier
+        })
+        .then(response => {
+            // The reponse is always a redirect either to "/dashboard"
+            // it if it's a success or to "/signout" if it's a fail.
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+</script>
+
+<!-- This script has a function to make a pop up with the names of the files that didn't pass the type and size validations. -->
+<script>
+    function displayUploadFilesError(invalidTypeFiles, invalidSizeFiles) {
+        if (invalidTypeFiles.length > 0 || invalidSizeFiles.length > 0) {
+            let errorMessage = 'Some files could not be uploaded: \n\n';
+            if (invalidTypeFiles.length > 0) {
+                errorMessage += 'Invalid types:\n';
+                errorMessage += invalidTypeFiles.map(file => '- ' + file).join('\n') + '\n\n';
+            }
+            if (invalidSizeFiles.length > 0) {
+                errorMessage += 'Exceeded size limit, 25MB/img 500MB/vid:\n';
+                errorMessage += invalidSizeFiles.map(file => '- ' + file).join('\n');
+            }
+            alert(errorMessage);
+    }
+}
+</script>
+
+
+<!-- This script is to validate the type and size of the uploaded media files. -->
+<script>
+    function isValidFileType(file) {
+        const acceptableTypes = { 'image': ['apng', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'webp', 'svg'], 'video': ['mp4', 'webm', 'ogg'] };
+        const fileType = file.type.split('/')[0]; // Extracting the file type from the file's MIME type
+
+        if (acceptableTypes.hasOwnProperty(fileType)) {
+            const fileExtension = file.name.split('.').pop().toLowerCase(); // Extracting the file extension
+            return acceptableTypes[fileType].includes(fileExtension);
+        }
+
+        return false;
+    }
+
+    function isValidFileSize(file) {
+        const acceptableSizes = { 'image': 25 * 1024 * 1024, 'video': 500 * 1024 * 1024 };
+        const fileType = file.type.split('/')[0]; // Extracting the file type from the file's MIME type
+
+        if (acceptableSizes.hasOwnProperty(fileType)) {
+            return file.size <= acceptableSizes[fileType];
+        }
+
+        return false;
+    }
+</script>
+
+
+<!-- same -->
+<!-- This script is to fetch the media of each post. -->
+<script>
+    // Function to fetch media for a specific post
+    function fetchMediaForPost(postId) {
+        fetch(`/dashboard/get_media_of_post/${postId}`, {
+            method: 'GET'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Get the container for the current post
+            var container = $(`#post-${postId}-media-container`);
+            if (data.length > 0) {
+                // Generate and append media HTML for the current post
+                generateMediaHTML(container, data);
+                // Initialize any necessary functionalities for the media (e.g., image gallery)
+                initializeGallery("post", postId);
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+
+    // Function to generate the required elements for the fetched media of the post.
+    function generateMediaHTML(container, response) {
+        if (response.length === 1) {
+            html = generateSingleMediaHTML(response[0], "one-media-temp");
+        } else if (response.length === 2) {
+            html = generateTwoMediaHTML(response);
+        } else if (response.length === 3) {
+            html = generateThreeMediaHTML(response);
+        } else {
+            html = generateMoreThanThreeMediaHTML(response);
+        }
+        container.append(html);
+    }
+
+    function generateSingleMediaHTML(response, className) {
+        var html = '';
+        if (response.media_type === "image") {
+            html += '<img class="' + className + '" src="/static/uploads/posts/images/' + response.media_name + '" alt="' + response.media_name + ' post image">';
+        } else if (response.media_type === "video") {
+            html += '<a class="' + className + '" ' +
+                'data-lg-size="1280-720" ' +
+                'data-video=\'{"source": [{"src":"/static/uploads/posts/videos/' + response.media_name + '", "type":"video/mp4"}], ' +
+                '"attributes": {"preload": false, "playsinline": true, "controls": true}}\' >' +
+                '<video controls src="/static/uploads/posts/videos/' + response.media_name + '" ></video>' +
+                '</a>';
+        }
+        return html;
+    }
+
+    function generateTwoMediaHTML(response) {
+        var html = '';
+        for (var i = 0; i < response.length; i++) {
+            html += generateSingleMediaHTML(response[i], "two-media-temp");
+        }
+        return html;
+    }
+
+    function generateThreeMediaHTML(response) {
+        var html = '';
+        html += generateSingleMediaHTML(response[0], "three-media-temp");
+        html += '<div class="two-media-container three-media-temp">';
+        for (var i = 1; i < response.length; i++) {
+            html += generateSingleMediaHTML(response[i], "three-media-temp");
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function generateMoreThanThreeMediaHTML(response) {
+        var html = '';
+        html += generateSingleMediaHTML(response[0], "three-media-temp");
+        html += '<div class="two-media-container three-media-temp">';
+        html += generateSingleMediaHTML(response[1], "three-media-temp");
+        html += '<div class="more-media-container three-media-temp">';
+        html += generateSingleMediaHTML(response[2], "three-media-temp");
+        html += '<div class="overlay-media-count">+' + (response.length - 3) + '</div>';
+        html += '</div></div>';
+        for (var i = 3; i < response.length; i++) {
+            html += generateSingleMediaHTML(response[i], "hidden-media-temp");
+        }
+        return html;
+    }
+</script>
+
+
+
+
+<!-- same -->
+<!-- This script is to handle the like button of the post -->
+<script>
+    // Flag variable to track if fetch operation is in progress
+    var isFetchInProgress = false;
+
+    // Function to handle like button click
+    function handlePostLike(postId, likesCount) {
+        // Check if fetch operation is already in progress
+        if (isFetchInProgress) {
+            return; // Do nothing if fetch operation is in progress
+        }
+
+        // Set flag to indicate fetch operation is in progress
+        isFetchInProgress = true;
+
+        // Use fetch to send the POST request
+        fetch('/dashboard/like_post/'+ postId, {
+            method: 'POST'
+        })
+        .then(response => {
+            // Check if response is a redirect
+            if (response.redirected) {
+                window.location.href = response.url; // Redirect to the specified URL
+            } else {
+                return response.json(); // Parse response as JSON
+            }
+        })
+        .then(data => {
+            // Update UI based on response data
+            var likeBtn = $("#post-" + postId + "-like-btn");
+            if (data['is_liker']) {
+                // Update UI for unlike
+                likeBtn.html('<i class="fa-regular fa-heart fa-lg"></i><strong>Like</strong>');
+                likeBtn.removeClass("post-red-like-btn");
+                likeBtn.data("post-likes-count", likesCount - 1);
+                // Update likes-count div based on likes_count
+                if (likesCount == 1) {
+                    $("#post-" + postId + "-likes-count").empty();
+                } else {
+                    $("#post-" + postId + "-likes-count").html('<i class="fa-solid fa-heart"></i> ' + (likesCount - 1));
+                }
+            } else {
+                // Update UI for like
+                likeBtn.html('<i class="fa-solid fa-heart fa-lg"></i> <strong>Like</strong>');
+                likeBtn.addClass("post-red-like-btn");
+                likeBtn.data("post-likes-count", likesCount + 1);
+                // Update likes-count div based on likes_count
+                if (likesCount === 0) {
+                    $("#post-" + postId + "-likes-count").html('<i class="fa-solid fa-heart"></i> You liked this');
+                } else {
+                    $("#post-" + postId + "-likes-count").html('<i class="fa-solid fa-heart"></i> You & ' + likesCount + ' others like this');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        })
+        .finally(() => {
+            // Reset flag to indicate fetch operation is completed
+            isFetchInProgress = false;
+        });
+    }
+
+    // Like button click event
+    $(document).on('click', 'button.post-like-btn', function () {
+        var postId = $(this).attr('id').split('-')[1];
+        var likesCount = $(this).data("post-likes-count");
+        handlePostLike(postId, likesCount);
+    });
+</script>
+
+
+
+<!-- This script is to add validations to the comment/reply form. -->
+<script>
+    addFormValidations("post")
+    function addFormValidations(formType) {
+        const formTextarea = document.querySelector(`.${formType}-form-caption`);
+
+        // Add an event listener to the textarea
+        formTextarea.addEventListener('input', function () {
+            handleInputChange(formType);
+        });
+
+        // Trigger initial check
+        handleInputChange(formType);
+    };
+
+    // Function to handle input changes
+    function handleInputChange(formType) {
+        // Get references to the elements
+        const formTextarea = document.querySelector(`.${formType}-form-caption`);
+        const submitButton = document.getElementById(`${formType}-form-btn`);
+
+        let selectedFiles;
+        switch (formType) {
+            case 'reply':
+                selectedFiles = replyFormSelectedFiles;
+                break;
+            case 'comment':
+                selectedFiles = commentFormSelectedFiles;
+                break;
+            case 'post':
+                selectedFiles = postFormSelectedFiles;
+                break;
+            default:
+                selectedFiles = [];
+                break;
+        }
+
+        // Check if the textarea is not empty or if there are selected media files
+        if (formTextarea.value.trim() !== '' || selectedFiles.length !== 0) {
+            submitButton.removeAttribute('disabled');
+            submitButton.classList.remove(`disabled-${formType}-form-submit-button`);
+            submitButton.classList.add(`${formType}-form-submit-button`);
+        } else {
+            submitButton.setAttribute('disabled', 'disabled');
+            submitButton.classList.remove(`${formType}-form-submit-button`);
+            submitButton.classList.add(`disabled-${formType}-form-submit-button`);
+        }
+    }
+</script>
+
+<!-- same -->
+<!-- This script is to delete a post. -->
+<script>
+    // Use event delegation for dynamically added buttons
+    $(document).on('click', '.post-delete-btn', function () {
+        // Get the post_id from the data attribute
+        var postId = $(this).data('post-id');
+
+        // Make a fetch request to the server
+        fetch('/dashboard/' + postId + '/delete_post', {
+            method: 'DELETE'
+        })
+        .then(response => {
+            // The reponse is always a redirect either to "/dashboard"
+            // it if it's a success or to "/signout" if it's a fail.
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    });
+</script>
+
+<!-- same -->
+<!-- This script is for the lightGallery for the media on the page. -->
+<script>
+    let mediaLightGallery;
+    function initializeGallery(elementType, elementIdNumber = undefined) {
+        // If elementIdNumber is passed then it's to make a light gallery for a post/comment/reply media.
+        var elementHtmlId;
+        var container;
+        if (elementIdNumber) {
+            // Construct the ID of the element
+            elementHtmlId = elementType + '-' + elementIdNumber + '-media-container';
+            // Get the element by ID
+            container = document.getElementById(elementHtmlId);
+        }
+        // If elementIdNumber is NOT passed then it's to make a light gallery for a UPDATE post/comment/reply form media.
+        else {
+            elementHtmlId = 'update-' + elementType + '-form-media-container';
+            container = document.getElementById(elementHtmlId);
+        }
+        // Check if the element exists
+        if (container) {
+            // Initialize lightGallery for the specified element
+            mediaLightGallery = lightGallery(container, {
+                selector: 'img, a',
+                plugins: [lgVideo, lgRotate],
+            });
+
+            // console.log("Gallery initialized for " + elementType + " with ID: " + elementIdNumber);
+        } else {
+            // console.error("Element with type: " + elementType + " and ID " + elementIdNumber + " not found.");
+        }
+    }
+</script>
+
+
+<!-- same -->
+<!--This script is to make the height of textarea for the post/comment/reply 
+    form adjust automatically with the size of the the inputted text.-->
+<script>
+    $(document).ready(function () {
+        // Attach the event listener using event delegation
+        $(document).on('input', 'textarea.height-auto-adjuster', function (e) {
+            let textarea = e.target;
+
+            // Set different initial heights based on textarea class
+            textarea.style.height = (textarea.classList.contains("post-form-caption")) ? "63px" :
+                (textarea.classList.contains("comment-form-caption")) ? "25px" :
+                    (textarea.classList.contains("reply-form-caption")) ? "25px" : "auto";
+
+            let scHeight = textarea.scrollHeight;
+            textarea.style.height = `${scHeight}px`;
+        });
+    });
+</script>
+
+<!-- same -->
+<!-- This script is for the copy url link buttons. -->
+<script>
+    function copyPostUrl(postId) {
+        var urlToCopy = window.location.origin + '/dashboard/' + postId;
+        copyUrlToClipboard(urlToCopy);
+    }
+
+    function copyUrlToClipboard(urlToCopy) {
+        var inputElement = document.createElement("input");
+        inputElement.value = urlToCopy;
+        document.body.appendChild(inputElement);
+        inputElement.select();
+        document.execCommand("copy");
+        document.body.removeChild(inputElement);
+        alert("URL copied to clipboard: " + urlToCopy);
+    }
+</script>
