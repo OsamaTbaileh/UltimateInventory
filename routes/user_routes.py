@@ -730,3 +730,28 @@ def remove_user_from_my_team(user_id):
             mysql.query_db(add_user_to_my_team_query, data)
             return redirect("/teams/my_team")
     return redirect("/sign_out")
+
+
+
+# /////////////////////////////////////////////////    /guest ROUTES   ////////////////////////////////////////////////
+# ///////////////////////////////////////////////// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ ////////////////////////////////////////////////
+
+# This route is for signing in as a guest.
+@app.route("/guest")
+def guest_signing_in():
+    # Clear any previous user data from the session.
+    session.clear()
+    # Get the 'guest' data the datababse.
+    mysql = connectToMySQL('primeinventory$prime_inventory')
+    guest_data_query = "SELECT * FROM users WHERE email = 'guest@guest.com';"
+    user = mysql.query_db(guest_data_query)
+    if user:
+        session['user_id'] = user[0]['user_id']
+        session['user_first_name'] = user[0]['first_name']
+        session['user_last_name'] = user[0]['last_name']
+        session['user_image_id'] = user[0]['image_id']
+        session['user_job_title'] = replace_job_title(user[0]['job_title'])
+        salted_created_at = str(user[0]['created_at']) + "saltyCoMmAander9/5"
+        session['hashed_created_at'] = bcrypt.generate_password_hash(salted_created_at)
+        return redirect('/dashboard')
+    return redirect("/sign_out")
