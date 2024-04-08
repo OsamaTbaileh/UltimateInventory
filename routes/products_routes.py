@@ -15,7 +15,7 @@ app = Blueprint('products', __name__)
 def render_all_products_page():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         products = mysql.query_db("SELECT * FROM products WHERE product_id != 'del';")
         return render_template("products/all_products.html", all_products=products, checked_user=checked_user)
     return redirect("/sign_out")
@@ -26,7 +26,7 @@ def render_all_products_page():
 def render_view_product_page(product_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the product's data based on the product's ID.
         product_query = """SELECT p.*, CONCAT(u.first_name, ' ', u.last_name) AS creator_full_name, CONCAT(u2.first_name, ' ', u2.last_name) AS updater_full_name
             FROM products p
@@ -41,7 +41,7 @@ def render_view_product_page(product_id):
         product['creator_full_name'] = product['creator_full_name'] if product['creator_full_name'] is not None else "Deleted User"
         product['updater_full_name'] = product['updater_full_name'] if product['updater_full_name'] is not None else "Deleted User"
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the product's locations data based on the product's ID.
         locations_query = """
             SELECT l.location_id, l.name AS location_name,
@@ -64,11 +64,11 @@ def render_view_product_page(product_id):
 def render_add_product_form(location_id=None):          #Whether there is a parameter passed or not, it will work.
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Fetch all existing products from the database.
         products = mysql.query_db("SELECT * FROM products WHERE product_id != 'del' ORDER BY LOWER(name);")
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Fetch all existing locations from the database.
         locations = mysql.query_db("""SELECT * 
                                     FROM locations 
@@ -77,7 +77,7 @@ def render_add_product_form(location_id=None):          #Whether there is a para
                                     CASE WHEN location_id = 'out' THEN 0 ELSE 1 END,
                                     LOWER(name);""")
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Fetch the specefic location name and ID, When reached from an add button in a specefic location view page.
         query = ("SELECT location_id, name AS Location_name FROM locations WHERE location_id = %(location_id_from_URL)s;")
         data = {'location_id_from_URL': location_id}
@@ -91,7 +91,7 @@ def render_add_product_form(location_id=None):          #Whether there is a para
 def render_update_product_form(product_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the product data from the database.
         product_query = "SELECT * FROM products WHERE product_id = %(product_id_from_URL)s;"
         data = {'product_id_from_URL': product_id}
@@ -116,7 +116,7 @@ def add_new_product():
 
         # If the first checkbox is checked (add existing product).
         if 'new_product_checkbox' not in request.form:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Add movement to the movements table with the product ID, location, and quantity.
             movement_query = """
                 INSERT INTO movements (movement_id, product_id, quantity, from_location_id, to_location_id, created_by, updated_by)
@@ -135,7 +135,7 @@ def add_new_product():
 
         # If the second checkbox is checked (add new product).
         else:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Insert a new product into the products table.
             product_query = """
                 INSERT INTO products (product_id, name, price, created_by, updated_by)
@@ -148,7 +148,7 @@ def add_new_product():
                 )
             """
             new_product = mysql.query_db(product_query, data)
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Add movement to the movements table with the product ID, location, and quantity.
             movement_query = """
                 INSERT INTO movements (movement_id, product_id, quantity, from_location_id, to_location_id, created_by, updated_by)
@@ -182,7 +182,7 @@ def update_product():
                 flash(error)
             return redirect("/products/update_product/" + str(data['old_product_id_from_form']))
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         update_product_query = """
             UPDATE products 
             SET product_id = %(product_id_from_form)s,
@@ -203,7 +203,7 @@ def delete_product(product_id):
     if checked_user:
         data = {'product_id_from_URL': product_id}
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Update the movements with the deleted product's ID in their "product_id".
         update_product_ID_in_movements_query = """
             UPDATE movements
@@ -212,7 +212,7 @@ def delete_product(product_id):
         """
         mysql.query_db(update_product_ID_in_movements_query, data)
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Delete the product from the 'products' table.
         delete_product_query = """
             DELETE FROM products 

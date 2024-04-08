@@ -29,7 +29,7 @@ def render_dashboard_page():
 def rend(posts_number=3, posts_offset=0):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Get the latest 3 posts.
         get_posts_query = """
             SELECT 
@@ -72,7 +72,7 @@ def rend(posts_number=3, posts_offset=0):
 def render_view_post_page(post_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Get the data of the post and the data of the author.
         post_query = """
             SELECT 
@@ -113,7 +113,7 @@ def render_view_post_page(post_id):
 def get_media_of_post(post_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         media_query = """
             SELECT media_id, name AS media_name, type AS media_type
             FROM media
@@ -134,7 +134,7 @@ def get_media_of_post(post_id):
 def get_comments_of_post(post_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         comments_query = """
             SELECT 
                 c.comment_id, c.caption, c.created_at, c.updated_at,
@@ -174,7 +174,7 @@ def get_comments_of_post(post_id):
 def get_replies_of_comment(comment_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         replies_query = """
             SELECT 
                 r.reply_id, r.caption, r.created_at, r.updated_at,
@@ -222,7 +222,7 @@ def like_post(post_id):
         }
 
         # Check if the user has already liked the post
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         is_liker_query = """
             SELECT COUNT(like_id) AS like_count
             FROM likes
@@ -234,7 +234,7 @@ def like_post(post_id):
 
         if is_liker:
             # Unlike the post
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             unlike_query = """
                 DELETE FROM likes 
                 WHERE user_id = %(user_id_from_session)s 
@@ -244,7 +244,7 @@ def like_post(post_id):
             mysql.query_db(unlike_query, data)
         else:
             # Like the post
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             like_query = """
                 INSERT INTO likes (user_id, reference_id, reference_table)
                 VALUES (%(user_id_from_session)s, %(post_id_from_request)s, 'posts');
@@ -268,7 +268,7 @@ def like_comment(comment_id):
         }
 
         # Check if the user has already liked the comment
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         is_liker_query = """
             SELECT COUNT(like_id) AS like_count
             FROM likes
@@ -280,7 +280,7 @@ def like_comment(comment_id):
 
         if is_liker:
             # Unlike the comment
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             unlike_query = """
                 DELETE FROM likes 
                 WHERE user_id = %(user_id_from_session)s 
@@ -290,7 +290,7 @@ def like_comment(comment_id):
             mysql.query_db(unlike_query, data)
         else:
             # Like the comment
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             like_query = """
                 INSERT INTO likes (user_id, reference_id, reference_table)
                 VALUES (%(user_id_from_session)s, %(comment_id_from_request)s, 'comments');
@@ -314,7 +314,7 @@ def like_reply(reply_id):
         }
 
         # Check if the user has already liked the reply
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         is_liker_query = """
             SELECT COUNT(like_id) AS like_count
             FROM likes
@@ -326,7 +326,7 @@ def like_reply(reply_id):
 
         if is_liker:
             # Unlike the reply
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             unlike_query = """
                 DELETE FROM likes 
                 WHERE user_id = %(user_id_from_session)s 
@@ -336,7 +336,7 @@ def like_reply(reply_id):
             mysql.query_db(unlike_query, data)
         else:
             # Like the reply
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             like_query = """
                 INSERT INTO likes (user_id, reference_id, reference_table)
                 VALUES (%(user_id_from_session)s, %(reply_id_from_request)s, 'replies');
@@ -424,7 +424,7 @@ def add_new_post():
             return signout()
 
         # Add post to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         add_post_query = """
             INSERT INTO posts (caption, user_id)
             VALUES (
@@ -437,7 +437,7 @@ def add_new_post():
         # If the post got media with it: 
         if 'added_media_names' in data:
             # Add the new media files from the database.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Construct the INSERT INTO query with properly formatted tuples.
             add_new_post_media_query = """
                 INSERT INTO media (name, type, reference_table, reference_id) VALUES {}
@@ -463,7 +463,7 @@ def add_new_comment():
             return signout()
 
         # Add comment to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         add_comment_query = """
             INSERT INTO comments (caption, post_id, user_id)
             VALUES (
@@ -476,7 +476,7 @@ def add_new_comment():
 
         # If the comment got media with it: 
         if 'media_name' in data:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             add_media_query = """
                 INSERT INTO media (name, reference_id, reference_table, type)
                 VALUES (
@@ -510,7 +510,7 @@ def add_new_reply():
             return signout()
 
         # Add comment to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         add_reply_query = """
             INSERT INTO replies (caption, comment_id, user_id)
             VALUES (
@@ -523,7 +523,7 @@ def add_new_reply():
 
         # If the comment got media with it: 
         if 'media_name' in data:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             add_media_query = """
                 INSERT INTO media (name, reference_id, reference_table, type)
                 VALUES (
@@ -552,7 +552,7 @@ def update_post():
     if checked_user:
         # Check if the logged in user is the author of the post.
         data = { 'updated_post_id': request.form.get('updated_post_id') }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         post_author_id_query = """
             SELECT user_id FROM posts WHERE post_id = %(updated_post_id)s;
         """
@@ -565,7 +565,7 @@ def update_post():
                 return signout()
 
             # Update the post.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             update_post_query = """
                 UPDATE posts
                 SET caption = %(updated_post_caption)s
@@ -588,7 +588,7 @@ def update_comment():
     if checked_user:
         # Check if the logged in user is the author of the comment.
         data = { 'updated_comment_id': request.form.get('updated_comment_id') }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         comment_author_id_query = """
             SELECT user_id FROM comments WHERE comment_id = %(updated_comment_id)s;
         """
@@ -601,7 +601,7 @@ def update_comment():
                 return signout()
 
             # Update the comment.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             update_comment_query = """
                 UPDATE comments
                 SET caption = %(updated_comment_caption)s, updated_at = NOW()
@@ -622,7 +622,7 @@ def update_reply():
     if checked_user:
         # Check if the logged in user is the author of the reply.
         data = { 'updated_reply_id': request.form.get('updated_reply_id') }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         reply_author_id_query = """
             SELECT user_id FROM replies WHERE reply_id = %(updated_reply_id)s;
         """
@@ -635,7 +635,7 @@ def update_reply():
                 return signout()
 
             # Update the reply.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             update_reply_query = """
                 UPDATE replies
                 SET caption = %(updated_reply_caption)s, updated_at = NOW()
@@ -660,7 +660,7 @@ def delete_post(post_id):
     if checked_user:
         # Check if the logged in user is the author of the post.
         data = { 'post_id_from_URL': post_id }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         post_author_id_query = """
             SELECT user_id FROM posts WHERE post_id = %(post_id_from_URL)s;
         """
@@ -668,7 +668,7 @@ def delete_post(post_id):
         if session['user_id'] == post_author_id:
             # Delete all the media related to the post, either they are for the post itself or for it's comments & replies.
             # If you want to keep them, although the post is deleted just comment out this step and query.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             all_related_media_of_post_query = """
                 SELECT DISTINCT m.name, m.type, m.reference_table
                 FROM posts p
@@ -689,7 +689,7 @@ def delete_post(post_id):
                 validate_deleted_media_files(all_post_media)
 
             # Delete the post and it's comments & replies & all related media & likes.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             delete_post_query = """
                 DELETE l, m, p
                 FROM posts p
@@ -722,7 +722,7 @@ def delete_comment(comment_id):
     if checked_user:
         # Check if the logged-in user is the author of the comment.
         data = { 'comment_id_from_URL': comment_id }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         comment_author_id_query = """
             SELECT user_id FROM comments WHERE comment_id = %(comment_id_from_URL)s;
         """
@@ -730,7 +730,7 @@ def delete_comment(comment_id):
         if session['user_id'] == comment_author_id:
             # Delete all the media related to the comment, either they are for the comment itself or for its replies.
             # If you want to keep them, although the comment is deleted, just comment out this step and query.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             all_related_media_of_comment_query = """
                 SELECT DISTINCT m.name, m.type, m.reference_table
                 FROM comments c
@@ -748,7 +748,7 @@ def delete_comment(comment_id):
                 validate_deleted_media_files(all_comment_media)
 
             # Delete the comment and its replies & all related media & likes.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             delete_comment_query = """
                 DELETE l, m, c
                 FROM comments c
@@ -777,7 +777,7 @@ def delete_reply(reply_id):
     if checked_user:
         # Check if the logged-in user is the author of the reply.
         data = { 'reply_id_from_URL': reply_id }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         reply_author_id_query = """
             SELECT user_id FROM replies WHERE reply_id = %(reply_id_from_URL)s;
         """
@@ -785,7 +785,7 @@ def delete_reply(reply_id):
         if session['user_id'] == reply_author_id:
             # Delete all the media related to the reply.
             # If you want to keep them, although the reply is deleted, just comment out this step and query.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             all_related_media_of_reply_query = """
                 SELECT DISTINCT m.name, m.type, m.reference_table
                 FROM replies r
@@ -800,7 +800,7 @@ def delete_reply(reply_id):
                 validate_deleted_media_files(all_reply_media)
 
             # Delete the reply & all related media & likes.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             delete_reply_query = """
                 DELETE l, m, r
                 FROM replies r

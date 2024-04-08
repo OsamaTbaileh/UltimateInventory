@@ -24,7 +24,7 @@ def render_home_page():
 def render_normal_report_page():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         products = mysql.query_db("""
             SELECT l.location_id, l.name AS location_name, p.product_id, p.name AS product_name, p.price,
             COALESCE(SUM(CASE WHEN m.to_location_id = l.location_id THEN m.quantity END), 0) AS total_in_quantity,
@@ -45,15 +45,15 @@ def render_normal_report_page():
 def render_advanced_report_page():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT DISTINCT product_id, name FROM products ORDER BY LOWER(name);"
         products = mysql.query_db(query)
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT DISTINCT location_id, name FROM locations ORDER BY LOWER(name);"
         locations = mysql.query_db(query)
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Fetch product quantities in each location
         query = """
             SELECT l.location_id, l.name AS location_name, p.product_id, p.name AS product_name,

@@ -36,7 +36,7 @@ bcrypt = Bcrypt()  # Create an instance of the Bcrypt class
 def create_user():
     error = False
     # Check if the entered email already used before.
-    mysql = connectToMySQL('primeinventory$prime_inventory')
+    mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
     data = { "email_from_form" : request.form['email'] }
     emails_query = "SELECT user_id FROM users WHERE email = %(email_from_form)s;"
     emails = mysql.query_db(emails_query, data)
@@ -173,7 +173,7 @@ def create_user():
     else:
         # create the hash
         register_pass_hash = bcrypt.generate_password_hash(request.form['password'])  
-        mysql = connectToMySQL("primeinventory$prime_inventory")
+        mysql = connectToMySQL("ultimateinventory$ultimate_inventory")
         data = {
             "fname_from_form": request.form['first_name'],
             "lname_from_form": request.form['last_name'],
@@ -196,10 +196,10 @@ def create_user():
         mysql.query_db(register_query,data)
 
         # adding the user's address to the database:
-        mysql = connectToMySQL("primeinventory$prime_inventory")
+        mysql = connectToMySQL("ultimateinventory$ultimate_inventory")
         fetch_the_new_user_id_query = "SELECT user_id FROM users WHERE email = %(email_from_form)s;"
         data['new_user_id'] = mysql.query_db(fetch_the_new_user_id_query,data)[0]['user_id']
-        mysql = connectToMySQL("primeinventory$prime_inventory")
+        mysql = connectToMySQL("ultimateinventory$ultimate_inventory")
         adding_address_query = """
             INSERT INTO addresses (country, city, street, postal_code, user_id) 
             VALUES (%(country_from_form)s, %(city_from_form)s, %(street_form_form)s, %(postal_code_from_form)s, %(new_user_id)s);
@@ -213,7 +213,7 @@ def create_user():
 # sign in to the website.
 @app.route("/signing_in", methods=["POST"])
 def sign_in():
-    mysql = connectToMySQL('primeinventory$prime_inventory')
+    mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
     data = { "email_from_form": request.form['email'] }
     check_email_query = "SELECT * FROM users WHERE email = %(email_from_form)s;"
     user = mysql.query_db(check_email_query,data)
@@ -243,7 +243,7 @@ def signout():
 @app.route("/check_logged_user")
 def check_user_id():
     if 'user_id' in session:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT user_id, first_name, last_name, image_id, job_title, created_at FROM users WHERE user_id = %(user_id)s;"
         data = { 'user_id': session['user_id'] }
         user = mysql.query_db(query, data)
@@ -291,7 +291,7 @@ def render_all_users_page():
 def render_user_profile(user_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the user's data based on the user's ID.
         user_query = """SELECT
                             u1.*,
@@ -317,7 +317,7 @@ def render_user_profile(user_id):
         user['job_title'] = job_titles[user['job_title']]
         user['gender'] = genders[user['gender']]
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the user's Address based on the user's ID.
         address_query = "SELECT country, city, street, postal_code FROM addresses WHERE user_id = %(user_id_from_URL)s;"
         address = mysql.query_db(address_query, data)
@@ -330,7 +330,7 @@ def render_user_profile(user_id):
 def render_update_profile_form():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the user's data based on the user's ID.
         user_query = """SELECT
                             u1.*,
@@ -356,7 +356,7 @@ def render_update_profile_form():
         user['job_title'] = job_titles[user['job_title']]
         user['gender'] = genders[user['gender']]
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the user's Address based on the user's ID.
         address_query = "SELECT country, city, street, postal_code FROM addresses WHERE user_id = %(user_id_from_session)s;"
         address = mysql.query_db(address_query, data)
@@ -387,7 +387,7 @@ def update_user_profile():
 
         # If the user changed his job_title from Manager to Worker then he will loose his team:
         if checked_user['user_job_title'] == "Manager" and data['job_title_from_form'] == 3:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             update_team_query = """
                 UPDATE users 
                 SET supervisor_id = NULL,
@@ -397,7 +397,7 @@ def update_user_profile():
 
         # If the user changed his job_title from Worker to Manager then he will loose his supervisor and will have the ability to have his own team:
         elif checked_user['user_job_title'] == "Worker" and data['job_title_from_form'] == 2:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             update_team_query = """
                 UPDATE users 
                 SET supervisor_id = NULL,
@@ -406,7 +406,7 @@ def update_user_profile():
             mysql.query_db(update_team_query, data)
 
         # If the user didn't change his job_title (no need to change team or supervisor):
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         update_user_query = """
             UPDATE users 
             SET first_name = %(first_name_from_form)s,
@@ -421,7 +421,7 @@ def update_user_profile():
         mysql.query_db(update_user_query, data)
 
         # update the user address:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         update_user_address_query = """
             UPDATE addresses 
             SET country = %(country_from_form)s,
@@ -453,7 +453,7 @@ def change_user_account_password():
         # Update the password of the user:
         new_password_hash = bcrypt.generate_password_hash(data['new_password_from_form'])
         data['new_password_hash'] = new_password_hash
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         update_user_password_query = """
             UPDATE users 
             SET password = %(new_password_hash)s
@@ -474,7 +474,7 @@ def delete_user(user_id_url):
 
     # Only the admin can delete any account & the user can delete his own account
     elif checked_user['user_job_title'] == "Adminstrator" or session['user_id'] == int(user_id_url):
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Delete the user's address from the 'adresses' table.
         delete_user_address_query = """
             DELETE FROM addresses
@@ -483,7 +483,7 @@ def delete_user(user_id_url):
         data = {'user_id_from_URL': user_id_url}
         mysql.query_db(delete_user_address_query, data)
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Delete the user from the 'users' table.
         delete_user_query = """
             DELETE FROM users 
@@ -506,7 +506,7 @@ def load_all_users():
     checked_user = check_user_id()
     if checked_user:
         # Get all users from the database:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         all_users_query = """
             SELECT user_id, first_name, last_name, image_id, job_title
             FROM users
@@ -526,7 +526,7 @@ def load_managers():
     checked_user = check_user_id()
     if checked_user:
         # Get all users from the database:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         managers_query = """
             SELECT user_id, first_name, last_name, image_id, job_title
             FROM users
@@ -547,7 +547,7 @@ def load_workers():
     checked_user = check_user_id()
     if checked_user:
         # Get all users from the database:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         workers_query = """
             SELECT user_id, first_name, last_name, image_id, job_title
             FROM users
@@ -568,7 +568,7 @@ def load_new_workers():
     checked_user = check_user_id()
     if checked_user:
         # Get all users from the database:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         new_workers_query = """
             SELECT user_id, first_name, last_name, image_id, job_title
             FROM users
@@ -598,13 +598,13 @@ def add_user_to_my_team(user_id):
             'chosen_user_id': user_id,
             'supervisor_id': session['user_id']
         }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         chosen_user_query = "SELECT supervisor_id FROM users WHERE user_id = %(chosen_user_id)s;"
         chosen_user_supervisor_id = mysql.query_db(chosen_user_query, data)
 
         if chosen_user_supervisor_id[0]['supervisor_id'] == None:
             # Set the looged user as a supervisor for the choosen user:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             add_user_to_my_team_query = """
                 UPDATE users 
                 SET supervisor_id = %(supervisor_id)s
@@ -634,7 +634,7 @@ def get_my_team():
     if checked_user:
         if checked_user['user_job_title'] == "Worker":
             team = []
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Retrieve the user's supervisor's information.
             supervisor_query = """SELECT u2.user_id, u2.first_name, u2.last_name, u2.job_title, u2.image_id
                             FROM users u1
@@ -649,7 +649,7 @@ def get_my_team():
                 supervisor['job_title'] = replace_job_title(supervisor['job_title'])
                 data['supervisor_id'] = supervisor['user_id']
 
-                mysql = connectToMySQL('primeinventory$prime_inventory')
+                mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
                 # Retrieve the user's team data based on the user's supervisor's ID.
                 team_query = """SELECT user_id, first_name, last_name, job_title, image_id
                                 FROM users
@@ -663,7 +663,7 @@ def get_my_team():
 
         # If the logged in user is "Manager":
         elif checked_user['user_job_title'] == "Manager":
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Retrieve the user's team data based on the user's supervisor's ID.
             team_query = """SELECT user_id, first_name, last_name, job_title, image_id
                             FROM users
@@ -683,7 +683,7 @@ def get_my_team():
 
         # If the logged in user is "Adminstrator":
         elif checked_user['user_job_title'] == "Adminstrator":
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             # Retrieve the user's team data which are all the managers.
             team_query = """SELECT user_id, first_name, last_name, job_title, image_id
                             FROM users
@@ -715,13 +715,13 @@ def remove_user_from_my_team(user_id):
             'chosen_user_id': user_id,
             'supervisor_id': session['user_id']
         }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         chosen_user_query = "SELECT supervisor_id FROM users WHERE user_id = %(chosen_user_id)s;"
         chosen_user_supervisor_id = mysql.query_db(chosen_user_query, data)
 
         if chosen_user_supervisor_id[0]['supervisor_id'] == session['user_id']:
             # Set the supervisor_id for the choosen user as NULL:
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             add_user_to_my_team_query = """
                 UPDATE users 
                 SET supervisor_id = NULL
@@ -742,7 +742,7 @@ def guest_signing_in():
     # Clear any previous user data from the session.
     session.clear()
     # Get the 'guest' data the datababse.
-    mysql = connectToMySQL('primeinventory$prime_inventory')
+    mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
     guest_data_query = "SELECT * FROM users WHERE email = 'guest@guest.com';"
     user = mysql.query_db(guest_data_query)
     if user:

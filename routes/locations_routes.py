@@ -18,7 +18,7 @@ app = Blueprint('locations', __name__)
 def render_all_locations_page():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         locations = mysql.query_db("SELECT * FROM locations WHERE location_id NOT IN ('del', 'out');")
         return render_template("locations/all_locations.html", all_locations=locations, checked_user=checked_user)
     return redirect("/sign_out")
@@ -29,7 +29,7 @@ def render_all_locations_page():
 def render_view_locaiton_page(location_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the location's data based on the location's ID.
         location_query = """SELECT l.*, CONCAT(u.first_name, ' ', u.last_name) AS creator_full_name, CONCAT(u2.first_name, ' ', u2.last_name) AS updater_full_name
             FROM locations l
@@ -44,7 +44,7 @@ def render_view_locaiton_page(location_id):
         location['creator_full_name'] = location['creator_full_name'] if location['creator_full_name'] is not None else "Deleted User"
         location['updater_full_name'] = location['updater_full_name'] if location['updater_full_name'] is not None else "Deleted User"
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the location's products data based on the location's ID.
         products_query = """
             SELECT p.product_id, p.name, p.price,
@@ -76,7 +76,7 @@ def render_add_location_form():
 def render_update_location_form(location_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the location data based on the location's ID.
         query = "SELECT * FROM locations WHERE location_id = %(location_id_from_URL)s"
         data = {'location_id_from_URL': location_id,}
@@ -98,7 +98,7 @@ def add_new_location():
                 flash(error)
             return redirect("/locations/add_new_location")
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = """
             INSERT INTO locations (location_id, name, image_id, created_by, updated_by) 
             VALUES (
@@ -127,7 +127,7 @@ def update_location():
                 flash(error)
             return redirect("/locations/update_location/" + str(data['old_location_id_from_form']))
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         update_location_query = """
             UPDATE locations 
             SET location_id = %(location_id_from_form)s,
@@ -149,7 +149,7 @@ def delete_location(location_id):
     if checked_user:
         data = {'location_id_from_URL': location_id}
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Update the movements with the deleted location's ID in their "from_location_id".
         update_from_movements_query = """
             UPDATE movements
@@ -159,7 +159,7 @@ def delete_location(location_id):
         mysql.query_db(update_from_movements_query, data)
 
         # Update the movements with the deleted location's ID in their "to_location_id".
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         update_to_movements_query = """
             UPDATE movements
             SET to_location_id = 'del'
@@ -167,7 +167,7 @@ def delete_location(location_id):
         """
         mysql.query_db(update_to_movements_query, data)
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Delete the location from the 'locations' table.
         delete_location_query = """
             DELETE FROM locations 

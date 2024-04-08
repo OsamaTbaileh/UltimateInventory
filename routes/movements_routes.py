@@ -16,7 +16,7 @@ app = Blueprint('movements', __name__)
 def render_all_movements_page(movement_type, sort_order):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         if movement_type.lower() == "all":
             # Retrieve all movements with their corresponding from_location, to_location, and product names
             query = """
@@ -73,7 +73,7 @@ def filter_movements():
 def render_view_movement_page(movement_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the movement data based on the ID
         movement_query = """SELECT m.*, 
             CONCAT(u.first_name, ' ', u.last_name) AS creator_full_name,
@@ -108,7 +108,7 @@ def render_view_movement_page(movement_id):
 def render_add_movement_form():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         locations = mysql.query_db("""SELECT location_id, name 
                                         FROM locations
                                         WHERE location_id != 'del'
@@ -124,13 +124,13 @@ def render_add_movement_form():
 def render_update_movement_form(movement_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve the movement data based on the ID
         movement_query = "SELECT * FROM movements WHERE movement_id = %(movement_id_from_URL)s"
         data = {'movement_id_from_URL': movement_id}
         movement = mysql.query_db(movement_query, data)
         
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve other necessary data for the locations.
         locations = mysql.query_db("""SELECT location_id, name 
                                         FROM locations
@@ -138,7 +138,7 @@ def render_update_movement_form(movement_id):
                                         ORDER BY 
                                         CASE WHEN location_id = 'out' THEN 0 ELSE 1 END,
                                         LOWER(name);""")        
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Retrieve other necessary data for the product of the movement.
         product_query = """
             SELECT product_id, name AS product_name 
@@ -157,7 +157,7 @@ def render_update_movement_form(movement_id):
 def get_products_by_location(location_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = """
             SELECT p.product_id, p.name, p.price,
                 (COALESCE(SUM(CASE WHEN m.to_location_id = %(location_id_form_AJAX)s THEN m.quantity ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN m.from_location_id = %(location_id_form_AJAX)s THEN m.quantity ELSE 0 END), 0)) AS total_quantity
@@ -178,7 +178,7 @@ def get_products_by_location(location_id):
 def get_all_products():
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT product_id, name FROM products WHERE product_id != 'del' ORDER BY LOWER(name);"
         products = mysql.query_db(query)
         return jsonify(products)
@@ -197,7 +197,7 @@ def add_new_movement():
                 flash(error)
             return redirect("/movements/add_new_movement")
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Add movement to the movements table with the product ID, location, and quantity.
         movement_query = """INSERT INTO movements (movement_id, product_id, quantity, from_location_id, to_location_id, created_by, updated_by)
                             VALUES (%(movement_id_from_form)s, 
@@ -225,7 +225,7 @@ def update_movement():
                 flash(error)
             return redirect("/movements/update_movement/" + str(data['old_movement_id_from_form']))
 
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = """
             UPDATE movements 
             SET movement_id = %(movement_id_from_form)s, 
@@ -246,7 +246,7 @@ def update_movement():
 def delete_movement(movement_id):
     checked_user = check_user_id()
     if checked_user:
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Delete the movement from the 'movements' table
         query = "DELETE FROM movements WHERE movement_id = %(movement_id_from_URL)s"
         data = {'movement_id_from_URL': movement_id}

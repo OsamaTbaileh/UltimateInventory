@@ -28,7 +28,7 @@ def validate_add_new_location_method(form_data, form_files):
         validation_errors.append("Location ID must be between 5 and 20 characters in length.")
     else:
         # Check if location_id already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM locations WHERE location_id = %(location_id_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0:
@@ -39,7 +39,7 @@ def validate_add_new_location_method(form_data, form_files):
         validation_errors.append("Location name must be between 5 and 20 characters in length.")
     else:
         # Check if location's name already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM locations WHERE name = %(location_name_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0:
@@ -101,7 +101,7 @@ def validate_update_location_method(form_data, form_files):
         validation_errors.append("Location ID must be between 5 and 20 characters in length.")
     else:
         # Check if location_id already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM locations WHERE location_id = %(location_id_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0 and data['location_id_from_form'] != data['old_location_id_from_form']:
@@ -112,7 +112,7 @@ def validate_update_location_method(form_data, form_files):
         validation_errors.append("Location name must be between 5 and 20 characters in length.")
     else:
         # Check if location's name already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM locations WHERE name = %(location_name_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0 and data['location_name_from_form'] != data['old_location_name_from_form']:
@@ -193,7 +193,7 @@ def validate_add_new_product_method(form_data):
         elif 'product_id_input_1' in form_data:
             data['product_id_from_form'] = form_data['product_id_input_1']
             # Check if product_id exists in the database.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = "SELECT COUNT(*) AS count FROM products WHERE  product_id = %(product_id_from_form)s" 
             result = mysql.query_db(query, data)
             # If entered product_id didn't match any product ID in the database.
@@ -217,7 +217,7 @@ def validate_add_new_product_method(form_data):
             validation_errors.append("Movement ID must be between 5 and 20 characters in length.")
         else:
             # Check if movement_id already exists in the database.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = "SELECT COUNT(*) AS count FROM movements WHERE movement_id = %(movement_id_1_from_form)s"
             result = mysql.query_db(query, data)
             if result[0]['count'] > 0:
@@ -246,7 +246,7 @@ def validate_add_new_product_method(form_data):
             validation_errors.append("Product ID must be between 5 and 20 characters in length.")
         else:
             # Check if product_id already exists in the database.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = "SELECT COUNT(*) AS count FROM products WHERE product_id = %(product_id_2_from_form)s"
             result = mysql.query_db(query, data)
             if result[0]['count'] > 0:
@@ -257,7 +257,7 @@ def validate_add_new_product_method(form_data):
             validation_errors.append("Product name must be between 3 and 20 characters in length.")
         else:
             # Check if product's name already exists in the database.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = "SELECT COUNT(*) AS count FROM products WHERE  name = %(product_name_2_from_form)s"
             result = mysql.query_db(query, data)
             if result[0]['count'] > 0:
@@ -283,7 +283,7 @@ def validate_add_new_product_method(form_data):
             validation_errors.append("Movement ID must be between 5 and 20 characters in length.")
         else:
             # Check if movement_id already exists in the database.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = "SELECT COUNT(*) AS count FROM movements WHERE movement_id = %(movement_id_2_from_form)s"
             result = mysql.query_db(query, data)
             if result[0]['count'] > 0:
@@ -316,7 +316,7 @@ def validate_update_product_method(form_data):
         validation_errors.append("Product ID must be between 5 and 20 characters in length.")
     else:
         # Check if product_id already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM products WHERE  product_id = %(product_id_from_form)s" 
         result = mysql.query_db(query, data)
         # If the user didn't cahnge the ID:
@@ -328,7 +328,7 @@ def validate_update_product_method(form_data):
         validation_errors.append("Product name must be between 3 and 20 characters in length.")
     else:
         # Check if product's name already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM products WHERE  name = %(product_name_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0 and data['product_name_from_form'] != data['old_product_name_from_form']:
@@ -364,7 +364,7 @@ def validate_add_new_movement_method(form_data):
         validation_errors.append("Movement ID must be between 5 and 20 characters in length.")
     else:
         # Check if movement_id already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM movements WHERE movement_id = %(movement_id_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0:
@@ -392,7 +392,7 @@ def validate_add_new_movement_method(form_data):
                     return data, validation_errors
                 # Validate product_id availability in from_location when the user writes the product ID (product quantity in location > 0).
                 data['product_id_from_form'] = form_data['product_id_input']
-                mysql = connectToMySQL('primeinventory$prime_inventory')
+                mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
                 query = """
                     SELECT 
                         COALESCE(SUM(CASE WHEN m.to_location_id = %(from_location_id_from_form)s THEN m.quantity ELSE 0 END), 0) -
@@ -413,7 +413,7 @@ def validate_add_new_movement_method(form_data):
                     return data, validation_errors
                 # Validate product_id is available in all products.
                 data['product_id_from_form'] = form_data['product_id_input']
-                mysql = connectToMySQL('primeinventory$prime_inventory')
+                mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
                 query = """
                     SELECT COUNT(*) AS product_count FROM products WHERE product_id = %(product_id_from_form)s
                 """
@@ -434,7 +434,7 @@ def validate_add_new_movement_method(form_data):
                 else:
                     if form_data['from_location_id'] != "out":
                         # Validate product_id availability in from_location (if the quantity in the location is more than or equal to movement's quantity).
-                        mysql = connectToMySQL('primeinventory$prime_inventory')
+                        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
                         query = """
                             SELECT 
                                 COALESCE(SUM(CASE WHEN m.to_location_id = %(from_location_id_from_form)s THEN m.quantity ELSE 0 END), 0) -
@@ -473,7 +473,7 @@ def validate_update_movement_method(form_data):
         validation_errors.append("Movement ID must be between 5 and 20 characters in length.")
     else:
         # Check if movement_id already exists in the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         query = "SELECT COUNT(*) AS count FROM movements WHERE movement_id = %(movement_id_from_form)s"
         result = mysql.query_db(query, data)
         if result[0]['count'] > 0 and data['movement_id_from_form'] != data['old_movement_id_from_form']:
@@ -506,7 +506,7 @@ def validate_update_movement_method(form_data):
                     validation_errors.append("Please insert a positive integer number as the quantity.")
                 else:
                     # Validate product_id availability in from_location (if the quantity in the location is more than or equal to movement's quantity).
-                    mysql = connectToMySQL('primeinventory$prime_inventory')
+                    mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
                     query = """
                         SELECT 
                             COALESCE(SUM(CASE WHEN m.to_location_id = %(from_location_id_from_form)s THEN m.quantity ELSE 0 END), 0) -
@@ -542,7 +542,7 @@ def validate_update_movement_method(form_data):
             # Validate product_id when the user used the text input to enter a product id manually if he chosed None as a "From Location".
             # Validate product_id is available in "all products".
             data['product_id_from_form'] = form_data['product_id_input']
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = """
                 SELECT COUNT(*) AS product_count FROM products WHERE product_id = %(product_id_from_form)s
             """
@@ -562,7 +562,7 @@ def validate_update_movement_method(form_data):
 
         else:
             # Validate product_id availability in from_location (if the quantity in the location is more than or equal to movement's quantity).
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             query = """
                 SELECT 
                     COALESCE(SUM(CASE WHEN m.to_location_id = %(from_location_id_from_form)s THEN m.quantity ELSE 0 END), 0) -
@@ -649,7 +649,7 @@ def validate_update_user_profile_method(form_data, form_files, checked_user):
     elif not EMAIL_REGEX.match(form_data['email']):
         validation_errors.append(("Invalid email address.", 'email'))
     # Check if the entered email already used before.
-    mysql = connectToMySQL('primeinventory$prime_inventory')
+    mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
     emails_query = "SELECT COUNT(*) AS count FROM users WHERE email = %(email_from_form)s;"
     result = mysql.query_db(emails_query, data)
     if result[0]['count'] > 0 and data['email_from_form'] != data['old_email_form_form']:
@@ -757,7 +757,7 @@ def validate_change_user_account_password(form_data):
         validation_errors.append(("Definitely your old password isn't this short!", 'old_password'))
         return data, validation_errors
 
-    mysql = connectToMySQL('primeinventory$prime_inventory')
+    mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
     password_query = "SELECT password from users where user_id = %(user_id_from_session)s;"
     result = mysql.query_db(password_query, data)
     if not bcrypt.check_password_hash(result[0]['password'], form_data['old_password']):
@@ -851,7 +851,7 @@ def validate_add_new_post_method(form_data, form_files):
                 return data, validation_errors
 
         # Add the new media files to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Construct the INSERT INTO query with properly formatted tuples
         add_new_post_media_query = """
             INSERT INTO media (name, type, reference_table, reference_id) VALUES {}
@@ -928,7 +928,7 @@ def validate_update_post_method(form_data, form_files):
                 return data, validation_errors
 
         # Add the new media files to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Construct the INSERT INTO query with properly formatted tuples
         add_new_post_media_query = """
             INSERT INTO media (name, type, reference_table, reference_id) VALUES {}
@@ -940,7 +940,7 @@ def validate_update_post_method(form_data, form_files):
     # If the user deleted some media from the original media of the post.
     if form_data.getlist('deleted_images[]') and len(form_data.getlist('deleted_images[]')) > 0:
         # Get the names of the original post media files.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         post_original_media_names_query = """
             SELECT name AS post_media_name FROM media WHERE reference_table = "posts" AND reference_id = %(updated_post_id)s;
         """
@@ -973,7 +973,7 @@ def validate_update_post_method(form_data, form_files):
                 os.remove(media_path)
 
         # Delete the deleted media files from the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Construct the DELETE FROM query with properly formatted media names
         delete_removed_post_media_query = """
             DELETE FROM media WHERE name IN ({})
@@ -1105,7 +1105,7 @@ def validate_update_comment_method(form_data, form_files):
 
         # Since each comment can only has one media file, then we will delete any relatable media file record from DB before adding any new one.
         # Check if there is any media associated with the comment and get it's name and type.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         comment_original_media_names_query = """
             SELECT name, type FROM media WHERE reference_table = "comments" AND reference_id = %(updated_comment_id)s;
         """
@@ -1114,7 +1114,7 @@ def validate_update_comment_method(form_data, form_files):
             comment_original_media_name_and_type = comment_original_media_name_and_type[0]
 
             # Delete any assosiated media record from the DB.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             delete_associated_media_query = """
                 DELETE from media WHERE reference_table = 'comments' AND reference_id = %(updated_comment_id)s;
             """        
@@ -1129,7 +1129,7 @@ def validate_update_comment_method(form_data, form_files):
         data['new_media_name'] = media_name
         data['new_media_type'] = media_type[0]
         # Add the new media files to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Construct the INSERT INTO query with properly formatted tuples
         add_new_comment_media_query = """
             INSERT INTO media (name, type, reference_table, reference_id) VALUES (%(new_media_name)s, %(new_media_type)s, 'comments', %(updated_comment_id)s)
@@ -1140,7 +1140,7 @@ def validate_update_comment_method(form_data, form_files):
     # If the user deleted some media from the original media of the comment.
     elif form_data.getlist('deleted_images[]') and len(form_data.getlist('deleted_images[]')) == 1:
         # Get the names of the original comment media file.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         comment_original_media_name_query = """
             SELECT name AS comment_media_name FROM media WHERE reference_table = "comments" AND reference_id = %(updated_rcomment_id)s;
         """
@@ -1165,7 +1165,7 @@ def validate_update_comment_method(form_data, form_files):
 
         # Delete the deleted media record from the database.
         data = { 'deleted_media_name': form_data.getlist('deleted_images[]')[0].split("/")[-1] }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         delete_removed_comment_media_query = """
             DELETE FROM media WHERE name = %(deleted_media_name)s;
         """
@@ -1295,7 +1295,7 @@ def validate_update_reply_method(form_data, form_files):
 
         # Since each reply can only has one media file, then we will delete any relatable media file record from DB before adding any new one.
         # Check if there is any media associated with the reply and get it's name and type.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         reply_original_media_names_query = """
             SELECT name, type FROM media WHERE reference_table = "replies" AND reference_id = %(updated_reply_id)s;
         """
@@ -1304,7 +1304,7 @@ def validate_update_reply_method(form_data, form_files):
             reply_original_media_name_and_type = reply_original_media_name_and_type[0]
 
             # Delete any assosiated media record from the DB.
-            mysql = connectToMySQL('primeinventory$prime_inventory')
+            mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
             delete_associated_media_query = """
                 DELETE from media WHERE reference_table = 'replies' AND reference_id = %(updated_reply_id)s;
             """        
@@ -1319,7 +1319,7 @@ def validate_update_reply_method(form_data, form_files):
         data['new_media_name'] = media_name
         data['new_media_type'] = media_type[0]
         # Add the new media files to the database.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         # Construct the INSERT INTO query with properly formatted tuples
         add_new_reply_media_query = """
             INSERT INTO media (name, type, reference_table, reference_id) VALUES (%(new_media_name)s, %(new_media_type)s, 'replies', %(updated_reply_id)s)
@@ -1330,7 +1330,7 @@ def validate_update_reply_method(form_data, form_files):
     # If the user deleted some media from the original media of the reply.
     elif form_data.getlist('deleted_images[]') and len(form_data.getlist('deleted_images[]')) == 1:
         # Get the names of the original reply media file.
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         reply_original_media_name_query = """
             SELECT name AS reply_media_name FROM media WHERE reference_table = "replies" AND reference_id = %(updated_reply_id)s;
         """
@@ -1355,7 +1355,7 @@ def validate_update_reply_method(form_data, form_files):
 
         # Delete the deleted media record from the database.
         data = { 'deleted_media_name': form_data.getlist('deleted_images[]')[0].split("/")[-1] }
-        mysql = connectToMySQL('primeinventory$prime_inventory')
+        mysql = connectToMySQL('ultimateinventory$ultimate_inventory')
         delete_removed_reply_media_query = """
             DELETE FROM media WHERE name = %(deleted_media_name)s;
         """
