@@ -121,7 +121,7 @@ def validate_update_location_method(form_data, form_files):
     # Validate location's image:
     # If the user decided to uplaod a new photo file:
     media_file = None
-    if "location_image" in form_files or form_files['location_image'].filename != '':
+    if "location_image" in form_files and form_files['location_image'].filename != '':
         media_file = form_files['location_image']
         media_type = media_file.content_type.split('/')
         if not validate_type_of_uploaded_media_file(media_type, { 'image': ('apng', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'webp', 'svg') }):
