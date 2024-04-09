@@ -56,7 +56,7 @@ def validate_add_new_location_method(form_data, form_files):
             return data, validation_errors
 
         # Define the relative path to the target directory.
-        relative_path = r'static\uploads\locations_photos'
+        relative_path = 'static/uploads/locations_photos'
         # Construct the complete path to save the image.
         image_path = os.path.join(current_directory, '..', relative_path)
         # Process the uploaded image.
@@ -129,7 +129,7 @@ def validate_update_location_method(form_data, form_files):
             return data, validation_errors
 
         # Define the relative path to the target directory (one level up).
-        relative_path = r'static\uploads\locations_photos'
+        relative_path = 'static/uploads/locations_photos'
 
         # Construct the complete path to save the image.
         image_path = os.path.join(current_directory, '..', relative_path)
@@ -700,7 +700,7 @@ def validate_update_user_profile_method(form_data, form_files, checked_user):
             return data, validation_errors
 
         # Define the relative path to the target directory (one level up).
-        relative_path = r'static\uploads\users_photos'
+        relative_path = 'static/uploads/users_photos'
 
         # Construct the complete path to save the image.
         image_path = os.path.join(current_directory, '..', relative_path)
@@ -825,7 +825,7 @@ def validate_add_new_post_method(form_data, form_files):
             #Extract the type of the media.
             media_type = media_file.content_type.split("/")[0]
             # Define the relative path to the target directory.
-            relative_path = r'static\uploads\posts\{}s'.format(media_type)
+            relative_path = 'static/uploads/posts/{}s'.format(media_type)
             # Construct the complete path to save the media.
             media_path = os.path.join(current_directory, '..', relative_path)
             # Process the uploaded media.
@@ -902,7 +902,7 @@ def validate_update_post_method(form_data, form_files):
             #Extract the type of the media.
             media_type = media_file.content_type.split("/")[0]
             # Define the relative path to the target directory.
-            relative_path = r'static\uploads\posts\{}s'.format(media_type)
+            relative_path = 'static/uploads/posts/{}s'.format(media_type)
             # Construct the complete path to save the media.
             media_path = os.path.join(current_directory, '..', relative_path)
             # Process the uploaded media.
@@ -1021,7 +1021,7 @@ def validate_add_new_comment_method(form_data, form_files):
                 return data, validation_errors
 
             # Define the relative path to the target directory (one level up).
-            relative_path = r'static\uploads\comments\{}s'.format(media_type[0])
+            relative_path = 'static/uploads/comments/{}s'.format(media_type[0])
             # Construct the complete path to save the media.
             media_path = os.path.join(current_directory, '..', relative_path)
             # Process the uploaded media.
@@ -1084,7 +1084,7 @@ def validate_update_comment_method(form_data, form_files):
             return data, validation_errors
         
         # Define the relative path to the target directory (one level up).
-        relative_path = r'static\uploads\comments\{}s'.format(media_type[0])
+        relative_path = 'static/uploads/comments/{}s'.format(media_type[0])
         # Construct the complete path to save the media.
         media_path = os.path.join(current_directory, '..', relative_path)
         # Process the uploaded media.
@@ -1121,7 +1121,7 @@ def validate_update_comment_method(form_data, form_files):
             mysql.query_db(delete_associated_media_query, data)
 
             # Delete any assosiated media file from the server.
-            relative_path = r'static\uploads\comments\{}s\{}'.format(comment_original_media_name_and_type['type'], comment_original_media_name_and_type['name'])
+            relative_path = 'static/uploads/comments/{}s/{}'.format(comment_original_media_name_and_type['type'], comment_original_media_name_and_type['name'])
             media_path = os.path.join(current_directory, '..', relative_path)
             if os.path.exists(media_path):          
                 os.remove(media_path)
@@ -1211,7 +1211,7 @@ def validate_add_new_reply_method(form_data, form_files):
                 return data, validation_errors
 
             # Define the relative path to the target directory (one level up).
-            relative_path = r'static\uploads\replies\{}s'.format(media_type[0])
+            relative_path = 'static/uploads/replies/{}s'.format(media_type[0])
             # Construct the complete path to save the media.
             media_path = os.path.join(current_directory, '..', relative_path)
             # Process the uploaded media.
@@ -1274,7 +1274,7 @@ def validate_update_reply_method(form_data, form_files):
             return data, validation_errors
         
         # Define the relative path to the target directory (one level up).
-        relative_path = r'static\uploads\replies\{}s'.format(media_type[0])
+        relative_path = 'static/uploads/replies/{}s'.format(media_type[0])
         # Construct the complete path to save the media.
         media_path = os.path.join(current_directory, '..', relative_path)
         # Process the uploaded media.
@@ -1311,7 +1311,7 @@ def validate_update_reply_method(form_data, form_files):
             mysql.query_db(delete_associated_media_query, data)
 
             # Delete any assosiated media file from the server.
-            relative_path = r'static\uploads\replies\{}s\{}'.format(reply_original_media_name_and_type['type'], reply_original_media_name_and_type['name'])
+            relative_path = 'static/uploads/replies/{}s/{}'.format(reply_original_media_name_and_type['type'], reply_original_media_name_and_type['name'])
             media_path = os.path.join(current_directory, '..', relative_path)
             if os.path.exists(media_path):          
                 os.remove(media_path)

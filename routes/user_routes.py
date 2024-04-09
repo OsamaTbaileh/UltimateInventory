@@ -144,7 +144,7 @@ def create_user():
         # Get the current file's directory.
         current_directory = os.path.dirname(__file__)
         # Define the relative path to the target directory (one level up).
-        relative_path = r'static\uploads\users_photos'
+        relative_path = 'static/uploads/users_photos'
         # Construct the complete path to save the image.
         image_path = os.path.join(current_directory, '..', relative_path)
         # Process the uploaded image.
