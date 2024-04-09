@@ -227,7 +227,7 @@ def sign_in():
                 session['user_last_name'] = user[0]['last_name']
                 session['user_image_id'] = user[0]['image_id']
                 session['user_job_title'] = replace_job_title(user[0]['job_title'])
-                user_account_created_at = user[0]['created_at']
+                user_account_created_at = str(user[0]['created_at'])
                 session['hashed_created_at'] = bcrypt.generate_password_hash(user_account_created_at)
                 return redirect('/dashboard')
     flash("Unauthorized Access: Sign In credentials are invalid!", 'fail')
@@ -249,7 +249,7 @@ def check_user_id():
         query = "SELECT user_id, first_name, last_name, image_id, job_title, created_at FROM users WHERE user_id = %(user_id)s;"
         data = { 'user_id': session['user_id'] }
         user = mysql.query_db(query, data)
-        user_account_created_at = user[0]['created_at']
+        user_account_created_at = str(user[0]['created_at'])
         if user and bcrypt.check_password_hash(session['hashed_created_at'], user_account_created_at):
             return {
                 "user_job_title": replace_job_title(user[0]['job_title']),
@@ -753,7 +753,7 @@ def guest_signing_in():
         session['user_last_name'] = user[0]['last_name']
         session['user_image_id'] = user[0]['image_id']
         session['user_job_title'] = replace_job_title(user[0]['job_title'])
-        user_account_created_at = user[0]['created_at']
+        user_account_created_at = str(user[0]['created_at'])
         session['hashed_created_at'] = bcrypt.generate_password_hash(user_account_created_at)
         return redirect('/dashboard')
     return redirect("/sign_out")
