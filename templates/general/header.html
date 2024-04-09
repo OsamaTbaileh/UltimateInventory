@@ -84,9 +84,7 @@
               <img id="user-img" class="nav-link mx-0 user-img rounded-circle p-0" src="/static/uploads/users_photos/{{ checked_user.user_image_id }}" alt="User Image" data-bs-toggle="dropdown">
               <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item text-light" href="/users/{{ session.user_id }}">My Profile</a>
-                  {% if session.user_id != 1 or session.user_job_title != "Adminstrator" %}
                   <a class="dropdown-item text-light" href="/teams/my_team">My Team</a>
-                  {% endif %}
                   <a class="dropdown-item text-light" href="/sign_out">Sign Out</a>
               </div>
             </li>
