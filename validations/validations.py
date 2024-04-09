@@ -841,7 +841,7 @@ def validate_add_new_post_method(form_data, form_files):
 
         # Validate size of media file.
         for media_path in media_paths:
-            if not validate_size_of_uploaded_media_file(media_path, media_path.split("\\")[-2][:-1]):
+            if not validate_size_of_uploaded_media_file(media_path, media_path.split("/")[-2][:-1]):
                 validation_errors.append(("An uploaded file size is above the maximum.", 'fail'))
                 # If any one of them fail then that means frontend validations failed, and it will not save any of them.
                 # Remove all the saved medias above from the server.
