@@ -95,7 +95,7 @@
                         <img src="/static/uploads/users_photos/{{ member.image_id }}" alt="{{ member.first_name }} {{ member.last_name }} image." class="{{ member.first_name }} {{ member.job_title | lower }}-img">
                     </a>
                     <div class="{{ member.job_title | lower }}-name-container d-flex flex-column  justify-content-center">
-                        <a class="text-center mb-1" href="/users/{{ member.image_id }}">{{ member.first_name }} {{ member.last_name }}</a>
+                        <a class="text-center mb-1" href="/users/{{ member.user_id }}">{{ member.first_name }} {{ member.last_name }}</a>
                     </div>
                 </div>
                 {% endfor %}
