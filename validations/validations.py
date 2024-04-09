@@ -692,7 +692,7 @@ def validate_update_user_profile_method(form_data, form_files, checked_user):
     # Validate user's image:
     # If the user decided to uplaod a new photo file:
     media_file = None
-    if "user_image" in form_files:
+    if "user_image" in form_files and form_files['user_image'].filename != '':
         media_file = form_files['user_image']
         media_type = media_file.content_type.split('/')
         if not validate_type_of_uploaded_media_file(media_type, { 'image': ('apng', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'webp', 'svg') }):
@@ -727,7 +727,7 @@ def validate_update_user_profile_method(form_data, form_files, checked_user):
             os.remove(old_image_path)
 
     # Validate location's image if the user didnt update it, then use the old one:
-    elif 'user_image' not in form_files:
+    elif 'user_image' not in form_files or form_files['user_image'].filename == '':
         image_id =  checked_user['user_image_id']
 
     data['user_image_from_form'] = image_id
