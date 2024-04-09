@@ -134,7 +134,7 @@ def create_user():
 
     # User Image:
     # If the user decided to uplaod a photo file:
-    if "user_image" in request.files:
+    if "user_image" in request.files and request.files['user_image'].filename != '':
         media_file = request.files['user_image']
         media_type = media_file.content_type.split('/')
         if not validate_type_of_uploaded_media_file(media_type, { 'image': ('apng', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'webp', 'svg') }):
@@ -159,6 +159,8 @@ def create_user():
         if not validate_size_of_uploaded_media_file(image_path, media_type[0]):
             flash("An uploaded image file size is above the maximum which is 25MB.", 'user_image')
             error = True
+            if os.path.exists(image_path):
+                os.remove(image_path)
 
     # Validate user's image:
     elif 'user_image' not in request.files:
