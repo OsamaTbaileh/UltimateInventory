@@ -73,11 +73,9 @@
             <li class="nav-item d-sm-block d-md-block d-lg-none">
               <a class="nav-link mx-0 text-light " href="/users/{{ session.user_id }}">My Profile</a>
             </li>
-            {% if session.user_id != 1 %}
             <li class="nav-item d-sm-block d-md-block d-lg-none">
               <a class="nav-link mx-0 text-light" href="/teams/my_team">My Team</a>
             </li>
-            {% endif %}
             <li class="nav-item d-sm-block d-md-block d-lg-none">
               <a class="nav-link mx-0 text-light" href="/sign_out">Sign Out</a>
             </li>
