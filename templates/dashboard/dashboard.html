@@ -86,7 +86,7 @@
                         <img src="/static/uploads/users_photos/{{ the_supervisor.image_id }}" alt="{{ the_supervisor.first_name }} {{ the_supervisor.last_name }} image." class="{{ the_supervisor.first_name }} {{ the_supervisor.job_title | lower }}-img">
                     </a>
                     <div class="{{ the_supervisor.job_title | lower }}-name-container d-flex flex-column  justify-content-center">
-                        <a class="text-center mb-1" href="/users/{{ the_supervisor.image_id }}">{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}</a>
+                        <a class="text-center mb-1" href="/users/{{ the_supervisor.user_id }}">{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}</a>
                     </div>
                 </div>
                 {% for member in the_team %}
