@@ -1,9 +1,23 @@
 <div align="center">
-  <h1> Prime Inventory </h1>
+  <h1> Ultimate Inventory </h1>
 </div>
+
+
+Introducing "Ultimate Inventory," the next evolution of our previous project, "Prime Inventory." Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
+
+## whats new?
+- **📊 Dynamic Dashboard:** Empower users with a streamlined feed for posting, commenting, replying, and liking to enhance communication and collaboration between teams and users.
+- **🖼️ Media Files Upload:** Additionally, users can seamlessly upload media files such as images and videos, enhancing efficiency in managing inventory operations.
+- **💾 Enhanced Database Efficiency:** Improve database performance, strengthen validations, and refine backend logic.
+- **🚀 Expanded API Integration: ** Integrate Gmail and Google Maps APIs to elevate functionality and user experience.
+
 
 ## Idea:
 This web application is specifically designed to assist store managers in efficiently managing multiple warehouses located in different cities and locations. Its primary purpose is to provide a streamlined solution for organizing products within these warehouses and effectively tracking the movement of each product. This includes monitoring the origin and destination of each product as it moves throughout the supply chain. By utilizing this application, store managers can optimize their inventory management processes, enhance operational efficiency, and maintain accurate records of product movement within their company's warehousing infrastructure.
+
+
+## Idea:
+This web application is specifically designed to assist store managers in efficiently managing multiple warehouses located in different cities and locations. In addition to providing a streamlined solution for organizing products within these warehouses and tracking their movement, it also includes a feature for building teams composed of various workers and managers. By enabling collaboration among team members, the application enhances operational efficiency and optimizes inventory management processes. Moreover, it helps maintain accurate records of product movement within the company's warehousing infrastructure.
 
 
 ## Functional Specifications:
@@ -16,6 +30,9 @@ This web application is specifically designed to assist store managers in effici
     - Higher permissions and privileges.
     - Can add, delete, and modify various entities (locations, products, etc.).
     - Can observe the movements of all products.
+  - Admin Account:
+    - Highest permissions and privileges.
+    - Can delete users accounts.
 
 
 ## Programing Languages, Frameworks & Libraries Used:
