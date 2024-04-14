@@ -9,7 +9,7 @@ Introducing "Ultimate Inventory," the next evolution of our previous project, "P
 - **📊 Dynamic Dashboard:** Empower users with a streamlined feed for posting, commenting, replying, and liking to enhance communication and collaboration between teams and users.
 - **🖼️ Media Files Upload:** Additionally, users can seamlessly upload media files such as images and videos, enhancing efficiency in managing inventory operations.
 - **💾 Enhanced Database Efficiency:** Improve database performance, strengthen validations, and refine backend logic.
-- **🚀 Expanded API Integration: ** Integrate Gmail and Google Maps APIs to elevate functionality and user experience.
+- **🚀 Expanded API Integration:** Integrate Gmail and Google Maps APIs to elevate functionality and user experience.
 
 
 ## Idea:
