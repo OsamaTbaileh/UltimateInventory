@@ -47,6 +47,10 @@ a.navbar-brand {
     font-size: 14px;
 }
 
+.navbar .container {
+    max-width: 100%;
+}
+
 #user-img {
     max-width: 40px; 
     max-height: 40px;
