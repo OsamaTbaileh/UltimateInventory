@@ -163,7 +163,7 @@ def create_user():
                 os.remove(image_path)
 
     # Validate user's image:
-    elif 'user_image' not in request.files:
+    elif 'user_image' not in request.files or request.files['user_image'].filename == '':
         if request.form['gender'] == 'f':
             image_id = "female_default_user.jpg"
         else:
