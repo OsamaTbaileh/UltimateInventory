@@ -5,23 +5,23 @@
 <div class="mx-0 px-0 mw-100 my-5 pb-3 d-flex justify-content-center">
     <div class="container mx-0 pt-5 px-1 px-sm-2 px-md-3 px-lg-4">
         <div>
-            <h1 class="text-warning">Advanced Report:</h1>
+            <h1>Advanced Report:</h1>
             <p>This page contains a full report of all products with their corresponding quantity in each location.</p>
         </div>
         <div class="table-responsive">
             <table class="table custom-table table-hover report_table" id="table">
                 <thead>
                     <tr class="table-head">
-                        <th class="fixed-column"></th>
+                        <th class="column-head fixed-column"></th>
                         {% for product in products %}
-                            <th>{{ product['name'] }}</th>
+                            <th class="column-head">{{ product['name'] }}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for location in locations %}
                         <tr>
-                            <td class="bg-warning fixed-column">{{ location['name'] }}</td>
+                            <td class="row-head fixed-column">{{ location['name'] }}</td>
                             {% for product in products %}
                                 <td>{{ quantity_dict.get(location['location_id']).get(product['product_id']) }}</td>
                             {% endfor %}
