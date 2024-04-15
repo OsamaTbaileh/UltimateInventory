@@ -1,7 +1,7 @@
 {% set css_files = '<link rel="stylesheet" href="../../static/css/home_page.css">' %}
 {% include 'general/header.html' %}
 
-
+<div class="mx-0 px-0 mw-100" style="flex: 1; margin-top: 76px !important;">
 <!-- Logo & Slogan -->
 <div class="home-page-bg">
   <div class="row col-12 col-md-10 col-lg-8 col-xl-6 px-3">
@@ -19,51 +19,203 @@
   </div>
 </div>
 
-<!-- Our vision & mission -->
+<!-- Our vision, mission & values -->
 <section class="our-vision-section">
   <div class="container">
-    <h2>Our Vision, Mission & Values</h2>
+    <header class="text-center mb-5">
+      <div class="row">
+        <div class="col-lg-7 mx-auto">
+          <h1>Our Vision, Mission & Values</h1>
+          <p>"Vision without action is merely a dream. Action without vision just passes the time. Vision with action can change the world." - Joel A. Barker</p>
+        </div>
+      </div>
+    </header>
+
     <div class="row">
+
       <div class="col-lg-4 text-center">
-        <div class="circle-image">
-          <img class="about-us-image img-fluid" src="/static/img/vision.png" alt="Vision Image">
-        </div>
-        <p>Our Vision</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis tortor a risus iaculis, at eleifend lacus feugiat.</p>
+        <video autoplay muted style="width: 50%; border-radius:20%;">
+          <source src="/static/videos/our_vision.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p>Our vision is to create a world where technology enhances every aspect of life, empowering individuals and organizations to achieve their full potential.</p>
       </div>
+
       <div class="col-lg-4 text-center">
-        <div class="circle-image">
-          <img class="about-us-image img-fluid" src="/static/img/mission.png" alt="Mission Image">
-        </div>
-        <p>Our Mission</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis tortor a risus iaculis, at eleifend lacus feugiat.</p>
+        <video autoplay muted style="width: 50%; border-radius:20%;">
+          <source src="/static/videos/our_mission.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p>Our mission is to deliver innovative solutions that drive positive change, fostering collaboration, efficiency, and growth in every industry we serve.</p>
       </div>
+
       <div class="col-lg-4 text-center">
-        <div class="circle-image">
-          <img class="about-us-image img-fluid" src="/static/img/values.png" alt="Values Image">
-        </div>
-        <p>Our Values</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis tortor a risus iaculis, at eleifend lacus feugiat.</p>
+        <video autoplay muted style="width: 50%; border-radius:20%;">
+          <source src="/static/videos/our_values.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p>At our core, we value integrity, creativity, and a relentless pursuit of excellence. We believe in fostering a culture of respect, diversity, and continuous learning.</p>
       </div>
+
     </div>
   </div>
 </section>
 
 <!-- About us -->
-<section class="about-us-section">
+<section id="about-us" class="about-us-section bg-light">
+  <header class="text-center mb-5">
+    <div class="row">
+      <div class="col-lg-7 mx-auto">
+        <h1>About Us</h1>
+        <p>Want to know more about us?</p>
+      </div>
+    </div>
+  </header>
+
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
-        <h2>About Us</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis tortor a risus iaculis, at eleifend lacus feugiat. Pellentesque consequat, libero ac rhoncus viverra, risus risus fringilla augue, vel condimentum ex velit at erat.</p>
-        <p>Praesent tristique urna eu nisi consequat semper. Mauris vel ligula et felis sagittis volutpat eget a ante. Aliquam erat volutpat. Donec in mauris hendrerit, commodo elit vel, pulvinar arcu. Donec ut fermentum mauris.</p>
+        <p>Introducing "Ultimate Inventory," the evolution of our project "Prime Inventory." Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.</p>
+        <br>
+        <p>Our journey began with "Prime Inventory," aimed at assisting store managers in efficiently managing multiple warehouses. With each iteration, we refined the platform, incorporating feedback and pushing innovation boundaries.</p>
+        <br>
+        <p>"Ultimate Inventory" empowers store managers with a comprehensive toolset for organizing products, tracking movements, and optimizing inventory management. From its dynamic dashboard to seamless media file uploads, every feature enhances operational efficiency.</p>
+        <br>
+        <p>Join us as we continue to innovate and redefine inventory management's future.</p>
       </div>
-      <div class="col-lg-6">
+        <div class="col-lg-6">
         <img class="about-us-image img-fluid rounded" src="../static/img/AboutUs.jpg" alt="About Us section Image">
       </div>
     </div>
   </div>
 </section>
+
+<!-- Pricing -->
+<section id="pricing" class="pricing-section">
+  <div class="container">
+    <header class="text-center mb-5">
+      <div class="row">
+        <div class="col-lg-7 mx-auto">
+          <h1>Pricing</h1>
+          <p>Discover the perfect plan tailored to your needs from our diverse selection</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="row text-center align-items-end">
+      <!-- Pricing Table-->
+      <div class="col-lg-4 mb-5 mb-lg-0">
+        <div class="bg-white p-5 rounded-lg shadow">
+          <h1 class="h6 text-uppercase font-weight-bold mb-4">Basic</h1>
+          <h2 class="h2 font-weight-bold">$199<span class="text-small font-weight-normal ml-2">/ month</span></h2>
+
+          <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+          <ul class="list-unstyled my-5 text-small text-start">
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Up to 100 Users</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Up to 100 GB Space</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Dashborad</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> 1st Week Daily Free Support</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Normal Data Reports</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Google Maps Integration</li>
+            <li class="mb-3 text-muted">
+              <i class="fa fa-times mr-2"></i>
+              <del>Advanced Data Reports</del>
+            </li>
+            <li class="mb-3 text-muted">
+              <i class="fa fa-times mr-2"></i>
+              <del>Gmail Notifications</del>
+            </li>
+            <li class="mb-3 text-muted">
+              <i class="fa fa-times mr-2"></i>
+              <del>Free guest users</del>
+            </li>
+          </ul>
+          <a href="https://www.linkedin.com/in/osamatbaileh" class="btn btn-primary d-block p-2 shadow rounded-pill">Subscribe</a>
+        </div>
+      </div>
+      <!-- END -->
+
+      <!-- Pricing Table-->
+      <div class="col-lg-4 mb-5 mb-lg-0">
+        <div class="bg-white p-5 rounded-lg shadow">
+          <h1 class="h6 text-uppercase font-weight-bold mb-4">Pro</h1>
+          <h2 class="h2 font-weight-bold">$399<span class="text-small font-weight-normal ml-2">/ month</span></h2>
+
+          <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+          <ul class="list-unstyled my-5 text-small text-start">
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Up to 250 Users</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Up to 500 GB Space</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Dashborad</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> 1st month Daily Free Support</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Normal Data Reports</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Google Maps Integration</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Advanced Data Reports</li>
+            <li class="mb-3 text-muted">
+              <i class="fa fa-times mr-2"></i>
+              <del>Gmail Notifications</del>
+            </li>
+            <li class="mb-3 text-muted">
+              <i class="fa fa-times mr-2"></i>
+              <del>Free Guest Users</del>
+            </li>
+          </ul>
+          <a href="https://www.linkedin.com/in/osamatbaileh" class="btn btn-primary d-block p-2 shadow rounded-pill">Subscribe</a>
+        </div>
+      </div>
+      <!-- END -->
+
+      <!-- Pricing Table-->
+      <div class="col-lg-4">
+        <div class="bg-white p-5 rounded-lg shadow">
+          <h1 class="h6 text-uppercase font-weight-bold mb-4">Enterprise</h1>
+          <h2 class="h2 font-weight-bold">$899<span class="text-small font-weight-normal ml-2">/ month</span></h2>
+
+          <div class="custom-separator my-4 mx-auto bg-primary"></div>
+
+          <ul class="list-unstyled my-5 text-small text-start">
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Up to 500 Users</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Up to 1TB space</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Dashborad</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> 1st Year Daily Free Support</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Normal Data Reports</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Google Maps Integration</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Advanced Data Reports</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Gmail Notifications</li>
+            <li class="mb-3">
+              <i class="fa fa-check mr-2 text-primary"></i> Free Guest Users</li>
+          </ul>
+          <a href="https://www.linkedin.com/in/osamatbaileh" class="btn btn-primary d-block p-2 shadow rounded-pill">Subscribe</a>
+        </div>
+      </div>
+      <!-- END -->
+
+    </div>
+  </div>
+</section>
+</div>
 
 
 {%include 'general/footer.html'%}  
