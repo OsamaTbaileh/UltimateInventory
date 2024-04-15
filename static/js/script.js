@@ -12,4 +12,5 @@ function fadeInSection(sectionClass) {
 window.addEventListener("scroll", () => {
     fadeInSection(".our-vision-section");
     fadeInSection(".about-us-section");
+    fadeInSection(".pricing-section");
 });
