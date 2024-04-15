@@ -5,6 +5,15 @@
 .fixed-column {
     position: sticky;
     left: 0;
-    background-color: #fff;
+    background-color: white;
     z-index: 1;
+}
+
+.row-head {
+    background-color: #6e758a !important;
+    color: white;
+}
+
+.column-head {
+    background-color: #2e364d !important;
 }
