@@ -1,7 +1,7 @@
 {% set css_files = '<link rel="stylesheet" href="../../static/css/home_page.css">' %}
 {% include 'general/header.html' %}
 
-<div class="mx-0 px-0 mw-100" style="flex: 1; margin-top: 76px !important;">
+
 <!-- Logo & Slogan -->
 <div class="home-page-bg">
   <div class="row col-12 col-md-10 col-lg-8 col-xl-6 px-3">
@@ -63,16 +63,16 @@
 
 <!-- About us -->
 <section id="about-us" class="about-us-section bg-light">
-  <header class="text-center mb-5">
-    <div class="row">
-      <div class="col-lg-7 mx-auto">
-        <h1>About Us</h1>
-        <p>Want to know more about us?</p>
-      </div>
-    </div>
-  </header>
-
   <div class="container">
+    <header class="text-center mb-5">
+      <div class="row">
+        <div class="col-lg-7 mx-auto">
+          <h1>About Us</h1>
+          <p>Want to know more about us?</p>
+        </div>
+      </div>
+    </header>
+
     <div class="row">
       <div class="col-lg-6">
         <p>Introducing "Ultimate Inventory," the evolution of our project "Prime Inventory." Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.</p>
@@ -83,8 +83,8 @@
         <br>
         <p>Join us as we continue to innovate and redefine inventory management's future.</p>
       </div>
-        <div class="col-lg-6">
-        <img class="about-us-image img-fluid rounded" src="../static/img/AboutUs.jpg" alt="About Us section Image">
+      <div class="col-lg-6">
+        <img class="about-us-image  rounded" src="../static/img/AboutUs.jpg" alt="About Us section Image">
       </div>
     </div>
   </div>
@@ -215,7 +215,6 @@
     </div>
   </div>
 </section>
-</div>
 
 
 {%include 'general/footer.html'%}  
