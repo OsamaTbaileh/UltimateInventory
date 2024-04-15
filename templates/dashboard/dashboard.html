@@ -11,7 +11,7 @@
     <div class="w-100 mx-0 px-sm-2 px-md-3 px-lg-4 bg d-flex justify-content-between" style="max-width: 1500px; ">
         <!-- Left Section: -->
         <section class="left-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
-            <a class="left-section-item d-flex align-items-center rounded p-2" href="/users/{{ the_supervisor.image_id }}">               
+            <a class="left-section-item d-flex align-items-center rounded p-2" href="/users/{{ the_supervisor.user_id }}">               
                 <img src="/static/uploads/users_photos/{{ the_supervisor.image_id }}" alt="{{ the_supervisor.first_name }} {{ the_supervisor.last_name }} image." class="{{ the_supervisor.first_name }} {{ the_supervisor.job_title | lower }}-img">
                 <p class="text-center mb-1">{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}</p>
             </a>
@@ -41,15 +41,15 @@
             </a>
             <a class="left-section-item d-flex align-items-center rounded" href="/movements/1/ASC">               
                 <i class="fa-solid fa-bolt fa-fw"></i>
-                <p class="text-center">Movements of last 1 day</p>
+                <p class="text-center">Moves of last 1 day</p>
             </a>
             <a class="left-section-item d-flex align-items-center rounded" href="/movements/7/ASC">               
                 <i class="fa-solid fa-bolt fa-fw"></i>
-                <p class="text-center">Movements of last 7 day</p>
+                <p class="text-center">Moves of last 7 day</p>
             </a>
             <a class="left-section-item d-flex align-items-center rounded" href="/movements/30/ASC">               
                 <i class="fa-solid fa-bolt fa-fw"></i>
-                <p class="text-center">Movements of last 30 day</p>
+                <p class="text-center">Moves of last 30 day</p>
             </a>
             <a class="left-section-item d-flex align-items-center rounded" href="/sign_out">               
                 <i class="fa-solid fa-arrow-right-from-bracket fa-aw"></i>
