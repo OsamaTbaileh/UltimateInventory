@@ -14,11 +14,11 @@
     box-shadow: 0 5px 10px #b3bed1;
 }
 
-#neubar .dropdown-menu li a:hover {
+.dropdown-menu .dropdown-item:hover {
     color: #2e364d !important; 
 }
 
-#neubar .dropdown-menu li a:active {
+.dropdown-menu .dropdown-item:active {
     background-color: #b3bed1 !important; 
 }
 
@@ -65,6 +65,7 @@ a.navbar-brand {
 #user-img:hover {
     transform: scale(1.05) !important;
     box-shadow: 0 0 13px rgba(255, 255, 255, 1) !important;
+    transition: all 0.2s ease-in-out;
 }
 
 .navbar-toggler {
