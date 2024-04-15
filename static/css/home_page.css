@@ -40,10 +40,10 @@
 
 
 
-/* Our Vision & Mission Section:///////////////////////////////////////////////////////////////////////////////////*/
+/* Our Vision & Mission Section:///////////////////////////////////////////////////////////////////////*/
 .our-vision-section {
-    background-color: #f8f9fa;
-    padding: 60px 0;
+    background-color: white;
+    padding: 80px 0;
     opacity: 0; /* Set the opacity to 0 */
     visibility: hidden; /* Hide the section initially */
     transition: opacity 1s, visibility 1s;
@@ -54,7 +54,7 @@
 /* About Us Section:///////////////////////////////////////////////////////////////////////////////////*/
 .about-us-section {
     background-color: #f8f9fa;
-    padding: 60px 0;
+    padding: 80px 0;
     opacity: 0; /* Set the opacity to 0 */
     visibility: hidden; /* Hide the section initially */
     transition: opacity 1s, visibility 1s;
@@ -67,6 +67,19 @@
 }
 
 
+
+/* Pricing Section:////////////////////////////////////////////////////////////////////////////////////*/
+.pricing-section {
+    background-color: #f3f3f3;
+    padding: 80px 0;
+    opacity: 0; /* Set the opacity to 0 */
+    visibility: hidden; /* Hide the section initially */
+    transition: opacity 1s, visibility 1s;
+}
+
+
+
+/* guest-btn & signin-btn:////////////////////////////////////////////////////////////////////////////////*/
 .guest-btn a,
 .signin-btn a{
     display: inline-block;
