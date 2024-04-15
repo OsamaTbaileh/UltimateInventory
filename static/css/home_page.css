@@ -12,6 +12,7 @@
 /* Slogan Section:///////////////////////////////////////////////////////////////////////////////////*/
 .home-page-bg {
     /* background: linear-gradient(to top right, #1c1b1b, #6a6a6a); */
+    max-width: 100% !important;
     background-image: url("/static/img/slogan_background.jpg");
     background-size: cover;
     background-repeat: no-repeat;
