@@ -107,6 +107,12 @@
     margin: 0px;
 }
 
+.post-caption {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
 .adminstrator-name-container a:hover {
     color: #FF4433;
 }
@@ -579,8 +585,8 @@ img.three-media-temp {
 }
 
 .comment-caption a,
-.comment-caption p {
-    font-family: 'Open Sans', sans-serif;
+.comment-caption pre {
+    font-family: 'Open Sans', sans-serif !important;
     font-size: 14px;
     font-weight: bold;
 }
@@ -694,7 +700,7 @@ img.three-media-temp {
 }
 
 .reply-caption a,
-.reply-caption p {
+.reply-caption pre {
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
     font-weight: bold;
