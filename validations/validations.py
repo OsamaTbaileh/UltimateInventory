@@ -76,7 +76,7 @@ def validate_add_new_location_method(form_data, form_files):
             return data, validation_errors
 
     # Validate location's image:
-    elif 'location_image' not in form_files:  
+    elif 'location_image' not in form_files or form_files['location_image'].filename == '':  
         image_id = "default_location.png"
 
     data['location_image_from_form'] = image_id
