@@ -655,7 +655,8 @@ def get_my_team():
                 # Retrieve the user's team data based on the user's supervisor's ID.
                 team_query = """SELECT user_id, first_name, last_name, job_title, image_id
                                 FROM users
-                                WHERE supervisor_id = %(supervisor_id)s;"""
+                                WHERE supervisor_id = %(supervisor_id)s
+                                ORDER BY first_name, last_name;"""
                 team = mysql.query_db(team_query, data)
                 if len(team)>0:
                     team = replace_job_title(team)
@@ -669,7 +670,8 @@ def get_my_team():
             # Retrieve the user's team data based on the user's supervisor's ID.
             team_query = """SELECT user_id, first_name, last_name, job_title, image_id
                             FROM users
-                            WHERE supervisor_id = %(user_id)s;"""
+                            WHERE supervisor_id = %(user_id)s
+                            ORDER BY first_name, last_name;"""
             data = {'user_id': session['user_id']}
             team = mysql.query_db(team_query, data)
             if len(team)>0:
@@ -689,7 +691,8 @@ def get_my_team():
             # Retrieve the user's team data which are all the managers.
             team_query = """SELECT user_id, first_name, last_name, job_title, image_id
                             FROM users
-                            WHERE job_title = 2;"""
+                            WHERE job_title = 2
+                            ORDER BY first_name, last_name;"""
             team = mysql.query_db(team_query)
             if len(team)>0:
                 team = replace_job_title(team)
