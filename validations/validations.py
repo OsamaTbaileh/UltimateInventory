@@ -918,7 +918,7 @@ def validate_update_post_method(form_data, form_files):
 
         # Validate size of media file.
         for media_path in media_paths:
-            if not validate_size_of_uploaded_media_file(media_path, media_path.split("\\")[-2][:-1]):
+            if not validate_size_of_uploaded_media_file(media_path, media_path.split("/")[-2][:-1]):
                 validation_errors.append(("An uploaded file size is above the maximum.", 'fail'))
                 # If any one of them fail then that means frontend validations failed, and it will not save any of them.
                 # Remove all the saved medias above from the server.
@@ -1378,7 +1378,7 @@ def validate_deleted_media_files(all_media):
     for media in all_media:
         if media['name'] is not None and media['type'] is not None:
             # Define the relative path to the target directory (one level up).
-            relative_path = r"..\static\uploads\{}\{}s".format(media['reference_table'], media['type'])
+            relative_path = "../static/uploads/{}/{}s".format(media['reference_table'], media['type'])
             # Construct the path to the media to replace it with the new one.
             media_path = os.path.join(current_directory, relative_path, media['name'])
             # Check if the media_path file exists.
