@@ -3,9 +3,9 @@
 </div>
 
 
-Introducing "Ultimate Inventory," the next evolution of our previous project, "Prime Inventory." Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
+Introducing "Ultimate Inventory," the next evolution of our previous project, [Prime Inventory](https://github.com/OsamaTbaileh/PrimeInventory). Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
 
-## whats new?
+## what's new?
 - **📊 Dynamic Dashboard:** Empower users with a streamlined feed for posting, commenting, replying, and liking to enhance communication and collaboration between teams and users.
 - **🖼️ Media Files Upload:** Additionally, users can seamlessly upload media files such as images and videos, enhancing efficiency in managing inventory operations.
 - **💾 Enhanced Database Efficiency:** Improve database performance, strengthen validations, and refine backend logic.
@@ -17,7 +17,7 @@ This web application is specifically designed to assist store managers in effici
 
 
 ## Functional Specifications:
-- **Fully-Responsive:** The usage of bootstrap make it suitable for all screen sizes.
+- **Fully Responsive:** The usage of Bootstrap makes it suitable for all screen sizes.
 - **Login and Registration:** The application supports two types of authentication: worker and manager accounts.
   - Worker Account:
     - Limited access to website functionalities.
@@ -31,8 +31,8 @@ This web application is specifically designed to assist store managers in effici
     - Can delete users accounts.
 
 
-## Programing Languages, Frameworks & Libraries Used:
-- Pyhton 3.6.4
+## Programming Languages, Frameworks & Libraries Used:
+- Python 3.6.4
 - Flask 2.0.3
 - MySQL Workbench 8.0 CE
 - Bootstrap 5.0.2 
@@ -81,12 +81,12 @@ This web application is specifically designed to assist store managers in effici
 <br/><br/>
 
 ## Getting Started:
-"Prime Inventory" requires [Python](https://www.python.org/downloads/) to run.
+"Ultimate Inventory" requires [Python](https://www.python.org/downloads/) to run.
 1. **Clone the repository** to your local machine, open ur cmd & write down:
 ```sh
-git clone <https://github.com/OsamaTbaileh/PrimeInventory>
+git clone <https://github.com/OsamaTbaileh/UltimateInventory>
 ```
-2. **Activate your virtual environment**. If you don't have a virtual environment set up, create and activate one using the appropriate commands for your operating system.The following commands is to make new environment and to actiavte it:
+2. **Activate your virtual environment**. If you don't have a virtual environment set up, create and activate one using the appropriate commands for your operating system. The following commands are to make a new environment and to activate it:
 ```sh
 Python -m venv                  ex: Python -m myEnv
 call myEnv/Scripts/activate
@@ -98,13 +98,13 @@ pip install Flask
 ```
 4. **Navigate to the project directory** containing the Flask app's entry point file (`server.py`):
 ```sh
-cd path/to/entry/PrimeInventory
+cd path/to/entry/UltimateInventory
 ```
 5. **Start the server**:
 ```sh
 python server.py
 ```
-6. Open your web browser and visit the specified URL or endpoint to access the web app.(Usually it's localhost:5000):
+6. Open your web browser and visit the specified URL or endpoint to access the web app.(Usually, it's localhost:5000):
 ```sh
 localhost:5000
 ```
@@ -112,6 +112,6 @@ localhost:5000
 
 
 ## Support
-If you encounter any issues or have questions, please [submit an issue](https://github.com/OsamaTbaileh/PrimeInventory/issues) or contact me on one of my contacts [HERE](https://github.com/OsamaTbaileh/OsamaTbaileh)
+If you encounter any issues or have questions, please [submit an issue](https://github.com/OsamaTbaileh/UltimateInventory/issues) or contact me on one of my contacts [HERE](https://github.com/OsamaTbaileh/OsamaTbaileh)
 ### Note:
 - login and registration will be added very soon, stay tuned.
