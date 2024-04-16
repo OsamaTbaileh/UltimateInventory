@@ -69,9 +69,7 @@
                 </div>
 
                 <!-- Post Caption -->
-                <p class="post-caption px-3 mb-2" id="post-{{ the_post.post_id }}-caption">
-                    {{ the_post.caption }}
-                </p>
+                <pre class="post-caption px-3 mb-2" id="post-{{ the_post.post_id }}-caption">{{ the_post.caption }}</pre>
 
                 <!-- Post Media -->
                 <div class="post-media-container mb-2" id="post-{{ the_post.post_id }}-media-container"
@@ -664,7 +662,7 @@
                             <div class="comment-caption-container">
                                 <div class="${comment.author_job_title}-name-container d-inline-block comment-caption">
                                     <a class=" mb-0 mx-0" href="/users/${comment.author_user_id}">${comment.author_full_name}</a> 
-                                    <p id="comment-${comment.comment_id}-caption" class="p-0 m-0">${comment.caption}</p>
+                                    <pre id="comment-${comment.comment_id}-caption" class="p-0 m-0">${comment.caption}</pre>
                                 </div>
                                 ${comment.likes_count > 0 ? `
                                     <div class="comment-likes-count" id="comment-${comment.comment_id}-likes-count">
@@ -777,7 +775,7 @@
                             <div class="reply-caption-container">
                                 <div class="${reply.author_job_title}-name-container d-inline-block reply-caption">
                                     <a class="mb-0 mx-0"  href="/users/${reply.author_user_id}">${reply.author_full_name}</a>
-                                    <p id="reply-${reply.reply_id}-caption" class="p-0 m-0">${reply.caption}</p>
+                                    <pre id="reply-${reply.reply_id}-caption" class="p-0 m-0">${reply.caption}</pre>
                                 </div>
                                 ${reply.likes_count > 0 ? `
                                     <div class="reply-likes-count" id="reply-${reply.reply_id}-likes-count">
