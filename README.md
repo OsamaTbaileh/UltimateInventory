@@ -43,7 +43,7 @@ This web application is specifically designed to assist store managers in effici
 
 
 ## Color Schema:
-Solarized dark             |  Solarized Ocean
+
 :-------------------------:|:-------------------------:
 ![](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg)  |  ![](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg)
 
