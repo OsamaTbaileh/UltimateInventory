@@ -704,7 +704,7 @@ img.three-media-temp {
 .reply-caption a,
 .reply-caption pre {
     font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     white-space: pre-line;
 }
@@ -725,6 +725,9 @@ img.three-media-temp {
 .reply-form .reply-form-caption:active,
 .reply-form .update-reply-form-caption,
 .reply-form .update-reply-form-caption:active  {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 14px;
+    font-weight: bold;
     width: 100%;
     height: 25px;
     border: none;
