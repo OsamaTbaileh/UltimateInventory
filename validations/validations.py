@@ -800,7 +800,7 @@ def validate_add_new_post_method(form_data, form_files):
     }
 
     # If the caption is missed or the uploaded post was empty (empty caption & no media), which means front-end validations failed.
-    if ('post_form_caption' not in form_data) or (form_data.get('post_form_caption') == "" and len(form_files) == 0):
+    if ('post_form_caption' not in form_data) or (form_data.get('post_form_caption').strip() == "" and len(form_files) == 0):
         validation_errors.append(("An error occured while uploading your comment, try again.", 'fail'))
         return data, validation_errors
 
@@ -1003,7 +1003,7 @@ def validate_add_new_comment_method(form_data, form_files):
     }
 
     # If the caption is missed or the uploaded comment was empty (empty caption & no media), which means front-end validations failed.
-    if ('comment_form_caption' not in form_data) or (form_data.get('comment_form_caption') == "" and len(form_files) == 0):
+    if ('comment_form_caption' not in form_data) or (form_data.get('comment_form_caption').strip() == "" and len(form_files) == 0):
         validation_errors.append(("An error occured while uploading your comment, try again.", 'fail'))
         return data, validation_errors
 
@@ -1193,7 +1193,7 @@ def validate_add_new_reply_method(form_data, form_files):
     }
 
     # If the caption is missed or the uploaded reply was empty (empty caption & no media), which means front-end validations failed.
-    if ('reply_form_caption' not in form_data) or (form_data.get('reply_form_caption') == "" and len(form_files) == 0):
+    if ('reply_form_caption' not in form_data) or (form_data.get('reply_form_caption').strip() == "" and len(form_files) == 0):
         validation_errors.append(("An error occured while uploading your reply, try again.", 'fail'))
         return data, validation_errors
     
