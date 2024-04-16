@@ -41,6 +41,13 @@ This web application is specifically designed to assist store managers in effici
 ## Data Base:
 -SQL Through MySQL Workbench.
 
+
+## Color Schema:
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![]([https://...Dark.png](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg))  |  ![]([https://...Ocean.png](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg))
+
+
 <br/>
 
 
