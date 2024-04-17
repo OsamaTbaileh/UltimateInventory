@@ -64,6 +64,10 @@ Basic Colors   |  Extended Colors
 ![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/dashboard.jpeg)
 <br/><br/>
 
+## All Users Page:
+![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/users_all_users.jpeg)
+<br/><br/>
+
 ## Locations Page:
 ![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/locations.jpeg)
 
@@ -79,7 +83,7 @@ Basic Colors   |  Extended Colors
 
 <br/><br/>
 
-## If You Got The Desire to See More Screens and Photos, Please Click ![HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets)
+## There are Still plenty of Screens and Photos That You Need to See. If You Got The Desire, Please Click [HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets)
 
 
 ## Getting Started:
