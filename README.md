@@ -2,7 +2,7 @@
   <h1> Ultimate Inventory </h1>
 </div>
 
-### Click [HERE](https://ultimateinventory.pythonanywhere.com) for Live Demo
+### Click [HERE](https://ultimateinventory.pythonanywhere.com) for Live Demo, and choose Guest to get in swiftly.
 
 Introducing "Ultimate Inventory," the next evolution of our previous project, [Prime Inventory](https://github.com/OsamaTbaileh/PrimeInventory). Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
 
@@ -83,7 +83,7 @@ Basic Colors   |  Extended Colors
 
 <br/><br/>
 
-## There are Still plenty of Screens and Photos That You Need to See. If You Got The Desire, Please Click [HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets){: .red-link}
+## There are Still plenty of Screens and Photos That You Need to See. If You Got The Desire, Please Click [HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets)
 
 
 ## Getting Started:
