@@ -10,7 +10,7 @@
 <div class="mx-0 px-0 mw-100 d-flex justify-content-center" style="flex: 1; margin-top: 76px !important;">
     <div class="w-100 mx-0 px-sm-2 px-md-3 px-lg-4 bg d-flex justify-content-between" style="max-width: 1500px; ">
         <!-- Left Section: -->
-        <section class="left-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
+        <section class="dashboard-left-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
             <a class="left-section-item d-flex align-items-center rounded p-2" href="/users/{{ the_supervisor.user_id }}">               
                 <img src="/static/uploads/users_photos/{{ the_supervisor.image_id }}" alt="{{ the_supervisor.first_name }} {{ the_supervisor.last_name }} image." class="{{ the_supervisor.first_name }} {{ the_supervisor.job_title | lower }}-img">
                 <p class="text-center mb-1">{{ the_supervisor.first_name }} {{ the_supervisor.last_name }}</p>
@@ -58,7 +58,7 @@
         </section>
 
         <!-- Middle Section: -->
-        <section class="mid-section pt-3">
+        <section class="dashboard-mid-section pt-3">
             <!-- Make post form: -->
             <form id="makePostForm" onsubmit="submitPostForm(event)" action="/dashboard/add_new_post" method="post" enctype="multipart/form-data" class="p-3 mb-3 shaded-box rounded">
                 <textarea class="post-form-caption height-auto-adjuster" placeholder="What's on your mind today?" name="post_form_caption"></textarea>
@@ -78,7 +78,7 @@
         </section>
 
         <!-- Right Section: -->
-        <section class="right-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
+        <section class="dashboard-right-section pt-3 pe-2 sticky-top" style="overflow: auto; top: 79px; max-height: calc(100vh - 79px)">
             {% if has_team %}
                 <p class="d-flex team-header shaded-box rounded p-2 ps-3 mb-2">My Team Members:</p>
                 <div class="d-flex team-member shaded-box rounded p-2 mb-2">
