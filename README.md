@@ -2,6 +2,7 @@
   <h1> Ultimate Inventory </h1>
 </div>
 
+###Click ![HERE](https://ultimateinventory.pythonanywhere.com) for Live Demo
 
 Introducing "Ultimate Inventory," the next evolution of our previous project, [Prime Inventory](https://github.com/OsamaTbaileh/PrimeInventory). Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
 
@@ -78,6 +79,8 @@ Basic Colors   |  Extended Colors
 
 <br/><br/>
 
+## If You Got The Desire to See More Screens and Photos, Please Click ![HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets)
+
 
 ## Getting Started:
 "Ultimate Inventory" requires [Python](https://www.python.org/downloads/) to run.
@@ -93,17 +96,26 @@ call myEnv/Scripts/activate
 3. **Install Flask and dependencies**:
 Make sure your virtual environment is activated and in your cmd write down:
 ```sh
-pip install Flask
+pip install Flask==2.0.3
 ```
-4. **Navigate to the project directory** containing the Flask app's entry point file (`server.py`):
+4. **Install dependencies**:
+Here is a list of the required dependencies.Make sure your virtual environment is activated and in your cmd write down:
+```sh
+pip install PyMySQL==1.0.2
+pip install bcrypt==4.0.1
+pip install Flask-Bcrypt==1.0.1
+pip install mysql-connector-python==8.0.33
+pip install regex==2023.6.3
+```
+5. **Navigate to the project directory** containing the Flask app's entry point file (`server.py`):
 ```sh
 cd path/to/entry/UltimateInventory
 ```
-5. **Start the server**:
+6. **Start the server**:
 ```sh
 python server.py
 ```
-6. Open your web browser and visit the specified URL or endpoint to access the web app.(Usually, it's localhost:5000):
+7. Open your web browser and visit the specified URL or endpoint to access the web app.(Usually, it's localhost:5000):
 ```sh
 localhost:5000
 ```
