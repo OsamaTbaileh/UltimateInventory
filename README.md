@@ -83,7 +83,7 @@ Basic Colors   |  Extended Colors
 
 <br/><br/>
 
-## There are Still plenty of Screens and Photos That You Need to See. If You Got The Desire, Please Click [HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets)
+## There are Still plenty of Screens and Photos That You Need to See. If You Got The Desire, Please Click [HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets){: .red-link}
 
 
 ## Getting Started:
