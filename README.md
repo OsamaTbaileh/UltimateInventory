@@ -43,49 +43,41 @@ This web application is specifically designed to assist store managers in effici
 
 
 ## Color Schema:
-Basic Colors            |  Extended Colors
+Basic Colors   |  Extended Colors
 :-------------------------:|:-------------------------:
 ![](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/color-pallete1.png)  |  ![](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/color-pallete2.png)
 
 
+## EER Diagram:
+![ERD Diagram](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/EER_diagram.png)
 <br/>
 
 
 ## Some Screenshots of The Website:
 ## Home Page:
-![Home Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg)
+![Home Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/home.jpeg)
 
 <br/><br/>
 
+## Dashboard Page:
+![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/dashboard.jpeg)
+<br/><br/>
+
 ## Locations Page:
-![Locations Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/locations_page.jpeg)
+![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/locations.jpeg)
 
 <br/><br/>
 
 ## Products Page:
-![Products Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/products_page.jpeg)
+![Products Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/products.jpeg)
 
 <br/><br/>
 
 ## Movements Page:
-![Movements Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/movements_page.jpeg)
+![Movements Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/movements.jpeg)
 
 <br/><br/>
 
-## Normal Report Page:
-![Report Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/normal_report_page.jpeg)
-
-<br/><br/>
-
-## Advanced Report Page:
-![Report Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/advanced_report_page.jpeg)
-
-<br/><br/>
-
-## ERD:
-![ERD Diagram](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/ERD_diagram.jpg)
-
-<br/><br/>
 
 ## Getting Started:
 "Ultimate Inventory" requires [Python](https://www.python.org/downloads/) to run.
