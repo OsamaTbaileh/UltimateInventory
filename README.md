@@ -2,7 +2,7 @@
   <h1> Ultimate Inventory </h1>
 </div>
 
-###Click ![HERE](https://ultimateinventory.pythonanywhere.com) for Live Demo
+### Click ![HERE](https://ultimateinventory.pythonanywhere.com) for Live Demo
 
 Introducing "Ultimate Inventory," the next evolution of our previous project, [Prime Inventory](https://github.com/OsamaTbaileh/PrimeInventory). Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
 
