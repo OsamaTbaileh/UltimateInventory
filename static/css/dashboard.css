@@ -556,6 +556,7 @@ img.three-media-temp {
     min-height: 32px;
     object-fit: cover;
     border-width: 2px;
+    border-style: solid;
     cursor: pointer;
 }
 
