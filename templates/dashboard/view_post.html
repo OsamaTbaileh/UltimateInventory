@@ -9,11 +9,11 @@
 <div class="mx-0 px-0 mw-100 d-flex justify-content-center" style="flex: 1; margin-top: 76px !important;">
     <div class="w-100 mx-0 px-sm-2 px-md-3 px-lg-4 bg d-flex justify-content-between" style="max-width: 1500px; ">
         <!-- Left Section: -->
-        <section class="left-section">
+        <section class="view-post-left-section">
         </section>
 
         <!-- Middle Section: -->
-        <section class="mid-section pt-3">
+        <section class="view-post-mid-section pt-3">
 
             <!-- Post -->
             <div class="post-box shaded-box rounded mb-4 py-2">
@@ -136,7 +136,7 @@
                             href="/users/{{ session.user_id }}" class="user-img-container me-2 ms-0">
                             <img src="/static/uploads/users_photos/{{ checked_user.user_image_id }}"
                                 alt="{{ checked_user.user_first_name }} {{ checked_user.user_last_name }} image"
-                                class="comment-{{ the_post.author_job_title }}-img">
+                                class="comment-{{ checked_user.user_job_title | lower }}-img">
                         </a>
                         <div class="d-flex flex-column w-100">
                             <form id="makeCommentForm" onsubmit="submitCommentForm(event)"
@@ -185,7 +185,7 @@
         </section>
 
         <!-- Right Section: -->
-        <section class="right-section">
+        <section class="view-post-right-section">
         </section>
     </div>
 </div>
@@ -563,7 +563,7 @@
                 'data-lg-size="1280-720" ' +
                 'data-video=\'{"source": [{"src":"/static/uploads/posts/videos/' + response.media_name + '", "type":"video/mp4"}], ' +
                 '"attributes": {"preload": false, "playsinline": true, "controls": true}}\' >' +
-                '<video controls src="/static/uploads/posts/videos/' + response.media_name + '" ></video>' +
+                '<video controls muted src="/static/uploads/posts/videos/' + response.media_name + '" ></video>' +
                 '</a>';
         }
         return html;
@@ -652,20 +652,19 @@
 
             $.each(data, function (index, comment) {
                 // Format and append comment HTML to the container
-                console.log(comment)
                 var commentHtml = `
                     <div id="comment-${comment.comment_id}" class="d-flex align-items-start py-1">
                         <a aria-label="${comment.author_full_name}" href="/users/${comment.author_user_id}" class="user-img-container me-2 ms-0">                 
                             <img src="/static/uploads/users_photos/${comment.author_image_id}" alt="${comment.author_full_name} image" class="comment-${comment.author_job_title}-img">
                         </a>
-                        <div class="comment-content-box d-flex flex-column w-100">
+                        <div class="comment-content-box d-flex flex-column">
                             <div class="comment-caption-container">
-                                <div class="${comment.author_job_title}-name-container d-inline-block comment-caption">
+                                <div class="${comment.author_job_title}-name-container d-inline-block comment-caption overflow-hidden">
                                     <a class=" mb-0 mx-0" href="/users/${comment.author_user_id}">${comment.author_full_name}</a> 
                                     <pre id="comment-${comment.comment_id}-caption" class="p-0 m-0">${comment.caption}</pre>
                                 </div>
                                 ${comment.likes_count > 0 ? `
-                                    <div class="comment-likes-count" id="comment-${comment.comment_id}-likes-count">
+                                    <div class="comment-likes-count text-nowrap" id="comment-${comment.comment_id}-likes-count">
                                         <i class="fa-solid fa-heart"></i>
                                         ${comment.likes_count}
                                     </div>
@@ -698,7 +697,7 @@
                                         data-lg-size="1280-720"
                                         data-video='{"source": [{"src":"/static/uploads/comments/videos/${comment.media_name}", "type":"video/mp4"}],
                                         "attributes": {"preload": false, "playsinline": true, "controls": true}}' >
-                                        <video class="comment-media" autoplay controls src="/static/uploads/comments/videos/${comment.media_name}" ></video>
+                                        <video class="comment-media" autoplay controls muted src="/static/uploads/comments/videos/${comment.media_name}" ></video>
                                     </a>
                                 </div>
                             ` : ''}
@@ -771,14 +770,14 @@
                         <a aria-label="${reply.author_full_name}" href="/users/${reply.author_user_id}" class="user-img-container me-2 ms-0">                 
                             <img src="/static/uploads/users_photos/${reply.author_image_id}" alt="${reply.author_full_name} image" class="reply-${reply.author_job_title}-img">
                         </a>
-                        <div class="reply-content-box d-flex flex-column w-100">
+                        <div class="reply-content-box d-flex flex-column">
                             <div class="reply-caption-container">
-                                <div class="${reply.author_job_title}-name-container d-inline-block reply-caption">
+                                <div class="${reply.author_job_title}-name-container d-inline-block reply-caption overflow-hidden">
                                     <a class="mb-0 mx-0"  href="/users/${reply.author_user_id}">${reply.author_full_name}</a>
                                     <pre id="reply-${reply.reply_id}-caption" class="p-0 m-0">${reply.caption}</pre>
                                 </div>
                                 ${reply.likes_count > 0 ? `
-                                    <div class="reply-likes-count" id="reply-${reply.reply_id}-likes-count">
+                                    <div class="reply-likes-count text-nowrap" id="reply-${reply.reply_id}-likes-count">
                                         <i class="fa-solid fa-heart"></i>
                                         ${reply.likes_count}
                                     </div>
@@ -811,7 +810,7 @@
                                         data-lg-size="1280-720"
                                         data-video='{"source": [{"src":"/static/uploads/replies/videos/${reply.media_name}", "type":"video/mp4"}],
                                         "attributes": {"preload": false, "playsinline": true, "controls": true}}' >
-                                        <video class="reply-media" autoplay controls src="/static/uploads/replies/videos/${reply.media_name}" ></video>
+                                        <video class="reply-media" autoplay controls muted src="/static/uploads/replies/videos/${reply.media_name}" ></video>
                                     </a>
                                 </div>
                             ` : ''}
@@ -985,7 +984,7 @@
                 // Check if the likes count div exists and increment the count
                 if (likesCount === 0) {
                     // Create the likes count div
-                    commentCaptionDiv.parent().after('<div class="comment-likes-count" id="comment-' + commentId + '-likes-count"><i class="fa-solid fa-heart"></i> 1</div>');
+                    commentCaptionDiv.parent().after('<div class="comment-likes-count text-nowrap" id="comment-' + commentId + '-likes-count"><i class="fa-solid fa-heart"></i> 1</div>');
                     likeBtn.data("comment-likes-count", 1);  // Update data-comment-likes-count
                 } else {
                     likesCountDiv.html('<i class="fa-solid fa-heart"></i> ' + (likesCount + 1));
@@ -1062,7 +1061,7 @@
                 // Check if the likes count div exists and increment the count
                 if (likesCount === 0) {
                     // Create the likes count div
-                    replyCaptionDiv.parent().after('<div class="reply-likes-count" id="reply-' + replyId + '-likes-count"><i class="fa-solid fa-heart"></i> 1</div>');
+                    replyCaptionDiv.parent().after('<div class="reply-likes-count text-nowrap" id="reply-' + replyId + '-likes-count"><i class="fa-solid fa-heart"></i> 1</div>');
                     likeBtn.data("reply-likes-count", 1);  // Update data-reply-likes-count
                 } else {
                     likesCountDiv.html('<i class="fa-solid fa-heart"></i> ' + (likesCount + 1));
@@ -1239,9 +1238,14 @@
             </div>
         `;
 
-        // Append the generated HTML to the container
+        // Append the generated HTML to the container.
         repliesContainer.append(replyHtml);
+
+        // Add the required validation to the inputs of the form.
         addFormValidations("reply")
+
+        // Make the update-post-form textarea focused.
+        $('.reply-form').find('.reply-form-caption').focus();
     }
 
     // Click event for "View reply form" button
@@ -1391,7 +1395,7 @@
         var postContainer = $(this).closest('.post-box');
 
         // Check if the form is not already present
-        if (!postContainer.find('.update-post-from').length) {
+        if (!postContainer.find('.update-post-form').length) {
 
             // Find the closest ancestor with class post-dropdown
             var postDropdown = $(this).closest('.post-dropdown');
@@ -1422,10 +1426,10 @@
                     srcAttribute = $(this).find('video').attr('src');
                     elementHTML = `
                         <div class="uploaded-media-container">
-                            ${$(this).clone().removeClass('post-media hidden-media-temp').addClass('uploaded-media').prop('outerHTML')}
+                            ${$(this).clone().removeClass('post-media hidden-media-temp').addClass('one-media-temp uploaded-media').prop('outerHTML')}
                             <i class="fa fa-play-circle" aria-hidden="true"></i>
                             <i class="remove-media-x-btn update-post-form-media-x-btn fas fa-circle-xmark" data-src="${srcAttribute}"></i>
-                            </div>
+                        </div>
                     `;
                 }
 
@@ -1440,7 +1444,7 @@
 
             // Insert the form before the post-caption
             var formHtml = `
-                <form id="updatePostForm" onsubmit="submitUpdatePostForm(event, ${postId})" action="/dashboard/update_post" method="post" enctype="multipart/form-data" class="update-post-from p-3 mb-3">
+                <form id="updatePostForm" onsubmit="submitUpdatePostForm(event, ${postId})" action="/dashboard/update_post" method="post" enctype="multipart/form-data" class="update-post-form p-3 mb-3">
                     <textarea class="update-post-form-caption height-auto-adjuster" placeholder="Write your post here" name="update_post_form_caption">${captionContent}</textarea>
                     <div id="update-post-form-media-container" class="d-flex flex-wrap">
                         ${siblingsHTML}
@@ -1457,8 +1461,16 @@
 
             // Add the form with it's media to the DOM.
             postContainer.find('.post-caption').before(formHtml);
+
             // Add the required validation to the inputs of the form.
             addUpdateFormValidations('post');
+
+            // Add auto height adjuster for the textarea of the update-post-form
+            var FormTextarea = document.querySelector('.update-post-form-caption');
+            adjustTextareaHeight(FormTextarea)
+
+            // Make the update-post-form textarea focused.
+            $('.update-post-form-caption').focus();
 
             // Hide the closest ancestor with class post-dropdown
             postDropdown.hide();
@@ -1478,7 +1490,7 @@
                 postContainer.find('.post-caption, .post-media-container, .post-comment-like-counter-container, .post-comment-like-buttons-container, .comments-container').show();
 
                 // Remove the dynamically created form
-                postContainer.find('.update-post-from').remove();
+                postContainer.find('.update-post-form').remove();
 
                 // Remove the cancel update button
                 $(this).remove();
@@ -1776,6 +1788,13 @@
 
         // Add the required validation to the inputs of the form.
         addUpdateFormValidations('comment');
+
+        // Add auto height adjuster for the textarea of the update-comment-form
+        var FormTextarea = document.querySelector('.update-comment-form-caption');
+        adjustTextareaHeight(FormTextarea)
+
+        // Make the update-comment-form textarea focused.
+        $('.update-comment-form-caption').focus();
 
         // Make a gallery for the reviewed media.
         initializeGallery('comment')
@@ -2079,6 +2098,13 @@
         // Add the required validation to the inputs of the form.
         addUpdateFormValidations('reply');
 
+        // Add auto height adjuster for the textarea of the update-reply-form
+        var FormTextarea = document.querySelector('.update-reply-form-caption');
+        adjustTextareaHeight(FormTextarea)
+
+        // Make the update-reply-form textarea focused.
+        $('.update-reply-form-caption').focus();
+
         // Make a gallery for the reviewed media.
         initializeGallery('reply')
 
@@ -2276,21 +2302,25 @@
         // Attach the event listener using event delegation
         $(document).on('input', 'textarea.height-auto-adjuster', function (e) {
             let textarea = e.target;
+            adjustTextareaHeight(textarea)
+        });
+    });
 
-        if (textarea.classList.contains("post-form-caption") || textarea.classList.contains("update-post-form-caption")) {
-            textarea.style.height = "63px";
-        } else if (textarea.classList.contains("comment-form-caption") || textarea.classList.contains("update-comment-form-caption")) {
-            textarea.style.height = "25px";
-        } else if (textarea.classList.contains("reply-form-caption") || textarea.classList.contains("update-reply-form-caption")) {
-            textarea.style.height = "25px";
-        } else {
-            textarea.style.height = "auto";
-        }
+    // Function to adjust the height of the textarea input in the from.
+    function adjustTextareaHeight(textarea) {
+            if (textarea.classList.contains("post-form-caption") || textarea.classList.contains("update-post-form-caption")) {
+                textarea.style.height = "63px";
+            } else if (textarea.classList.contains("comment-form-caption") || textarea.classList.contains("update-comment-form-caption")) {
+                textarea.style.height = "25px";
+            } else if (textarea.classList.contains("reply-form-caption") || textarea.classList.contains("update-reply-form-caption")) {
+                textarea.style.height = "25px";
+            } else {
+                textarea.style.height = "auto";
+            }
 
             let scHeight = textarea.scrollHeight;
             textarea.style.height = `${scHeight}px`;
-        });
-    });
+        }
 </script>
 
 
