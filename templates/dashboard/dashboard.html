@@ -268,14 +268,17 @@ $(document).ready(function () {
     fetchPosts(3, 0);
 
     // Event listener for scrolling to the bottom of the page
-    $(window).scroll(function() {
-        if(Math.round($(window).scrollTop() + $(window).height())+1 == $(document).height()) {
+    $(window).on("scroll", function() {
+        var scrollHeight = $(document).height();
+        var scrollPosition = $(window).height() + $(window).scrollTop();
+        if ((scrollHeight - scrollPosition) <2 ) {
             // Fetch next set of posts only if no fetch is in progress
             if (!fetchingPosts) {
-                fetchPosts(3, $('.mid-section').children().length - 2);
+                fetchPosts(3, $('.dashboard-mid-section').children().length - 2);
             }
         }
     });
+
 });
 </script>
 
