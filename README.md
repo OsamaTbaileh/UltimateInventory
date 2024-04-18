@@ -2,6 +2,7 @@
   <h1> Ultimate Inventory </h1>
 </div>
 
+### Click [HERE](https://ultimateinventory.pythonanywhere.com) for Live Demo, and choose Guest to get in swiftly.
 
 Introducing "Ultimate Inventory," the next evolution of our previous project, [Prime Inventory](https://github.com/OsamaTbaileh/PrimeInventory). Packed with enhanced features, improved performance, and fortified security measures, it sets a new standard in inventory management.
 
@@ -43,49 +44,47 @@ This web application is specifically designed to assist store managers in effici
 
 
 ## Color Schema:
-
+Basic Colors   |  Extended Colors
 :-------------------------:|:-------------------------:
-![](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg)  |  ![](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg)
+![](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/color-pallete1.png)  |  ![](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/color-pallete2.png)
 
 
+## EER Diagram:
+![ERD Diagram](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/EER_diagram.png)
 <br/>
 
 
 ## Some Screenshots of The Website:
 ## Home Page:
-![Home Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/home_page.jpeg)
+![Home Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/home.jpeg)
 
 <br/><br/>
 
+## Dashboard Page:
+![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/dashboard.jpeg)
+<br/><br/>
+
+## All Users Page:
+![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/users_all_users.jpeg)
+<br/><br/>
+
 ## Locations Page:
-![Locations Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/locations_page.jpeg)
+![Locations Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/locations.jpeg)
 
 <br/><br/>
 
 ## Products Page:
-![Products Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/products_page.jpeg)
+![Products Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/products.jpeg)
 
 <br/><br/>
 
 ## Movements Page:
-![Movements Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/movements_page.jpeg)
+![Movements Page Screenshot](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/movements.jpeg)
 
 <br/><br/>
 
-## Normal Report Page:
-![Report Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/normal_report_page.jpeg)
+## There are Still plenty of Screens and Photos That You Need to See. If You Got The Desire, Please Click [HERE](https://github.com/OsamaTbaileh/UltimateInventory/tree/main/static/assets)
 
-<br/><br/>
-
-## Advanced Report Page:
-![Report Page Screenshot](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/advanced_report_page.jpeg)
-
-<br/><br/>
-
-## ERD:
-![ERD Diagram](https://github.com/OsamaTbaileh/PrimeInventory/blob/main/static/assets/ERD_diagram.jpg)
-
-<br/><br/>
 
 ## Getting Started:
 "Ultimate Inventory" requires [Python](https://www.python.org/downloads/) to run.
@@ -101,17 +100,26 @@ call myEnv/Scripts/activate
 3. **Install Flask and dependencies**:
 Make sure your virtual environment is activated and in your cmd write down:
 ```sh
-pip install Flask
+pip install Flask==2.0.3
 ```
-4. **Navigate to the project directory** containing the Flask app's entry point file (`server.py`):
+4. **Install dependencies**:
+Here is a list of the required dependencies.Make sure your virtual environment is activated and in your cmd write down:
+```sh
+pip install PyMySQL==1.0.2
+pip install bcrypt==4.0.1
+pip install Flask-Bcrypt==1.0.1
+pip install mysql-connector-python==8.0.33
+pip install regex==2023.6.3
+```
+5. **Navigate to the project directory** containing the Flask app's entry point file (`server.py`):
 ```sh
 cd path/to/entry/UltimateInventory
 ```
-5. **Start the server**:
+6. **Start the server**:
 ```sh
 python server.py
 ```
-6. Open your web browser and visit the specified URL or endpoint to access the web app.(Usually, it's localhost:5000):
+7. Open your web browser and visit the specified URL or endpoint to access the web app.(Usually, it's localhost:5000):
 ```sh
 localhost:5000
 ```
