@@ -44,7 +44,7 @@ This web application is specifically designed to assist store managers in effici
 
 
 ## Color Schema:
-Basic Colors   |  Extended Colors
+Basic    |    Extended 
 :-------------------------:|:-------------------------:
 ![](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/color-pallete1.png)  |  ![](https://github.com/OsamaTbaileh/UltimateInventory/blob/main/static/assets/color-pallete2.png)
 
